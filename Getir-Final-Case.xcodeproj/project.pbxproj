@@ -16,6 +16,13 @@
 		62BD933E2BC47E79007E122C /* Getir_Final_CaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD933D2BC47E79007E122C /* Getir_Final_CaseTests.swift */; };
 		62BD93482BC47E79007E122C /* Getir_Final_CaseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD93472BC47E79007E122C /* Getir_Final_CaseUITests.swift */; };
 		62BD934A2BC47E79007E122C /* Getir_Final_CaseUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD93492BC47E79007E122C /* Getir_Final_CaseUITestsLaunchTests.swift */; };
+		62BD93612BC48113007E122C /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD93602BC48113007E122C /* BaseViewController.swift */; };
+		62BD93632BC48192007E122C /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD93622BC48192007E122C /* SplashViewController.swift */; };
+		62BD93652BC481CD007E122C /* SplashInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD93642BC481CD007E122C /* SplashInteractor.swift */; };
+		62BD93682BC4827C007E122C /* SplashPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD93672BC4827C007E122C /* SplashPresenter.swift */; };
+		62BD936A2BC482F6007E122C /* SplashRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD93692BC482F6007E122C /* SplashRouter.swift */; };
+		62BD936C2BC494FE007E122C /* ProductListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD936B2BC494FE007E122C /* ProductListingViewController.swift */; };
+		62BD936E2BC49641007E122C /* ProductListingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD936D2BC49641007E122C /* ProductListingPresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +56,13 @@
 		62BD93432BC47E79007E122C /* Getir-Final-CaseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Getir-Final-CaseUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		62BD93472BC47E79007E122C /* Getir_Final_CaseUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Getir_Final_CaseUITests.swift; sourceTree = "<group>"; };
 		62BD93492BC47E79007E122C /* Getir_Final_CaseUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Getir_Final_CaseUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		62BD93602BC48113007E122C /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		62BD93622BC48192007E122C /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
+		62BD93642BC481CD007E122C /* SplashInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashInteractor.swift; sourceTree = "<group>"; };
+		62BD93672BC4827C007E122C /* SplashPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashPresenter.swift; sourceTree = "<group>"; };
+		62BD93692BC482F6007E122C /* SplashRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashRouter.swift; sourceTree = "<group>"; };
+		62BD936B2BC494FE007E122C /* ProductListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingViewController.swift; sourceTree = "<group>"; };
+		62BD936D2BC49641007E122C /* ProductListingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingPresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +154,10 @@
 		62BD93572BC47F83007E122C /* SplashScreen */ = {
 			isa = PBXGroup;
 			children = (
+				62BD93622BC48192007E122C /* SplashViewController.swift */,
+				62BD93642BC481CD007E122C /* SplashInteractor.swift */,
+				62BD93672BC4827C007E122C /* SplashPresenter.swift */,
+				62BD93692BC482F6007E122C /* SplashRouter.swift */,
 			);
 			path = SplashScreen;
 			sourceTree = "<group>";
@@ -159,6 +177,8 @@
 		62BD93592BC47FA7007E122C /* ProductListing */ = {
 			isa = PBXGroup;
 			children = (
+				62BD936B2BC494FE007E122C /* ProductListingViewController.swift */,
+				62BD936D2BC49641007E122C /* ProductListingPresenter.swift */,
 			);
 			path = ProductListing;
 			sourceTree = "<group>";
@@ -203,6 +223,7 @@
 		62BD935F2BC480C5007E122C /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				62BD93602BC48113007E122C /* BaseViewController.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -339,8 +360,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				62BD932B2BC47E78007E122C /* ViewController.swift in Sources */,
+				62BD936C2BC494FE007E122C /* ProductListingViewController.swift in Sources */,
+				62BD936A2BC482F6007E122C /* SplashRouter.swift in Sources */,
+				62BD93682BC4827C007E122C /* SplashPresenter.swift in Sources */,
+				62BD93652BC481CD007E122C /* SplashInteractor.swift in Sources */,
+				62BD93612BC48113007E122C /* BaseViewController.swift in Sources */,
 				62BD93272BC47E78007E122C /* AppDelegate.swift in Sources */,
+				62BD936E2BC49641007E122C /* ProductListingPresenter.swift in Sources */,
 				62BD93292BC47E78007E122C /* SceneDelegate.swift in Sources */,
+				62BD93632BC48192007E122C /* SplashViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
