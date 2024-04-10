@@ -5,7 +5,7 @@
 //  Created by Berke Parıldar on 8.04.2024.
 //
 
-import Foundation
+import UIKit
 
 enum SplashRoutes {
     case productListing
@@ -36,7 +36,10 @@ extension SplashRouter: SplashRouterProtocol {
     func navigate(_ route: SplashRoutes) {
         switch route {
         case .productListing:
-            print("Navigate to listing")
+            guard let window = viewController?.view.window else { return }
+            let productListingVC = ProductListingRouter.createModule()
+            let navigationController = UINavigationController(rootViewController: productListingVC)
+            window.rootViewController = navigationController
         }
     }
 }
