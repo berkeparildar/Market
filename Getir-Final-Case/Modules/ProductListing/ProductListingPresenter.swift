@@ -36,7 +36,7 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
     func viewDidLoad() {
         fetchProducts()
         view.setupView()
-        view.setTitle("Products")
+        view.setTitle("Ürünler")
         view.setupNavigationBar()
         view.setupVerticalCollectionView()
     }

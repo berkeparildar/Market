@@ -18,6 +18,7 @@ struct Product: Decodable {
     var id: String
     var name: String
     var attribute: String?
+    var shortDescription: String?
     var thumbnailURL: URL
     var imageURL: URL
     var price: Double

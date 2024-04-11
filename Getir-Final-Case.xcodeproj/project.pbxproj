@@ -34,6 +34,7 @@
 		62CCC5B92BC60CFB00F5693F /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 62CCC5B82BC60CFB00F5693F /* Moya */; };
 		62CCC5BB2BC60CFB00F5693F /* ReactiveMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 62CCC5BA2BC60CFB00F5693F /* ReactiveMoya */; };
 		62CCC5BD2BC60CFB00F5693F /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 62CCC5BC2BC60CFB00F5693F /* RxMoya */; };
+		62D767042BC72D360070A83F /* SectionBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D767032BC72D360070A83F /* SectionBackground.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 		62BD93692BC482F6007E122C /* SplashRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashRouter.swift; sourceTree = "<group>"; };
 		62BD936B2BC494FE007E122C /* ProductListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingViewController.swift; sourceTree = "<group>"; };
 		62BD936D2BC49641007E122C /* ProductListingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingPresenter.swift; sourceTree = "<group>"; };
+		62D767032BC72D360070A83F /* SectionBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionBackground.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -253,6 +255,7 @@
 			children = (
 				622999E82BC5CC73004941FF /* NetworkService.swift */,
 				6248B6242BC5F2ED003E695B /* LoadingView.swift */,
+				62D767032BC72D360070A83F /* SectionBackground.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -418,6 +421,7 @@
 				6248B6232BC5F263003E695B /* ProductViewCell.swift in Sources */,
 				62BD93612BC48113007E122C /* BaseViewController.swift in Sources */,
 				622999E52BC5B9FB004941FF /* ProductListingInteractor.swift in Sources */,
+				62D767042BC72D360070A83F /* SectionBackground.swift in Sources */,
 				62BD93272BC47E78007E122C /* AppDelegate.swift in Sources */,
 				62BD936E2BC49641007E122C /* ProductListingPresenter.swift in Sources */,
 				62BD93292BC47E78007E122C /* SceneDelegate.swift in Sources */,
