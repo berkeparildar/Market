@@ -99,7 +99,7 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
     }
     
     func createLayout() -> UICollectionViewLayout {
-        UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
             if sectionIndex == 1 {
                 let fixedWidth = 103.67
                 
@@ -119,7 +119,10 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
                 let paddingInsets = max(0, padding)
                 
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: paddingInsets, bottom: 16, trailing: paddingInsets)
+                section.contentInsets = NSDirectionalEdgeInsets(top: paddingInsets, leading: paddingInsets, bottom: 16, trailing: paddingInsets)
+                let sectionBackground = NSCollectionLayoutDecorationItem.background(
+                                    elementKind: "background-element-kind")
+                section.decorationItems = [sectionBackground]
                 return section
                 
             } else {
@@ -137,6 +140,8 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
                 
             }
         }
+        layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
+            return layout
     }
 }
 
