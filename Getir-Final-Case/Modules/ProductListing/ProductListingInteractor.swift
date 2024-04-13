@@ -30,7 +30,7 @@ extension ProductListingInteractor: ProductListingInteractorProtocol {
                     let decoder = JSONDecoder()
                     let decodedData = try decoder.decode([ProductAPIResponse].self, from: data)
                     guard let validResponse = decodedData.first else { return }
-                    self.output?.fetchProductsOutput(result: validResponse.products)
+                    self.output?.fetchProductsOutput(result: validResponse.products ?? [Product()])
                 } catch {
                     print(error)
                 }

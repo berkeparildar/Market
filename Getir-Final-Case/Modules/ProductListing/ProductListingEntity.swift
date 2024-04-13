@@ -8,19 +8,20 @@
 import Foundation
 
 struct ProductAPIResponse: Decodable {
-    var id: String
-    var name: String
-    var productCount: Int
-    var products: [Product]
+    var id: String?
+    var name: String?
+    var productCount: Int?
+    var products: [Product]?
 }
 
 struct Product: Decodable {
-    var id: String
-    var name: String
+    var id: String?
+    var name: String?
     var attribute: String?
     var shortDescription: String?
-    var thumbnailURL: URL
-    var imageURL: URL
-    var price: Double
-    var priceText: String
+    var thumbnailURL: URL?
+    var imageURL: URL?
+    var price: Double?
+    var priceText: String?
+    var isExpanded: Bool? = false
 }

@@ -121,7 +121,7 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: paddingInsets, leading: paddingInsets, bottom: 16, trailing: paddingInsets)
                 let sectionBackground = NSCollectionLayoutDecorationItem.background(
-                                    elementKind: "background-element-kind")
+                    elementKind: "background-element-kind")
                 section.decorationItems = [sectionBackground]
                 return section
                 
@@ -141,7 +141,7 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
             }
         }
         layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
-            return layout
+        return layout
     }
 }
 
@@ -160,6 +160,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "verticalProductCell", for: indexPath) as! ProductViewCell
         cell.configure(model: presenter.product(indexPath.item))
+        cell.delegate = presenter
         return cell
     }
 }

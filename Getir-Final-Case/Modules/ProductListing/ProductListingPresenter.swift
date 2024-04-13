@@ -48,6 +48,12 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
     func product(_ index: Int) -> Product? {
         return products[safe: index]
     }
+
+    func productIndex(id: String) -> Int? {
+        return products.firstIndex {
+            $0.id == id
+        }
+    }
     
     func didSelectItemAt(index: Int) {
         print(products[index].name)
@@ -72,5 +78,18 @@ extension ProductListingPresenter: ProductListingInteractorOutputProtocol {
         view.hideLoadingView()
         self.products = result
         view.reloadData()
+    }
+}
+
+extension ProductListingPresenter: ProductCellDelegate {
+    func didTapAddButton(forProduct product: Product) {
+        if let index = products.firstIndex(where: { $0.id == product.id }) {
+            if products[index].isExpanded == nil {
+                products[index].isExpanded = true
+            }
+            else {
+                products[index].isExpanded?.toggle()
+            }
+        }
     }
 }
