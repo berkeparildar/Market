@@ -84,11 +84,11 @@ extension ProductListingPresenter: ProductListingInteractorOutputProtocol {
 extension ProductListingPresenter: ProductCellDelegate {
     func didTapAddButton(forProduct product: Product) {
         if let index = products.firstIndex(where: { $0.id == product.id }) {
-            if products[index].isExpanded == nil {
-                products[index].isExpanded = true
+            if products[index].isInCart == nil {
+                products[index].isInCart = true
             }
             else {
-                products[index].isExpanded?.toggle()
+                products[index].isInCart?.toggle()
             }
         }
     }

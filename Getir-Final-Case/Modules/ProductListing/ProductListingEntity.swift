@@ -23,5 +23,6 @@ struct Product: Decodable {
     var imageURL: URL?
     var price: Double?
     var priceText: String?
-    var isExpanded: Bool? = false
+    var isInCart: Bool? = false
+    var cartCount: Int?
 }

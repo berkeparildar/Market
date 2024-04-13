@@ -119,6 +119,8 @@ class ProductViewCell: UICollectionViewCell {
     }
     
     func setupViews() {
+        layer.borderWidth = 1
+        layer.borderColor = UIColor.red.cgColor
         addSection.addSubview(deleteButton)
         addSection.addSubview(quantityLabel)
         addSection.addSubview(addButton)
@@ -192,7 +194,7 @@ class ProductViewCell: UICollectionViewCell {
         priceLabel.text = product.priceText ?? "Price"
         setImage(from: product.thumbnailURL!)
         self.product = product
-        self.isExpanded = product.isExpanded ?? false
+        self.isExpanded = product.isInCart ?? false
         updateAddSection(isExpanded: self.isExpanded)
     }
     
