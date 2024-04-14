@@ -5,10 +5,11 @@
 //  Created by Berke Parıldar on 9.04.2024.
 //
 
-import Foundation
+import UIKit
 
 enum ProductListingRoutes {
-    case detail, cart
+    case detail(product: Product),
+         cart
 }
 
 protocol ProductListingRouterProtocol: AnyObject {
@@ -36,7 +37,15 @@ final class ProductListingRouter {
 
 extension ProductListingRouter: ProductListingRouterProtocol {
     func navigate(_ route: ProductListingRoutes) {
-        
+        switch route {
+        case .detail(product: let product):
+            guard let window = viewController?.view.window else { return }
+            let productDetailVC = ProductDetailRouter.createModule()
+            let navigationController = UINavigationController(rootViewController: productDetailVC)
+            window.rootViewController = navigationController
+        case .cart:
+            break
+        }
     }
 }
 

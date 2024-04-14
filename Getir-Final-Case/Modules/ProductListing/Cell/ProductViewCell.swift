@@ -9,12 +9,17 @@ import UIKit
 
 protocol ProductCellDelegate: AnyObject {
     func didTapAddButton(forProduct product: Product)
+    func didTapRemoveButton(forProduct product: Product)
 }
 
 class ProductViewCell: UICollectionViewCell {
     
     weak var delegate: ProductCellDelegate?
     var product: Product?
+    var productCount: Int = 0
+    
+    let minusImage = UIImage(systemName: "minus")
+    let trashImage = UIImage(systemName: "trash")
     
     var addSectionHeightAnchor: NSLayoutConstraint!
     var addSectionShadowHeightAnchor: NSLayoutConstraint!
@@ -88,7 +93,6 @@ class ProductViewCell: UICollectionViewCell {
         let button = UIButton(type: .system)
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 12, weight: .bold, scale: .large)
         button.setPreferredSymbolConfiguration(largeConfig, forImageIn: .normal)
-        button.setImage(UIImage(systemName: "minus"), for: .normal)
         button.tintColor = .getirPurple
         button.backgroundColor = .white
         button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
@@ -103,7 +107,7 @@ class ProductViewCell: UICollectionViewCell {
         label.backgroundColor = .getirPurple
         label.textColor = .white
         label.textAlignment = .center
-        label.text = "1"
+        label.text = String(productCount)
         label.isHidden = false
         return label
     }()
@@ -119,8 +123,6 @@ class ProductViewCell: UICollectionViewCell {
     }
     
     func setupViews() {
-        layer.borderWidth = 1
-        layer.borderColor = UIColor.red.cgColor
         addSection.addSubview(deleteButton)
         addSection.addSubview(quantityLabel)
         addSection.addSubview(addButton)
@@ -194,7 +196,15 @@ class ProductViewCell: UICollectionViewCell {
         priceLabel.text = product.priceText ?? "Price"
         setImage(from: product.thumbnailURL!)
         self.product = product
-        self.isExpanded = product.isInCart ?? false
+        self.productCount = product.cartStatus?.count ?? 0
+        self.isExpanded = product.cartStatus?.isInCart ?? false
+        self.quantityLabel.text = "\(self.productCount)"
+        if self.productCount > 1 {
+            self.deleteButton.setImage(minusImage, for: .normal)
+        }
+        else {
+            self.deleteButton.setImage(trashImage, for: .normal)
+        }
         updateAddSection(isExpanded: self.isExpanded)
     }
     
@@ -208,20 +218,19 @@ class ProductViewCell: UICollectionViewCell {
     }
     
     @objc func addButtonTapped() {
+        print("Add button tapped.")
         if let product = product {
             delegate?.didTapAddButton(forProduct: product)
-            self.isExpanded.toggle()
+            self.isExpanded = true
+            self.productCount += 1
+            if self.productCount > 1 {
+                self.deleteButton.setImage(minusImage, for: .normal)
+            }
         }
-        if (self.isExpanded) {
-            addSectionHeightAnchor.constant = 90
-            addSectionShadowHeightAnchor.constant = 90
-        }
-        else {
-            addSectionHeightAnchor.constant = 30
-            addSectionShadowHeightAnchor.constant = 30
-        }
-        
-        
+        print("Current count: \(self.productCount)")
+        addSectionHeightAnchor.constant = 90
+        addSectionShadowHeightAnchor.constant = 90
+        self.quantityLabel.text = "\(self.productCount)"
         UIView.animate(withDuration: 0.3, animations: {
             self.layoutIfNeeded()
         }) { _ in
@@ -229,7 +238,29 @@ class ProductViewCell: UICollectionViewCell {
     }
     
     @objc func deleteButtonTapped() {
-        print("Add button was tapped!")
+        if let product = product {
+            delegate?.didTapRemoveButton(forProduct: product)
+            if self.productCount == 1 {
+                self.productCount = 0
+                self.isExpanded = false
+                addSectionHeightAnchor.constant = 30
+                addSectionShadowHeightAnchor.constant = 30
+            }
+            else {
+                self.productCount -= 1
+                if self.productCount == 1 {
+                    self.deleteButton.setImage(self.trashImage, for: .normal)
+                }
+            }
+            self.quantityLabel.text = "\(self.productCount)"
+        }
+        
+        
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.layoutIfNeeded()
+        }) { _ in
+        }
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {

@@ -56,7 +56,8 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
     }
     
     func didSelectItemAt(index: Int) {
-        print(products[index].name)
+        print("Tapped product")
+        //router.navigate(.detail(product: products[index]))
     }
     
     func tappedCart() {
@@ -82,14 +83,25 @@ extension ProductListingPresenter: ProductListingInteractorOutputProtocol {
 }
 
 extension ProductListingPresenter: ProductCellDelegate {
+
+    
     func didTapAddButton(forProduct product: Product) {
         if let index = products.firstIndex(where: { $0.id == product.id }) {
-            if products[index].isInCart == nil {
-                products[index].isInCart = true
+            if products[index].cartStatus?.isInCart == false {
+                products[index].cartStatus?.isInCart = true
             }
-            else {
-                products[index].isInCart?.toggle()
+            products[index].cartStatus?.count! += 1
+            interactor.updateCartRepository(with: products[index].id ?? "", add: true)
+        }
+    }
+    
+    func didTapRemoveButton(forProduct product: Product) {
+        if let index = products.firstIndex(where: { $0.id == product.id }) {
+            if products[index].cartStatus?.count == 1 {
+                products[index].cartStatus?.isInCart = false
             }
+            products[index].cartStatus?.count! -= 1
+            interactor.updateCartRepository(with: products[index].id ?? "", add: false)
         }
     }
 }
