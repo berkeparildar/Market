@@ -47,7 +47,8 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
         collectionView.delegate = self
         collectionView.backgroundColor = .getirLightGray
         self.baseView.addSubview(collectionView)
-        collectionView.register(ProductViewCell.self, forCellWithReuseIdentifier: "verticalProductCell")
+        //collectionView.register(ProductViewCell.self, forCellWithReuseIdentifier: "verticalProductCell")
+        collectionView.register(ProductCellView.self, forCellWithReuseIdentifier: "productCell")
         collectionView.register(SectionBackground.superclass(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "CustomHeaderView")
     }
     
@@ -154,9 +155,10 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
 
 extension ProductListingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if presenter.numberOfItemsVertical() == 0 {
+        if section == 0 {
+            return presenter.numberOfSuggestedProducts()
         }
-        return presenter.numberOfItemsVertical()
+        return presenter.numberOfProducts()
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -164,10 +166,22 @@ extension ProductListingViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "verticalProductCell", for: indexPath) as! ProductViewCell
-        cell.configure(model: presenter.product(indexPath.item))
-        cell.delegate = presenter
-        return cell
+        if indexPath.section == 0 {
+            let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: "productCell", for: indexPath) as! ProductCellView
+            let cellInteractor = ProductCellInteractor()
+            let cellPresenter = ProductCellPresenter(interactor: cellInteractor, view: cellView, product: presenter.suggestedProduct(indexPath.row))
+            cellView.presenter = cellPresenter
+            cellInteractor.output = cellPresenter
+            cellView.configureWithPresenter()
+            return cellView
+        }
+        let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: "productCell", for: indexPath) as! ProductCellView
+        let cellInteractor = ProductCellInteractor()
+        let cellPresenter = ProductCellPresenter(interactor: cellInteractor, view: cellView, product: presenter.product(indexPath.item))
+        cellView.presenter = cellPresenter
+        cellInteractor.output = cellPresenter
+        cellView.configureWithPresenter()
+        return cellView
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {

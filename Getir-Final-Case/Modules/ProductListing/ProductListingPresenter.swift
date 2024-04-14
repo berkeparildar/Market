@@ -9,8 +9,10 @@ import Foundation
 
 protocol ProductListingPresenterProtocol: AnyObject {
     func viewDidLoad()
-    func numberOfItemsVertical() -> Int
-    func product(_ index: Int) -> Product?
+    func numberOfProducts() -> Int
+    func numberOfSuggestedProducts() -> Int
+    func product(_ index: Int) -> Product
+    func suggestedProduct(_ index: Int) -> Product
     func didSelectItemAt(index: Int)
     func tappedCart()
     func tappedProduct(_ index: Int)
@@ -23,6 +25,7 @@ final class ProductListingPresenter {
     let interactor: ProductListingInteractorProtocol!
     
     private var products: [Product] = []
+    private var suggestedProducts: [Product] = []
     
     init(view: ProductListingViewControllerProtocol!, router: ProductListingRouterProtocol!, interactor: ProductListingInteractorProtocol!) {
         self.view = view
@@ -32,7 +35,7 @@ final class ProductListingPresenter {
 }
 
 extension ProductListingPresenter: ProductListingPresenterProtocol {
-    
+  
     func viewDidLoad() {
         fetchProducts()
         view.setupView()
@@ -40,13 +43,13 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
         view.setupNavigationBar()
         view.setupVerticalCollectionView()
     }
-    
-    func numberOfItemsVertical() -> Int {
-        return products.count
+        
+    func product(_ index: Int) -> Product {
+        return products[safe: index]!
     }
     
-    func product(_ index: Int) -> Product? {
-        return products[safe: index]
+    func suggestedProduct(_ index: Int) -> Product {
+        return suggestedProducts[safe: index]!
     }
 
     func productIndex(id: String) -> Int? {
@@ -60,6 +63,14 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
         //router.navigate(.detail(product: products[index]))
     }
     
+    func numberOfProducts() -> Int {
+        return products.count
+    }
+    
+    func numberOfSuggestedProducts() -> Int {
+        return suggestedProducts.count
+    }
+    
     func tappedCart() {
         router.navigate(.cart)
     }
@@ -71,37 +82,19 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
     private func fetchProducts() {
         view.showLoadingView()
         interactor.fetchProducts()
+        interactor.fetchSuggestedProducts()
     }
 }
 
 extension ProductListingPresenter: ProductListingInteractorOutputProtocol {
+    func fetchSuggestedProductsOutput(result: [Product]) {
+        self.suggestedProducts = result
+        view.reloadData()
+    }
+    
     func fetchProductsOutput(result: [Product]) {
         view.hideLoadingView()
         self.products = result
         view.reloadData()
-    }
-}
-
-extension ProductListingPresenter: ProductCellDelegate {
-
-    
-    func didTapAddButton(forProduct product: Product) {
-        if let index = products.firstIndex(where: { $0.id == product.id }) {
-            if products[index].cartStatus?.isInCart == false {
-                products[index].cartStatus?.isInCart = true
-            }
-            products[index].cartStatus?.count! += 1
-            interactor.updateCartRepository(with: products[index].id ?? "", add: true)
-        }
-    }
-    
-    func didTapRemoveButton(forProduct product: Product) {
-        if let index = products.firstIndex(where: { $0.id == product.id }) {
-            if products[index].cartStatus?.count == 1 {
-                products[index].cartStatus?.isInCart = false
-            }
-            products[index].cartStatus?.count! -= 1
-            interactor.updateCartRepository(with: products[index].id ?? "", add: false)
-        }
     }
 }

@@ -83,6 +83,7 @@ class CartRepository: CartRepositoryProtocol {
                         result.setValue(count, forKey: "count")
                     }
                     else {
+                        print("called delete")
                         context.delete(result)
                     }
                 }

@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ProductDetailInteractorProtocol {
-    func fetchProductStatus()
+    func updateCartRepository(with id: String, add: Bool)
 }
 
 protocol ProductDetailInteractorOutputProtocol {
@@ -20,7 +20,9 @@ final class ProductDetailInteractor {
 }
 
 extension ProductDetailInteractor: ProductDetailInteractorProtocol {
-    func fetchProductStatus() {
+
+    
+    func updateCartRepository(with id: String, add: Bool) {
         
     }
 }
