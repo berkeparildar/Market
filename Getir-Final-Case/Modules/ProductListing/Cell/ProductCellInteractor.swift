@@ -7,18 +7,23 @@
 
 import Foundation
 
-protocol ProductCellInteractorProtocol {
+protocol ProductCellInteractorProtocol: AnyObject {
     func tappedAddButton(product: Product)
     func tappedRemoveButton(product: Product)
     func fetchImage(url: URL)
 }
 
-protocol ProductCellInteractorOutputProtocol {
+protocol ProductCellInteractorOutputProtocol: AnyObject {
     func imageData(output: Data)
 }
 
+protocol UpdateNavigationBarProtocol: AnyObject {
+    func updateNavigationBar()
+}
+
 final class ProductCellInteractor {
-    var output: ProductCellInteractorOutputProtocol?
+    weak var output: ProductCellInteractorOutputProtocol?
+    weak var navBarNotifier: UpdateNavigationBarProtocol?
 }
 
 extension ProductCellInteractor: ProductCellInteractorProtocol {
@@ -28,18 +33,19 @@ extension ProductCellInteractor: ProductCellInteractorProtocol {
                 return
             }
             DispatchQueue.main.async {
-                print(data)
                 self.output?.imageData(output: data)
             }
         }.resume()
     }
     
     func tappedAddButton(product: Product) {
-        CartRepository().updateProduct(id: product.id!, add: true)
+        CartRepository().updateProduct(id: product.id!, price: product.price!, add: true)
+        navBarNotifier?.updateNavigationBar()
     }
     
     func tappedRemoveButton(product: Product) {
-        CartRepository().updateProduct(id: product.id!, add: false)
+        CartRepository().updateProduct(id: product.id!, price: product.price!, add: false)
+        navBarNotifier?.updateNavigationBar()
     }
 }
 

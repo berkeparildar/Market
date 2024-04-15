@@ -9,6 +9,8 @@ import UIKit
 
 protocol ProductDetailViewControllerProtocol: AnyObject {
     func setupNavigationBar()
+    func setupViews()
+    func setupConstraints()
 }
 
 final class ProductDetailViewController: UIViewController {
@@ -21,6 +23,14 @@ final class ProductDetailViewController: UIViewController {
 }
 
 extension ProductDetailViewController: ProductDetailViewControllerProtocol {
+    func setupConstraints() {
+        <#code#>
+    }
+    
+    func setupViews() {
+        <#code#>
+    }
+    
     func setupNavigationBar() {
         
     }

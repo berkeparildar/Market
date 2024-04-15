@@ -9,11 +9,10 @@ import UIKit
 
 protocol ProductListingViewControllerProtocol: AnyObject {
     func reloadData()
-    func setupView()
-    func setupVerticalCollectionView()
+    func setupViews()
+    func setupCollectionView()
     func showLoadingView()
     func hideLoadingView()
-    func setTitle(_ title: String)
     func showError(_ message: String)
     func setupNavigationBar()
 }
@@ -23,7 +22,7 @@ final class ProductListingViewController: BaseViewController {
     var presenter: ProductListingPresenter!
     var collectionView: UICollectionView!
     var baseView: UIView!
-     
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,39 +38,34 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
         }
     }
     
-    func setupVerticalCollectionView() {
+    func setupCollectionView() {
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: createLayout())
         collectionView.dataSource = self
         collectionView.layer.borderColor = UIColor.black.cgColor
         collectionView.layer.borderWidth = 1
         collectionView.delegate = self
         collectionView.backgroundColor = .getirLightGray
-        self.baseView.addSubview(collectionView)
-        //collectionView.register(ProductViewCell.self, forCellWithReuseIdentifier: "verticalProductCell")
         collectionView.register(ProductCellView.self, forCellWithReuseIdentifier: "productCell")
         collectionView.register(SectionBackground.superclass(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "CustomHeaderView")
     }
     
     func setupNavigationBar() {
+        guard let navigationBar = self.navigationController?.navigationBar else { return }
         if #available(iOS 15, *) {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground()
             appearance.backgroundColor = .getirPurple
-            appearance.buttonAppearance = UIBarButtonItemAppearance(style: .plain)
-            appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-            navigationController?.navigationBar.standardAppearance = appearance
-            navigationController?.navigationBar.scrollEdgeAppearance = appearance
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
         } else {
-            navigationController?.navigationBar.barTintColor = UIColor.getirPurple
+            navigationBar.barTintColor = UIColor.getirPurple
         }
-        let cartButton = UIBarButtonItem(image: .add, style: .plain, target: self, action: #selector(goToCartAction))
-        cartButton.tintColor = .white
-        self.navigationItem.rightBarButtonItem = cartButton
     }
     
-    func setupView() {
+    func setupViews() {
         baseView = UIView(frame: UIWindow(frame: UIScreen.main.bounds).frame)
         baseView.backgroundColor = .getirLightGray
+        baseView.addSubview(collectionView)
         self.view.addSubview(baseView)
     }
     
@@ -81,10 +75,6 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
     
     func hideLoadingView() {
         hideLoading()
-    }
-    
-    func setTitle(_ title: String) {
-        self.title = title
     }
     
     func showError(_ message: String) {
@@ -172,6 +162,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
             let cellPresenter = ProductCellPresenter(interactor: cellInteractor, view: cellView, product: presenter.suggestedProduct(indexPath.row))
             cellView.presenter = cellPresenter
             cellInteractor.output = cellPresenter
+            cellInteractor.navBarNotifier = self
             cellView.configureWithPresenter()
             return cellView
         }
@@ -180,6 +171,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
         let cellPresenter = ProductCellPresenter(interactor: cellInteractor, view: cellView, product: presenter.product(indexPath.item))
         cellView.presenter = cellPresenter
         cellInteractor.output = cellPresenter
+        cellInteractor.navBarNotifier = self
         cellView.configureWithPresenter()
         return cellView
     }
@@ -194,5 +186,13 @@ extension ProductListingViewController: UICollectionViewDataSource {
 extension ProductListingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         presenter.didSelectItemAt(index: indexPath.row)
+    }
+}
+
+extension ProductListingViewController: UpdateNavigationBarProtocol {
+    func updateNavigationBar() {
+        if let customNavController = navigationController as? CustomNavigationController {
+            customNavController.updateNavigationBar()
+        }
     }
 }

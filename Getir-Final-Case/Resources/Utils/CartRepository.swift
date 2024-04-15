@@ -11,7 +11,7 @@ import CoreData
 
 protocol CartRepositoryProtocol {
     func fetchCart() -> [CartProduct]?
-    func updateProduct(id: String, add: Bool)
+    func updateProduct(id: String, price: Double, add: Bool)
 }
 
 class CartRepository: CartRepositoryProtocol {
@@ -31,11 +31,11 @@ class CartRepository: CartRepositoryProtocol {
                     if products == nil {
                         products = [CartProduct]()
                     }
-                    print("wtf")
                     let productID = result.value(forKey: "id") as? String ?? "id"
                     let count = result.value(forKey: "count") as? Int ?? 1
-                    
-                    let product = CartProduct(id: productID, count: count, isInCart: true)
+                    let price = result.value(forKey: "price") as? Double ?? 0.0
+        
+                    let product = CartProduct(id: productID, count: count, isInCart: true, price: price)
                     
                     products.append(product)
                 }
@@ -49,7 +49,7 @@ class CartRepository: CartRepositoryProtocol {
         return [CartProduct]()
     }
     
-    func updateProduct(id: String, add: Bool) {
+    func updateProduct(id: String, price: Double, add: Bool) {
         let context = appDelegate.persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "CartItem")
         fetchRequest.predicate = NSPredicate(format: "id == %@", id)
@@ -65,6 +65,7 @@ class CartRepository: CartRepositoryProtocol {
                 else {
                     let newProduct = NSEntityDescription.insertNewObject(forEntityName: "CartItem", into: context)
                     newProduct.setValue(id, forKey: "id")
+                    newProduct.setValue(price, forKey: "price")
                     newProduct.setValue(1, forKey: "count")
                     newProduct.setValue(true, forKey: "isInCart")
                 }
@@ -83,7 +84,6 @@ class CartRepository: CartRepositoryProtocol {
                         result.setValue(count, forKey: "count")
                     }
                     else {
-                        print("called delete")
                         context.delete(result)
                     }
                 }

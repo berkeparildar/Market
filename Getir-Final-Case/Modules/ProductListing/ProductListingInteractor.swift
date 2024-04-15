@@ -11,7 +11,7 @@ import Foundation
 protocol ProductListingInteractorProtocol: AnyObject {
     func fetchProducts()
     func fetchSuggestedProducts()
-    func updateCartRepository(with id: String, add: Bool)
+    func updateCartRepository(with id: String, price: Double, add: Bool)
 }
 
 protocol ProductListingInteractorOutputProtocol: AnyObject {
@@ -95,7 +95,7 @@ extension ProductListingInteractor: ProductListingInteractorProtocol {
         }
     }
     
-    func updateCartRepository(with id: String, add: Bool) {
-        CartRepository().updateProduct(id: id, add: add)
+    func updateCartRepository(with id: String, price: Double, add: Bool) {
+        CartRepository().updateProduct(id: id, price: price, add: add)
     }
 }

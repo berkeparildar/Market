@@ -56,10 +56,12 @@ class CartProduct: Decodable {
     var id: String?
     var count: Int?
     var isInCart: Bool? = false
+    var price: Double?
     
-    init(id: String? = nil, count: Int? = nil, isInCart: Bool? = nil) {
+    init(id: String? = nil, count: Int? = nil, isInCart: Bool? = nil, price: Double? = nil) {
         self.id = id
         self.count = count
         self.isInCart = isInCart
+        self.price = price
     }
 }

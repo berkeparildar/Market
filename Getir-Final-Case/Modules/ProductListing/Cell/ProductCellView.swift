@@ -142,7 +142,6 @@ final class ProductCellView: UICollectionViewCell {
 extension ProductCellView: ProductCellViewProtocol {
     
     func setProductImage() {
-        print(presenter.getImageData())
         self.productImage.image = UIImage(data: presenter.getImageData())
     }
     
