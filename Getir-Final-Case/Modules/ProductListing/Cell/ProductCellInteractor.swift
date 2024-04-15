@@ -39,12 +39,12 @@ extension ProductCellInteractor: ProductCellInteractorProtocol {
     }
     
     func tappedAddButton(product: Product) {
-        CartRepository().updateProduct(id: product.id!, price: product.price!, add: true)
+        CartRepository.shared.updateProduct(id: product.id!, price: product.price!, add: true)
         navBarNotifier?.updateNavigationBar()
     }
     
     func tappedRemoveButton(product: Product) {
-        CartRepository().updateProduct(id: product.id!, price: product.price!, add: false)
+        CartRepository.shared.updateProduct(id: product.id!, price: product.price!, add: false)
         navBarNotifier?.updateNavigationBar()
     }
 }

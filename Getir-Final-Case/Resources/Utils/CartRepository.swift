@@ -16,8 +16,11 @@ protocol CartRepositoryProtocol {
 
 class CartRepository: CartRepositoryProtocol {
     
-    
     private let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
+    static let shared = CartRepository()
+    
+    private init() {}
     
     func fetchCart() -> [CartProduct]? {
         let context = appDelegate.persistentContainer.viewContext
@@ -34,7 +37,7 @@ class CartRepository: CartRepositoryProtocol {
                     let productID = result.value(forKey: "id") as? String ?? "id"
                     let count = result.value(forKey: "count") as? Int ?? 1
                     let price = result.value(forKey: "price") as? Double ?? 0.0
-        
+                    
                     let product = CartProduct(id: productID, count: count, isInCart: true, price: price)
                     
                     products.append(product)

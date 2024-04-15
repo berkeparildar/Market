@@ -40,9 +40,8 @@ extension ProductListingRouter: ProductListingRouterProtocol {
         switch route {
         case .detail(product: let product):
             guard let window = viewController?.view.window else { return }
-            let productDetailVC = ProductDetailRouter.createModule()
-            let navigationController = UINavigationController(rootViewController: productDetailVC)
-            window.rootViewController = navigationController
+            let productDetailVC = ProductDetailRouter.createModule(with: product)
+            viewController?.navigationController?.pushViewController(productDetailVC, animated: true)
         case .cart:
             break
         }

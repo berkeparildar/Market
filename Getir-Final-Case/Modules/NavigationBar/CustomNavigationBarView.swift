@@ -12,13 +12,15 @@ class CustomNavigationBarView: UINavigationBar {
     var imageBackgroundWidthAnchor: NSLayoutConstraint!
     var imageBackgroundTrailingAnchor: NSLayoutConstraint!
     
+    var updatedPrice: Double = 0.0
+        
     lazy var navigationTitle: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "OpenSans-Bold", size: 14)
         label.backgroundColor = .getirPurple
         label.textColor = .white
         label.textAlignment = .center
-        label.text = "Urunler"
+        label.text = "Ürünler"
         return label
     }()
     
@@ -59,6 +61,8 @@ class CustomNavigationBarView: UINavigationBar {
         setupAppearance()
         setupViews()
         setupConstraints()
+        updatePrice()
+        self.priceLabel.text = String(format: "₺%.2f", self.updatedPrice)
     }
     
     private func setupViews() {
@@ -118,23 +122,28 @@ class CustomNavigationBarView: UINavigationBar {
     }
     
     func updateCartButtonAppearance() {
-        guard let currentItems = CartRepository().fetchCart() else { return }
+        updatePrice()
+        cartButtonAnimationExpand()
+    }
+    
+    func updatePrice() {
+        guard let currentItems = CartRepository.shared.fetchCart() else { return }
         var totalPrice = 0.0
         currentItems.forEach {
             if let price = $0.price, let count = $0.count {
                 totalPrice += price * Double(count)
             }
         }
-        cartButtonAnimationExpand(updatedPrice: totalPrice)
+        self.updatedPrice = totalPrice
     }
     
-    func cartButtonAnimationExpand(updatedPrice: Double) {
+    func cartButtonAnimationExpand() {
         imageBackgroundWidthAnchor.isActive = false
         imageBackgroundTrailingAnchor.isActive = true
         UIView.animate(withDuration: 0.3) {
             self.layoutIfNeeded()
         } completion: { _ in
-            self.priceLabel.text = String(format: "₺%.2f", updatedPrice)
+            self.priceLabel.text = String(format: "₺%.2f", self.updatedPrice)
             self.cartButtonAnimationContract()
         }
     }

@@ -26,7 +26,6 @@ final class ProductListingInteractor {
 extension ProductListingInteractor: ProductListingInteractorProtocol {
     
     func fetchSuggestedProducts() {
-        let cartRepository = CartRepository()
         NetworkManager.shared.provider.request(.getSuggestedProducts) { result in
             switch result {
             case let .success(moyaResponse):
@@ -36,7 +35,7 @@ extension ProductListingInteractor: ProductListingInteractorProtocol {
                     let decoder = JSONDecoder()
                     let decodedData = try decoder.decode([ProductAPIResponse].self, from: data)
                     guard let validResponse = decodedData.first else { return }
-                    guard let cartItems = cartRepository.fetchCart() else { return }
+                    guard let cartItems = CartRepository.shared.fetchCart() else { return }
                     guard let products = validResponse.products else { return }
                     for product in products {
                         let updatedProduct = product
@@ -61,7 +60,6 @@ extension ProductListingInteractor: ProductListingInteractorProtocol {
     }
     
     func fetchProducts() {
-        let cartRepository = CartRepository()
         NetworkManager.shared.provider.request(.getProducts) { result in
             switch result {
             case let .success(moyaResponse):
@@ -71,7 +69,7 @@ extension ProductListingInteractor: ProductListingInteractorProtocol {
                     let decoder = JSONDecoder()
                     let decodedData = try decoder.decode([SuggestedProductAPIResponse].self, from: data)
                     guard let validResponse = decodedData.first else { return }
-                    guard let cartItems = cartRepository.fetchCart() else { return }
+                    guard let cartItems = CartRepository.shared.fetchCart() else { return }
                     guard let products = validResponse.products else { return }
                     for product in products {
                         let updatedProduct = product
@@ -96,6 +94,6 @@ extension ProductListingInteractor: ProductListingInteractorProtocol {
     }
     
     func updateCartRepository(with id: String, price: Double, add: Bool) {
-        CartRepository().updateProduct(id: id, price: price, add: add)
+        CartRepository.shared.updateProduct(id: id, price: price, add: add)
     }
 }

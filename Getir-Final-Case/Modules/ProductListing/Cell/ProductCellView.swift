@@ -11,7 +11,7 @@ protocol ProductCellViewProtocol: AnyObject {
     func setupViews()
     func setupConstraints()
     func setDeleteButtonImage()
-    func setProductImage()
+    func setProductImage(imageData: Data)
     func updateQuantityLabel()
     func updateAddSection(isExpanded: Bool)
 }
@@ -141,8 +141,8 @@ final class ProductCellView: UICollectionViewCell {
 
 extension ProductCellView: ProductCellViewProtocol {
     
-    func setProductImage() {
-        self.productImage.image = UIImage(data: presenter.getImageData())
+    func setProductImage(imageData: Data) {
+        self.productImage.image = UIImage(data: imageData)
     }
     
     func setupViews() {

@@ -32,12 +32,10 @@
 		628181BF2BCC9FFB002DC3DE /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181B32BCC9FFB002DC3DE /* OpenSans-Bold.ttf */; };
 		62AA580D2BCD80DE0022DD59 /* CustomNavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AA580C2BCD80DE0022DD59 /* CustomNavigationBarView.swift */; };
 		62AA580F2BCD811A0022DD59 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AA580E2BCD811A0022DD59 /* CustomNavigationController.swift */; };
+		62AA58112BCDD7FF0022DD59 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 62AA58102BCDD7FF0022DD59 /* Main.storyboard */; };
 		62BD93272BC47E78007E122C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD93262BC47E78007E122C /* AppDelegate.swift */; };
 		62BD93292BC47E78007E122C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD93282BC47E78007E122C /* SceneDelegate.swift */; };
-		62BD932B2BC47E78007E122C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD932A2BC47E78007E122C /* ViewController.swift */; };
-		62BD932E2BC47E78007E122C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 62BD932C2BC47E78007E122C /* Main.storyboard */; };
 		62BD93302BC47E79007E122C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62BD932F2BC47E79007E122C /* Assets.xcassets */; };
-		62BD93332BC47E79007E122C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 62BD93312BC47E79007E122C /* LaunchScreen.storyboard */; };
 		62BD933E2BC47E79007E122C /* Getir_Final_CaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD933D2BC47E79007E122C /* Getir_Final_CaseTests.swift */; };
 		62BD93482BC47E79007E122C /* Getir_Final_CaseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD93472BC47E79007E122C /* Getir_Final_CaseUITests.swift */; };
 		62BD934A2BC47E79007E122C /* Getir_Final_CaseUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD93492BC47E79007E122C /* Getir_Final_CaseUITestsLaunchTests.swift */; };
@@ -102,13 +100,11 @@
 		628181B32BCC9FFB002DC3DE /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		62AA580C2BCD80DE0022DD59 /* CustomNavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBarView.swift; sourceTree = "<group>"; };
 		62AA580E2BCD811A0022DD59 /* CustomNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
+		62AA58102BCDD7FF0022DD59 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		62BD93232BC47E78007E122C /* Getir-Final-Case.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Getir-Final-Case.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		62BD93262BC47E78007E122C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		62BD93282BC47E78007E122C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		62BD932A2BC47E78007E122C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		62BD932D2BC47E78007E122C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		62BD932F2BC47E79007E122C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		62BD93322BC47E79007E122C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		62BD93342BC47E79007E122C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		62BD93392BC47E79007E122C /* Getir-Final-CaseTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Getir-Final-CaseTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		62BD933D2BC47E79007E122C /* Getir_Final_CaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Getir_Final_CaseTests.swift; sourceTree = "<group>"; };
@@ -222,10 +218,6 @@
 				62BD935C2BC47FDE007E122C /* Resources */,
 				62BD93582BC47F8C007E122C /* Modules */,
 				62BD93562BC47F59007E122C /* App */,
-				62BD932A2BC47E78007E122C /* ViewController.swift */,
-				62BD932C2BC47E78007E122C /* Main.storyboard */,
-				62BD93312BC47E79007E122C /* LaunchScreen.storyboard */,
-				62BD93342BC47E79007E122C /* Info.plist */,
 			);
 			path = "Getir-Final-Case";
 			sourceTree = "<group>";
@@ -250,6 +242,8 @@
 		62BD93562BC47F59007E122C /* App */ = {
 			isa = PBXGroup;
 			children = (
+				62AA58102BCDD7FF0022DD59 /* Main.storyboard */,
+				62BD93342BC47E79007E122C /* Info.plist */,
 				62BD93262BC47E78007E122C /* AppDelegate.swift */,
 				62BD93282BC47E78007E122C /* SceneDelegate.swift */,
 				62BD932F2BC47E79007E122C /* Assets.xcassets */,
@@ -465,19 +459,18 @@
 			files = (
 				628181BC2BCC9FFB002DC3DE /* OpenSans-SemiBoldItalic.ttf in Resources */,
 				628181BE2BCC9FFB002DC3DE /* OpenSans-ExtraBoldItalic.ttf in Resources */,
-				62BD93332BC47E79007E122C /* LaunchScreen.storyboard in Resources */,
 				628181B92BCC9FFB002DC3DE /* OpenSans-SemiBold.ttf in Resources */,
 				62BD93302BC47E79007E122C /* Assets.xcassets in Resources */,
 				628181BD2BCC9FFB002DC3DE /* OpenSans-Italic.ttf in Resources */,
 				628181B42BCC9FFB002DC3DE /* OpenSans-Light.ttf in Resources */,
 				628181BA2BCC9FFB002DC3DE /* OpenSans-BoldItalic.ttf in Resources */,
+				62AA58112BCDD7FF0022DD59 /* Main.storyboard in Resources */,
 				628181BF2BCC9FFB002DC3DE /* OpenSans-Bold.ttf in Resources */,
 				628181BB2BCC9FFB002DC3DE /* OpenSans-LightItalic.ttf in Resources */,
 				628181B82BCC9FFB002DC3DE /* OpenSans-ExtraBold.ttf in Resources */,
 				628181B72BCC9FFB002DC3DE /* OpenSans-Regular.ttf in Resources */,
 				628181B52BCC9FFB002DC3DE /* OpenSans-Medium.ttf in Resources */,
 				628181B62BCC9FFB002DC3DE /* OpenSans-MediumItalic.ttf in Resources */,
-				62BD932E2BC47E78007E122C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,7 +495,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				62BD932B2BC47E78007E122C /* ViewController.swift in Sources */,
 				622999E72BC5BA22004941FF /* ProductListingRouter.swift in Sources */,
 				624134122BCC0E58002AD5C7 /* Cart.xcdatamodeld in Sources */,
 				6248B6272BC5F4DD003E695B /* Collection.swift in Sources */,
@@ -564,25 +556,6 @@
 			targetProxy = 62BD93442BC47E79007E122C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		62BD932C2BC47E78007E122C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				62BD932D2BC47E78007E122C /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		62BD93312BC47E79007E122C /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				62BD93322BC47E79007E122C /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		62BD934B2BC47E79007E122C /* Debug */ = {
@@ -713,7 +686,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8X8P7X3D8N;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Getir-Final-Case/Info.plist";
+				INFOPLIST_FILE = "Getir-Final-Case/App/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -746,7 +719,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8X8P7X3D8N;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Getir-Final-Case/Info.plist";
+				INFOPLIST_FILE = "Getir-Final-Case/App/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

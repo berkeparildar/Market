@@ -17,7 +17,6 @@ protocol ProductCellPresenterProtocol {
 
 final class ProductCellPresenter {
     var product: Product
-    var imageData: Data?
     
     unowned var view: ProductCellViewProtocol!
     let interactor: ProductCellInteractorProtocol!
@@ -75,17 +74,12 @@ extension ProductCellPresenter: ProductCellPresenterProtocol {
         view.updateQuantityLabel()
         interactor.tappedRemoveButton(product: product)
     }
-    
-    func getImageData() -> Data {
-        return imageData ?? Data()
-    }
 }
 
 extension ProductCellPresenter: ProductCellInteractorOutputProtocol {
     func imageData(output: Data) {
-        self.imageData = output
         DispatchQueue.main.async {
-            self.view.setProductImage()
+            self.view.setProductImage(imageData: output)
         }
     }
 }

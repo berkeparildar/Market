@@ -22,6 +22,16 @@ class CustomNavigationController: UINavigationController {
         navigationBar.addSubview(customNavigationBarView!)
         customNavigationBarView!.translatesAutoresizingMaskIntoConstraints = false
         
+        if #available(iOS 15, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .getirPurple
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+        } else {
+            navigationBar.barTintColor = UIColor.getirPurple
+        }
+        
         NSLayoutConstraint.activate([
             customNavigationBarView!.leadingAnchor.constraint(equalTo: navigationBar.leadingAnchor),
             customNavigationBarView!.trailingAnchor.constraint(equalTo: navigationBar.trailingAnchor),
@@ -34,4 +44,7 @@ class CustomNavigationController: UINavigationController {
         customNavigationBarView?.updateCartButtonAppearance()
     }
     
+    func setTitle(title: String) {
+        customNavigationBarView?.navigationTitle.text = title
+    }
 }

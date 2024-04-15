@@ -50,15 +50,9 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
     }
     
     func setupNavigationBar() {
-        guard let navigationBar = self.navigationController?.navigationBar else { return }
-        if #available(iOS 15, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = .getirPurple
-            navigationBar.standardAppearance = appearance
-            navigationBar.scrollEdgeAppearance = appearance
-        } else {
-            navigationBar.barTintColor = UIColor.getirPurple
+        if let customNavController = navigationController as? CustomNavigationController {
+            customNavController.setTitle(title: "Ürünler")
+            customNavController.updateNavigationBar()
         }
     }
     
@@ -185,7 +179,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
 
 extension ProductListingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter.didSelectItemAt(index: indexPath.row)
+        presenter.didSelectItemAt(section: indexPath.section, index: indexPath.item)
     }
 }
 
