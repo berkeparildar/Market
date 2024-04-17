@@ -10,8 +10,7 @@ import Foundation
 
 protocol ProductListingInteractorProtocol: AnyObject {
     func fetchProducts()
-    func fetchSuggestedProducts()
-    func updateCartRepository(with id: String, price: Double, add: Bool)
+    func updateCartRepository(product: Product, quantityIncreased: Bool)
 }
 
 protocol ProductListingInteractorOutputProtocol: AnyObject {
@@ -25,75 +24,33 @@ final class ProductListingInteractor {
 
 extension ProductListingInteractor: ProductListingInteractorProtocol {
     
-    func fetchSuggestedProducts() {
-        NetworkManager.shared.provider.request(.getSuggestedProducts) { result in
-            switch result {
-            case let .success(moyaResponse):
-                do {
-                    var updatedProducts  = [Product]()
-                    let data = moyaResponse.data
-                    let decoder = JSONDecoder()
-                    let decodedData = try decoder.decode([ProductAPIResponse].self, from: data)
-                    guard let validResponse = decodedData.first else { return }
-                    guard let cartItems = CartRepository.shared.fetchCart() else { return }
-                    guard let products = validResponse.products else { return }
-                    for product in products {
-                        let updatedProduct = product
-                        updatedProduct.cartStatus = CartProduct(id: updatedProduct.id, count: 0, isInCart: false)
-                        if !cartItems.isEmpty {
-                            for cartItem in cartItems {
-                                if updatedProduct.id == cartItem.id {
-                                    updatedProduct.cartStatus = cartItem
-                                }
-                            }
-                        }
-                        updatedProducts.append(updatedProduct)
-                    }
-                    self.output?.fetchSuggestedProductsOutput(result: updatedProducts)
-                } catch {
-                    print(error)
-                }
-            case let .failure(error):
-                print(error)
-            }
-        }
-    }
-    
     func fetchProducts() {
-        NetworkManager.shared.provider.request(.getProducts) { result in
+        NetworkManager.shared.fetchProducts(fetchCommand: .getProducts) { result in
             switch result {
-            case let .success(moyaResponse):
-                do {
-                    var updatedProducts  = [Product]()
-                    let data = moyaResponse.data
-                    let decoder = JSONDecoder()
-                    let decodedData = try decoder.decode([SuggestedProductAPIResponse].self, from: data)
-                    guard let validResponse = decodedData.first else { return }
-                    guard let cartItems = CartRepository.shared.fetchCart() else { return }
-                    guard let products = validResponse.products else { return }
-                    for product in products {
-                        let updatedProduct = product
-                        updatedProduct.cartStatus = CartProduct(id: updatedProduct.id, count: 0, isInCart: false)
-                        if !cartItems.isEmpty {
-                            for cartItem in cartItems {
-                                if updatedProduct.id == cartItem.id {
-                                    updatedProduct.cartStatus = cartItem
-                                }
-                            }
-                        }
-                        updatedProducts.append(updatedProduct)
-                    }
-                    self.output?.fetchProductsOutput(result: updatedProducts)
-                } catch {
-                    print(error)
-                }
-            case let .failure(error):
-                print(error)
+            case .success(let APIproducts):
+                let generatedProducts = ProductBuilder.shared.createProductModels(apiProducts: APIproducts)
+                let coreDataProducts = CartRepository.shared.fetchCart()
+                let updatedProducts = ProductBuilder.shared.updateCartStatus(generatedProducts: generatedProducts, coreDataProducts: coreDataProducts)
+                self.output?.fetchProductsOutput(result: updatedProducts)
+            case .failure(_):
+                print("Error fetching..")
+            }
+        }
+        
+        NetworkManager.shared.fetchProducts(fetchCommand: .getSuggestedProducts) { result in
+            switch result {
+            case .success(let APIproducts):
+                let generatedProducts = ProductBuilder.shared.createProductModels(apiProducts: APIproducts)
+                let coreDataProducts = CartRepository.shared.fetchCart()
+                let updatedProducts = ProductBuilder.shared.updateCartStatus(generatedProducts: generatedProducts, coreDataProducts: coreDataProducts)
+                self.output?.fetchSuggestedProductsOutput(result: updatedProducts)
+            case .failure(_):
+                print("Error fetching..")
             }
         }
     }
     
-    func updateCartRepository(with id: String, price: Double, add: Bool) {
-        CartRepository.shared.updateProduct(id: id, price: price, add: add)
+    func updateCartRepository(product: Product, quantityIncreased: Bool) {
+        CartRepository.shared.updateProduct(product: product, quantityIncreased: quantityIncreased)
     }
 }

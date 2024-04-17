@@ -14,7 +14,7 @@ protocol ProductListingViewControllerProtocol: AnyObject {
     func showLoadingView()
     func hideLoadingView()
     func showError(_ message: String)
-    func setupNavigationBar()
+    func setTitle()
 }
 
 final class ProductListingViewController: BaseViewController {
@@ -28,9 +28,20 @@ final class ProductListingViewController: BaseViewController {
         super.viewDidLoad()
         presenter.viewDidLoad()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.viewWillAppear()
+    }
 }
 
 extension ProductListingViewController: ProductListingViewControllerProtocol {
+    
+    func setTitle() {
+        if let customNavController = navigationController as? CustomNavigationController {
+            customNavController.setTitle(title: "Ürünler")
+        }
+    }
     
     func reloadData() {
         DispatchQueue.main.async {
@@ -47,13 +58,6 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
         collectionView.backgroundColor = .getirLightGray
         collectionView.register(ProductCellView.self, forCellWithReuseIdentifier: "productCell")
         collectionView.register(SectionBackground.superclass(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "CustomHeaderView")
-    }
-    
-    func setupNavigationBar() {
-        if let customNavController = navigationController as? CustomNavigationController {
-            customNavController.setTitle(title: "Ürünler")
-            customNavController.updateNavigationBar()
-        }
     }
     
     func setupViews() {
@@ -73,10 +77,6 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
     
     func showError(_ message: String) {
         showAlert(title: "Error", message: message)
-    }
-    
-    @objc private func goToCartAction() {
-        presenter.tappedCart()
     }
     
     func createLayout() -> UICollectionViewLayout {
@@ -162,7 +162,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
         }
         let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: "productCell", for: indexPath) as! ProductCellView
         let cellInteractor = ProductCellInteractor()
-        let cellPresenter = ProductCellPresenter(interactor: cellInteractor, view: cellView, product: presenter.product(indexPath.item))
+        let cellPresenter = ProductCellPresenter(interactor: cellInteractor, view: cellView, product: presenter.product(indexPath.row))
         cellView.presenter = cellPresenter
         cellInteractor.output = cellPresenter
         cellInteractor.navBarNotifier = self
@@ -179,7 +179,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
 
 extension ProductListingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter.didSelectItemAt(section: indexPath.section, index: indexPath.item)
+        presenter.didSelectItemAt(section: indexPath.section, index: indexPath.row)
     }
 }
 

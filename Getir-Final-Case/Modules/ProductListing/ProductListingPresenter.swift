@@ -14,8 +14,6 @@ protocol ProductListingPresenterProtocol: AnyObject {
     func product(_ index: Int) -> Product
     func suggestedProduct(_ index: Int) -> Product
     func didSelectItemAt(section: Int, index: Int)
-    func tappedCart()
-    func tappedProduct(_ index: Int)
 }
 
 final class ProductListingPresenter {
@@ -39,8 +37,12 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
     func viewDidLoad() {
         fetchProducts()
         view.setupCollectionView()
-        view.setupNavigationBar()
         view.setupViews()
+    }
+    
+    func viewWillAppear() {
+        view.setTitle()
+        view.reloadData()
     }
     
     func product(_ index: Int) -> Product {
@@ -52,13 +54,10 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
     }
     
     func didSelectItemAt(section: Int, index: Int) {
-        print("In the didSelectItem call")
         if section == 0 {
-            print("In the section 0")
             router.navigate(.detail(product: suggestedProducts[index]))
         }
         else {
-            print("In the section 1")
             router.navigate(.detail(product: products[index]))
         }
     }
@@ -70,19 +69,10 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
     func numberOfSuggestedProducts() -> Int {
         return suggestedProducts.count
     }
-    
-    func tappedCart() {
-        router.navigate(.cart)
-    }
-    
-    func tappedProduct(_ index: Int) {
-        
-    }
-    
+
     private func fetchProducts() {
         view.showLoadingView()
         interactor.fetchProducts()
-        interactor.fetchSuggestedProducts()
     }
 }
 

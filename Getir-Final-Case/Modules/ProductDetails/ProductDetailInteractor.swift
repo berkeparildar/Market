@@ -19,7 +19,8 @@ protocol ProductDetailInteractorOutputProtocol {
 
 final class ProductDetailInteractor {
     var output: ProductDetailInteractorOutputProtocol?
-    var product: Product?
+    var product: Product!
+    weak var navBarNotifier: UpdateNavigationBarProtocol?
     
     init(product: Product? = nil) {
         self.product = product
@@ -29,17 +30,16 @@ final class ProductDetailInteractor {
 extension ProductDetailInteractor: ProductDetailInteractorProtocol {
     
     func getProduct() {
-        guard let product = self.product else { return }
         self.output?.product(product: product)
     }
     
     func productAddedToCart() {
-        guard let product = product, let id = product.id, let price = product.price else { return }
-        CartRepository.shared.updateProduct(id: id, price: price, add: true)
+        CartRepository.shared.updateProduct(product: self.product, quantityIncreased: true)
+        navBarNotifier?.updateNavigationBar()
     }
     
     func productRemovedFromCart() {
-        guard let product = product, let id = product.id, let price = product.price else { return }
-        CartRepository.shared.updateProduct(id: id, price: price, add: false)
+        CartRepository.shared.updateProduct(product: self.product, quantityIncreased: false)
+        navBarNotifier?.updateNavigationBar()
     }
 }

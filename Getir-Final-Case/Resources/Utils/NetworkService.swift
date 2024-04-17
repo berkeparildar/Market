@@ -26,7 +26,7 @@ extension NetworkService: TargetType {
         URL(string: "https://65c38b5339055e7482c12050.mockapi.io/api")!
     }
     
-    var path: String {  
+    var path: String {
         switch self {
         case .getProducts:
             return "/products"
@@ -54,4 +54,22 @@ extension NetworkService: TargetType {
 struct NetworkManager {
     static let shared = NetworkManager()
     let provider = MoyaProvider<NetworkService>()
+    
+    func fetchProducts(fetchCommand: NetworkService, completion: @escaping (Result<[ProductAPI], Error>) -> Void) {
+        provider.request(fetchCommand) { result in
+            switch result {
+            case .success(let moyaResponse):
+                do {
+                    let decodedData = try JSONDecoder().decode([ProductAPIResponse].self, from: moyaResponse.data)
+                    guard let products = decodedData.first?.products else { return }
+                    completion(.success(products))
+                } catch {
+                    completion(.failure(error))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 }
+

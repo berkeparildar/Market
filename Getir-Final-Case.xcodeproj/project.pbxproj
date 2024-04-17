@@ -11,10 +11,14 @@
 		622999E52BC5B9FB004941FF /* ProductListingInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622999E42BC5B9FB004941FF /* ProductListingInteractor.swift */; };
 		622999E72BC5BA22004941FF /* ProductListingRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622999E62BC5BA22004941FF /* ProductListingRouter.swift */; };
 		622999E92BC5CC73004941FF /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622999E82BC5CC73004941FF /* NetworkService.swift */; };
-		624134122BCC0E58002AD5C7 /* Cart.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 624134102BCC0E58002AD5C7 /* Cart.xcdatamodeld */; };
 		624134152BCC13A7002AD5C7 /* CartRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624134142BCC13A7002AD5C7 /* CartRepository.swift */; };
 		6248B6252BC5F2ED003E695B /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6248B6242BC5F2ED003E695B /* LoadingView.swift */; };
 		6248B6272BC5F4DD003E695B /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6248B6262BC5F4DD003E695B /* Collection.swift */; };
+		6271F0772BCF2196005CA19A /* ProductDetailEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271F0762BCF2196005CA19A /* ProductDetailEntity.swift */; };
+		6271F07C2BCF4634005CA19A /* APIEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271F07B2BCF4634005CA19A /* APIEntity.swift */; };
+		6271F07E2BCF4732005CA19A /* ProductBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271F07D2BCF4732005CA19A /* ProductBuilder.swift */; };
+		6271F0812BCF5F54005CA19A /* Cart.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6271F07F2BCF5F54005CA19A /* Cart.xcdatamodeld */; };
+		6271F0842BCFE3BA005CA19A /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6271F0832BCFE3BA005CA19A /* Kingfisher */; };
 		628181782BCC51BC002DC3DE /* ProductCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628181772BCC51BC002DC3DE /* ProductCellPresenter.swift */; };
 		6281817A2BCC5346002DC3DE /* ProductCellInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628181792BCC5346002DC3DE /* ProductCellInteractor.swift */; };
 		6281817C2BCC5A30002DC3DE /* ProductCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6281817B2BCC5A30002DC3DE /* ProductCellView.swift */; };
@@ -79,10 +83,13 @@
 		622999E42BC5B9FB004941FF /* ProductListingInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingInteractor.swift; sourceTree = "<group>"; };
 		622999E62BC5BA22004941FF /* ProductListingRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingRouter.swift; sourceTree = "<group>"; };
 		622999E82BC5CC73004941FF /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
-		624134112BCC0E58002AD5C7 /* Cart.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Cart.xcdatamodel; sourceTree = "<group>"; };
 		624134142BCC13A7002AD5C7 /* CartRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartRepository.swift; sourceTree = "<group>"; };
 		6248B6242BC5F2ED003E695B /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		6248B6262BC5F4DD003E695B /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
+		6271F0762BCF2196005CA19A /* ProductDetailEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailEntity.swift; sourceTree = "<group>"; };
+		6271F07B2BCF4634005CA19A /* APIEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIEntity.swift; sourceTree = "<group>"; };
+		6271F07D2BCF4732005CA19A /* ProductBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductBuilder.swift; sourceTree = "<group>"; };
+		6271F0802BCF5F54005CA19A /* Cart.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Cart.xcdatamodel; sourceTree = "<group>"; };
 		628181772BCC51BC002DC3DE /* ProductCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCellPresenter.swift; sourceTree = "<group>"; };
 		628181792BCC5346002DC3DE /* ProductCellInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCellInteractor.swift; sourceTree = "<group>"; };
 		6281817B2BCC5A30002DC3DE /* ProductCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCellView.swift; sourceTree = "<group>"; };
@@ -134,6 +141,7 @@
 				62CCC5B72BC60CFB00F5693F /* CombineMoya in Frameworks */,
 				62CCC5BD2BC60CFB00F5693F /* RxMoya in Frameworks */,
 				62CCC5BB2BC60CFB00F5693F /* ReactiveMoya in Frameworks */,
+				6271F0842BCFE3BA005CA19A /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,12 +250,12 @@
 		62BD93562BC47F59007E122C /* App */ = {
 			isa = PBXGroup;
 			children = (
+				6271F07F2BCF5F54005CA19A /* Cart.xcdatamodeld */,
 				62AA58102BCDD7FF0022DD59 /* Main.storyboard */,
 				62BD93342BC47E79007E122C /* Info.plist */,
 				62BD93262BC47E78007E122C /* AppDelegate.swift */,
 				62BD93282BC47E78007E122C /* SceneDelegate.swift */,
 				62BD932F2BC47E79007E122C /* Assets.xcassets */,
-				624134102BCC0E58002AD5C7 /* Cart.xcdatamodeld */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -303,6 +311,7 @@
 				62EF7FD22BCB5B93008DF702 /* ProductDetailInteractor.swift */,
 				62EF7FD42BCB5BA4008DF702 /* ProductDetailPresenter.swift */,
 				62EF7FD62BCB5BC5008DF702 /* ProductDetailRouter.swift */,
+				6271F0762BCF2196005CA19A /* ProductDetailEntity.swift */,
 			);
 			path = ProductDetails;
 			sourceTree = "<group>";
@@ -332,6 +341,7 @@
 				6248B6242BC5F2ED003E695B /* LoadingView.swift */,
 				62D767032BC72D360070A83F /* SectionBackground.swift */,
 				624134142BCC13A7002AD5C7 /* CartRepository.swift */,
+				6271F07D2BCF4732005CA19A /* ProductBuilder.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -340,6 +350,7 @@
 			isa = PBXGroup;
 			children = (
 				62BD93602BC48113007E122C /* BaseViewController.swift */,
+				6271F07B2BCF4634005CA19A /* APIEntity.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -365,6 +376,7 @@
 				62CCC5B82BC60CFB00F5693F /* Moya */,
 				62CCC5BA2BC60CFB00F5693F /* ReactiveMoya */,
 				62CCC5BC2BC60CFB00F5693F /* RxMoya */,
+				6271F0832BCFE3BA005CA19A /* Kingfisher */,
 			);
 			productName = "Getir-Final-Case";
 			productReference = 62BD93232BC47E78007E122C /* Getir-Final-Case.app */;
@@ -440,6 +452,7 @@
 			mainGroup = 62BD931A2BC47E78007E122C;
 			packageReferences = (
 				62CCC5B52BC60CDC00F5693F /* XCRemoteSwiftPackageReference "Moya" */,
+				6271F0822BCFE3BA005CA19A /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 62BD93242BC47E78007E122C /* Products */;
 			projectDirPath = "";
@@ -496,7 +509,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				622999E72BC5BA22004941FF /* ProductListingRouter.swift in Sources */,
-				624134122BCC0E58002AD5C7 /* Cart.xcdatamodeld in Sources */,
+				6271F0812BCF5F54005CA19A /* Cart.xcdatamodeld in Sources */,
+				6271F07E2BCF4732005CA19A /* ProductBuilder.swift in Sources */,
 				6248B6272BC5F4DD003E695B /* Collection.swift in Sources */,
 				622999E32BC5B92B004941FF /* ProductListingEntity.swift in Sources */,
 				62AA580D2BCD80DE0022DD59 /* CustomNavigationBarView.swift in Sources */,
@@ -520,6 +534,8 @@
 				62BD93292BC47E78007E122C /* SceneDelegate.swift in Sources */,
 				62BD93632BC48192007E122C /* SplashViewController.swift in Sources */,
 				62EF7FD52BCB5BA4008DF702 /* ProductDetailPresenter.swift in Sources */,
+				6271F0772BCF2196005CA19A /* ProductDetailEntity.swift in Sources */,
+				6271F07C2BCF4634005CA19A /* APIEntity.swift in Sources */,
 				628181782BCC51BC002DC3DE /* ProductCellPresenter.swift in Sources */,
 				62EF7FD32BCB5B93008DF702 /* ProductDetailInteractor.swift in Sources */,
 			);
@@ -861,6 +877,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		6271F0822BCFE3BA005CA19A /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.11.0;
+			};
+		};
 		62CCC5B52BC60CDC00F5693F /* XCRemoteSwiftPackageReference "Moya" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Moya/Moya";
@@ -872,6 +896,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		6271F0832BCFE3BA005CA19A /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6271F0822BCFE3BA005CA19A /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
 		62CCC5B62BC60CFB00F5693F /* CombineMoya */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 62CCC5B52BC60CDC00F5693F /* XCRemoteSwiftPackageReference "Moya" */;
@@ -895,12 +924,12 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		624134102BCC0E58002AD5C7 /* Cart.xcdatamodeld */ = {
+		6271F07F2BCF5F54005CA19A /* Cart.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				624134112BCC0E58002AD5C7 /* Cart.xcdatamodel */,
+				6271F0802BCF5F54005CA19A /* Cart.xcdatamodel */,
 			);
-			currentVersion = 624134112BCC0E58002AD5C7 /* Cart.xcdatamodel */;
+			currentVersion = 6271F0802BCF5F54005CA19A /* Cart.xcdatamodel */;
 			path = Cart.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

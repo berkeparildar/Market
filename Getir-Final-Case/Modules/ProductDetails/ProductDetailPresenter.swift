@@ -11,7 +11,7 @@ protocol ProductDetailPresenterProtocol: AnyObject {
     func viewDidLoad()
     func fetchProduct()
     func getProduct() -> Product
-    func tappedAddButton()
+    func tappedAddToCartButton()
     func countInCart() -> Int
     func tappedRemoveButton()
 }
@@ -21,7 +21,7 @@ final class ProductDetailPresenter {
     let router: ProductDetailRouterProtocol!
     let interactor: ProductDetailInteractorProtocol!
     
-    private var product: Product = Product()
+    private var product: Product!
         
     init(view: ProductDetailViewControllerProtocol!, router: ProductDetailRouterProtocol!, interactor: ProductDetailInteractorProtocol!) {
         self.view = view
@@ -33,26 +33,36 @@ final class ProductDetailPresenter {
 extension ProductDetailPresenter: ProductDetailPresenterProtocol {
     
     func viewDidLoad() {
+        interactor.getProduct()
         view.setupNavigationBar()
         view.setupViews()
         view.setupConstraints()
+        view.setProductData(self.product)
+        view.configureViewWithCartCount()
     }
     
     func getProduct() -> Product {
         return self.product
     }
     
-    func tappedAddButton() {
+    func tappedAddToCartButton() {
+        product.isInCart = true
+        product.inCartCount += 1
         interactor.productAddedToCart()
+        view.configureViewWithCartCount()
     }
     
     func countInCart() -> Int {
-        guard let cartStatus = product.cartStatus, let cartInCount = cartStatus.count else { return 0 }
-        return cartInCount
+        return product.inCartCount
     }
     
     func tappedRemoveButton() {
+        product.inCartCount -= 1
+        if product.inCartCount == 0 {
+            product.isInCart = false
+        }
         interactor.productRemovedFromCart()
+        view.configureViewWithCartCount()
     }
     
     func fetchProduct() {
@@ -61,6 +71,7 @@ extension ProductDetailPresenter: ProductDetailPresenterProtocol {
 }
 
 extension ProductDetailPresenter: ProductDetailInteractorOutputProtocol {
+ 
     func product(product: Product) {
         self.product = product
     }

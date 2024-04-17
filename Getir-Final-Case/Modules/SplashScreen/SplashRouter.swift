@@ -39,6 +39,7 @@ extension SplashRouter: SplashRouterProtocol {
             guard let window = viewController?.view.window else { return }
             let productListingVC = ProductListingRouter.createModule()
             let navigationController = CustomNavigationController(rootViewController: productListingVC)
+            navigationController.navigationItem.hidesBackButton = true
             window.rootViewController = navigationController
         }
     }

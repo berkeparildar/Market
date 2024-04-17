@@ -28,6 +28,7 @@ final class ProductDetailRouter {
         
         view.presenter = presenter
         interactor.output = presenter
+        interactor.navBarNotifier = view
         router.viewController = view
         
         return view

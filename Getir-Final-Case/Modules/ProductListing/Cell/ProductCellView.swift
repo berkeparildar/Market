@@ -6,14 +6,14 @@
 //
 
 import UIKit
+import Kingfisher
 
 protocol ProductCellViewProtocol: AnyObject {
     func setupViews()
     func setupConstraints()
     func setDeleteButtonImage()
-    func setProductImage(imageData: Data)
     func updateQuantityLabel()
-    func updateAddSection(isExpanded: Bool)
+    func updateAddSection(isExpanded: Bool, animated: Bool)
 }
 
 final class ProductCellView: UICollectionViewCell {
@@ -31,13 +31,13 @@ final class ProductCellView: UICollectionViewCell {
     
     func configureWithPresenter() {
         let product = presenter.product
-        presenter.fetchImage()
-        nameLabel.text = product.name ?? "Name"
-        attributeLabel.text = product.attribute ?? product.shortDescription ?? ""
-        priceLabel.text = product.priceText ?? "Price"
+        nameLabel.text = product.productName
+        attributeLabel.text = product.productDescription
+        priceLabel.text = product.productPriceText
+        productImage.kf.setImage(with: product.imageURL)
         updateQuantityLabel()
         setDeleteButtonImage()
-        updateAddSection(isExpanded: presenter.expanded()!)
+        updateAddSection(isExpanded: product.isInCart, animated: false)
     }
     
     required init?(coder: NSCoder) {
@@ -120,7 +120,6 @@ final class ProductCellView: UICollectionViewCell {
     
     lazy var quantityLabel: UILabel = {
         let label = UILabel()
-        label.layer.cornerRadius = 8
         label.font = UIFont.systemFont(ofSize: 14)
         label.backgroundColor = .getirPurple
         label.textColor = .white
@@ -140,10 +139,6 @@ final class ProductCellView: UICollectionViewCell {
 }
 
 extension ProductCellView: ProductCellViewProtocol {
-    
-    func setProductImage(imageData: Data) {
-        self.productImage.image = UIImage(data: imageData)
-    }
     
     func setupViews() {
         addSection.addSubview(deleteButton)
@@ -213,7 +208,7 @@ extension ProductCellView: ProductCellViewProtocol {
     }
     
     func setDeleteButtonImage() {
-        let productCount = presenter.productCount()!
+        let productCount = presenter.productCount()
         if productCount > 1 {
             self.deleteButton.setImage(UIImage(systemName: "minus"), for: .normal)
         }
@@ -226,17 +221,21 @@ extension ProductCellView: ProductCellViewProtocol {
         })
     }
     
-    func updateAddSection(isExpanded: Bool) {
+    func updateAddSection(isExpanded: Bool, animated: Bool) {
         addSectionHeightAnchor.constant = isExpanded ? 90 : 30
         addSectionShadowHeightAnchor.constant = isExpanded ? 90 : 30
-        
-        UIView.animate(withDuration: 0.3) {
+        if animated {
+            UIView.animate(withDuration: 0.3) {
+                self.layoutIfNeeded()
+            }
+        }
+        else {
             self.layoutIfNeeded()
         }
     }
     
     func updateQuantityLabel() {
-        self.quantityLabel.text = String(presenter.productCount() ?? 0)
+        self.quantityLabel.text = String(presenter.productCount())
         UIView.animate(withDuration: 0.3, animations: {
             self.layoutIfNeeded()
         }) 

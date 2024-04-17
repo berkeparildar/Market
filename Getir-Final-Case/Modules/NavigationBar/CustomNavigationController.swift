@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol UpdateNavigationBarProtocol: AnyObject {
+    func updateNavigationBar()
+}
+
 class CustomNavigationController: UINavigationController {
     
     var customNavigationBarView: CustomNavigationBarView?
@@ -18,6 +22,7 @@ class CustomNavigationController: UINavigationController {
     
     private func setupCustomNavigationBar() {
         customNavigationBarView = CustomNavigationBarView()
+        customNavigationBarView?.controller = self
         let navigationBar = self.navigationBar
         navigationBar.addSubview(customNavigationBarView!)
         customNavigationBarView!.translatesAutoresizingMaskIntoConstraints = false
@@ -46,5 +51,15 @@ class CustomNavigationController: UINavigationController {
     
     func setTitle(title: String) {
         customNavigationBarView?.navigationTitle.text = title
+        if viewControllers.count > 1 {
+            customNavigationBarView?.addBackButton()
+        } else {
+            customNavigationBarView?.hideBackButton()
+        }
+    }
+    
+    override func pushViewController(_ viewController: UIViewController, animated: Bool) {
+        super.pushViewController(viewController, animated: animated)
+        viewController.navigationItem.hidesBackButton = true
     }
 }
