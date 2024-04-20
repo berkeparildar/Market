@@ -18,9 +18,9 @@ protocol ProductDetailViewControllerProtocol: AnyObject {
 final class ProductDetailViewController: BaseViewController {
     
     var presenter: ProductDetailPresenter!
-    
     var productIsInCartConstraints: [NSLayoutConstraint]!
     var productIsNotInCartConstraints: [NSLayoutConstraint]!
+    var customNavigationBar: CustomNavigationController!
     
     
     override func viewDidLoad() {
@@ -151,15 +151,17 @@ final class ProductDetailViewController: BaseViewController {
     
     @objc func didTapAddToCartButton() {
         presenter.tappedAddToCartButton()
-        print("Transition")
+        customNavigationBar.updatePrice()
     }
     
     @objc func didTapIncreaseQuantityButton() {
         presenter.tappedAddToCartButton()
+        customNavigationBar.updatePrice()
     }
     
     @objc func didTapDecreaseQuantityButton() {
         presenter.tappedRemoveButton()
+        customNavigationBar.updatePrice()
     }
 }
 
@@ -254,7 +256,7 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
             addToCartButton.topAnchor.constraint(equalTo: buttonBlock.topAnchor, constant: 16),
             addToCartButton.leadingAnchor.constraint(equalTo: buttonBlock.leadingAnchor, constant: 16),
             addToCartButton.trailingAnchor.constraint(equalTo: buttonBlock.trailingAnchor, constant: -16),
-            addToCartButton.bottomAnchor.constraint(equalTo: buttonBlock.bottomAnchor, constant: -16),
+            addToCartButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             buttonTextLabel.centerXAnchor.constraint(equalTo: addToCartButton.centerXAnchor),
             buttonTextLabel.centerYAnchor.constraint(equalTo: addToCartButton.centerYAnchor),
@@ -262,8 +264,8 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
             buttonTextLabel.bottomAnchor.constraint(equalTo: addToCartButton.bottomAnchor, constant: -15),
             
             quantityButtonsBackground.heightAnchor.constraint(equalToConstant: 48),
+            quantityButtonsBackground.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             quantityButtonsBackground.centerXAnchor.constraint(equalTo: buttonBlock.centerXAnchor),
-            quantityButtonsBackground.centerYAnchor.constraint(equalTo: buttonBlock.centerYAnchor),
             
             decreaseQuantityButton.heightAnchor.constraint(equalToConstant: 48),
             decreaseQuantityButton.widthAnchor.constraint(equalToConstant: 48),
@@ -281,24 +283,17 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
             increaseQuantityButton.centerYAnchor.constraint(equalTo: quantityButtonsBackground.centerYAnchor),
             increaseQuantityButton.leadingAnchor.constraint(equalTo: decreaseQuantityButton.trailingAnchor, constant: 48),
             increaseQuantityButton.trailingAnchor.constraint(equalTo: quantityButtonsBackground.trailingAnchor),
-            
-            
-            addToCartButton.topAnchor.constraint(equalTo: buttonBlock.topAnchor, constant: 16),
-            addToCartButton.leadingAnchor.constraint(equalTo: buttonBlock.leadingAnchor, constant: 16),
-            addToCartButton.trailingAnchor.constraint(equalTo: buttonBlock.trailingAnchor, constant: -16),
-            addToCartButton.bottomAnchor.constraint(equalTo: buttonBlock.bottomAnchor, constant: -16),
-            
-            buttonTextLabel.centerXAnchor.constraint(equalTo: addToCartButton.centerXAnchor),
-            buttonTextLabel.centerYAnchor.constraint(equalTo: addToCartButton.centerYAnchor),
-            buttonTextLabel.topAnchor.constraint(equalTo: addToCartButton.topAnchor, constant: 15),
-            buttonTextLabel.bottomAnchor.constraint(equalTo: addToCartButton.bottomAnchor, constant: -15)
         ])
     }
     
     func setupNavigationBar() {
         if let customNavController = navigationController as? CustomNavigationController {
-            customNavController.setTitle(title: "Ürün Detayı")
+            customNavigationBar = customNavController
         }
+    }
+    
+    func setTitle() {
+        customNavigationBar.setTitle(title: "Ürün Detayı")
     }
 
     func setProductData(_ product: Product) {
@@ -344,10 +339,16 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
     }
 }
 
-extension ProductDetailViewController: UpdateNavigationBarProtocol {
+extension ProductDetailViewController: NavigationBarProtocol {
+    
+    func updatePriceInNavigationBar() {
+        self.customNavigationBar.updatePrice()
+    }
+    
+    func didTapRightButton() {
+        presenter.didTapCartButton()
+    }
+
     func updateNavigationBar() {
-        if let customNavController = navigationController as? CustomNavigationController {
-            customNavController.updateNavigationBar()
-        }
     }
 }

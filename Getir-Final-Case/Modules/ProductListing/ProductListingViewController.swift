@@ -8,21 +8,32 @@
 import UIKit
 
 protocol ProductListingViewControllerProtocol: AnyObject {
-    func reloadData()
+    func setupNavigationBar()
+    func setTitle()
     func setupViews()
-    func setupCollectionView()
+    func setupConstraints()
+    func reloadData()
     func showLoadingView()
     func hideLoadingView()
     func showError(_ message: String)
-    func setTitle()
 }
 
 final class ProductListingViewController: BaseViewController {
     
     var presenter: ProductListingPresenter!
-    var collectionView: UICollectionView!
-    var baseView: UIView!
+    var customNavigationBar: CustomNavigationController!
     
+    lazy var collectionView: UICollectionView = {
+        let layout = createCollectionViewLayout()
+        let collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.backgroundColor = .getirLightGray
+        collectionView.register(ProductCellView.self, forCellWithReuseIdentifier: ProductCellView.identifier)
+        collectionView.register(SectionBackground.superclass(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "CustomHeaderView")
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,38 +44,85 @@ final class ProductListingViewController: BaseViewController {
         super.viewWillAppear(animated)
         presenter.viewWillAppear()
     }
+    
+    func createCollectionViewLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
+            return sectionIndex == 0 ? self.horizontalSectionLayout() : self.verticalSectionLayout()
+        }
+        layout.configuration.interSectionSpacing = 16
+        layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
+        return layout
+    }
+    
+    func horizontalSectionLayout() -> NSCollectionLayoutSection {
+        let fixedWidth = 92.0
+        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(fixedWidth), heightDimension: .estimated(150))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: item.layoutSize.heightDimension)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 16
+        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+        let sectionBackground = NSCollectionLayoutDecorationItem.background(
+            elementKind: "background-element-kind")
+        section.decorationItems = [sectionBackground]
+        section.orthogonalScrollingBehavior = .continuous
+        let headerSize = NSCollectionLayoutSize(widthDimension: .absolute(self.view.frame.width), heightDimension: .absolute(16))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+        section.boundarySupplementaryItems = [header]
+        return section
+    }
+    
+    func verticalSectionLayout() -> NSCollectionLayoutSection {
+        let fixedWidth = 103.67
+        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(fixedWidth), heightDimension: .estimated(200))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: item.layoutSize.heightDimension)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 3)
+        group.interItemSpacing = .flexible(16)
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 16
+        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+        let sectionBackground = NSCollectionLayoutDecorationItem.background(
+            elementKind: "background-element-kind")
+        section.decorationItems = [sectionBackground]
+        let headerSize = NSCollectionLayoutSize(widthDimension: .absolute(self.view.frame.width), heightDimension: .absolute(16))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+        section.boundarySupplementaryItems = [header]
+        return section
+    }
+    
 }
 
 extension ProductListingViewController: ProductListingViewControllerProtocol {
     
-    func setTitle() {
+    func setupNavigationBar() {
         if let customNavController = navigationController as? CustomNavigationController {
-            customNavController.setTitle(title: "Ürünler")
+            customNavigationBar = customNavController
         }
+    }
+    
+    func setTitle() {
+        customNavigationBar.setTitle(title: "Ürünler")
+    }
+    
+    func setupViews() {
+        view.addSubview(collectionView)
+    }
+    
+    func setupConstraints() {
+        NSLayoutConstraint.activate([
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
     }
     
     func reloadData() {
         DispatchQueue.main.async {
             self.collectionView.reloadData()
         }
-    }
-    
-    func setupCollectionView() {
-        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: createLayout())
-        collectionView.dataSource = self
-        collectionView.layer.borderColor = UIColor.black.cgColor
-        collectionView.layer.borderWidth = 1
-        collectionView.delegate = self
-        collectionView.backgroundColor = .getirLightGray
-        collectionView.register(ProductCellView.self, forCellWithReuseIdentifier: "productCell")
-        collectionView.register(SectionBackground.superclass(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "CustomHeaderView")
-    }
-    
-    func setupViews() {
-        baseView = UIView(frame: UIWindow(frame: UIScreen.main.bounds).frame)
-        baseView.backgroundColor = .getirLightGray
-        baseView.addSubview(collectionView)
-        self.view.addSubview(baseView)
     }
     
     func showLoadingView() {
@@ -79,70 +137,12 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
         showAlert(title: "Error", message: message)
     }
     
-    func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
-            if sectionIndex == 1 {
-                let fixedWidth = 103.67
-                
-                let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(fixedWidth), heightDimension: .estimated(200))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: item.layoutSize.heightDimension)
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 3)
-                group.interItemSpacing = .flexible(16)
-                
-                
-                let section = NSCollectionLayoutSection(group: group)
-                section.interGroupSpacing = 16
-                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
-                
-                let sectionBackground = NSCollectionLayoutDecorationItem.background(
-                    elementKind: "background-element-kind")
-                section.decorationItems = [sectionBackground]
-                
-                let headerSize = NSCollectionLayoutSize(widthDimension: .absolute(self.view.frame.width), heightDimension: .absolute(16))
-                let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-                section.boundarySupplementaryItems = [header]
-                return section
-                
-            } else {
-                let fixedWidth = 92.0
-                
-                let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(fixedWidth), heightDimension: .estimated(150))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                
-                let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: item.layoutSize.heightDimension)
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-                
-                
-                let section = NSCollectionLayoutSection(group: group)
-                section.interGroupSpacing = 16
-                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
-                let sectionBackground = NSCollectionLayoutDecorationItem.background(
-                    elementKind: "background-element-kind")
-                section.decorationItems = [sectionBackground]
-                section.orthogonalScrollingBehavior = .continuous
-                
-                let headerSize = NSCollectionLayoutSize(widthDimension: .absolute(self.view.frame.width), heightDimension: .absolute(16))
-                let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-                section.boundarySupplementaryItems = [header]
-                
-                return section
-                
-            }
-        }
-        layout.configuration.interSectionSpacing = 16
-        layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
-        return layout
-    }
 }
 
 extension ProductListingViewController: UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
-            return presenter.numberOfSuggestedProducts()
-        }
-        return presenter.numberOfProducts()
+        return section == 0 ? presenter.numberOfSuggestedProducts() : presenter.numberOfProducts()
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -150,23 +150,9 @@ extension ProductListingViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.section == 0 {
-            let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: "productCell", for: indexPath) as! ProductCellView
-            let cellInteractor = ProductCellInteractor()
-            let cellPresenter = ProductCellPresenter(interactor: cellInteractor, view: cellView, product: presenter.suggestedProduct(indexPath.row))
-            cellView.presenter = cellPresenter
-            cellInteractor.output = cellPresenter
-            cellInteractor.navBarNotifier = self
-            cellView.configureWithPresenter()
-            return cellView
-        }
         let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: "productCell", for: indexPath) as! ProductCellView
-        let cellInteractor = ProductCellInteractor()
-        let cellPresenter = ProductCellPresenter(interactor: cellInteractor, view: cellView, product: presenter.product(indexPath.row))
-        cellView.presenter = cellPresenter
-        cellInteractor.output = cellPresenter
-        cellInteractor.navBarNotifier = self
-        cellView.configureWithPresenter()
+        let product = indexPath.section == 0 ? presenter.suggestedProduct(indexPath.item) : presenter.product(indexPath.item)
+        ProductCellBuilder.createModule(cellView: cellView, product: product, navBarOwner: self)
         return cellView
     }
     
@@ -175,18 +161,25 @@ extension ProductListingViewController: UICollectionViewDataSource {
         headerView.backgroundColor = .getirLightGray
         return headerView
     }
+    
 }
 
 extension ProductListingViewController: UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         presenter.didSelectItemAt(section: indexPath.section, index: indexPath.row)
     }
+    
 }
 
-extension ProductListingViewController: UpdateNavigationBarProtocol {
-    func updateNavigationBar() {
-        if let customNavController = navigationController as? CustomNavigationController {
-            customNavController.updateNavigationBar()
-        }
+extension ProductListingViewController: NavigationBarProtocol {
+    
+    func updatePriceInNavigationBar() {
+        customNavigationBar.updatePrice()
     }
+    
+    func didTapRightButton() {
+        presenter.didTapCartButton()
+    }
+
 }

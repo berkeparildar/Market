@@ -14,6 +14,12 @@ protocol ProductListingPresenterProtocol: AnyObject {
     func product(_ index: Int) -> Product
     func suggestedProduct(_ index: Int) -> Product
     func didSelectItemAt(section: Int, index: Int)
+    func didTapCartButton()
+}
+
+protocol ProductCellDelegate: AnyObject {
+    func didAddProductToCart(product: Product)
+    func didRemoveProductFromCart(product: Product)
 }
 
 final class ProductListingPresenter {
@@ -34,15 +40,25 @@ final class ProductListingPresenter {
 
 extension ProductListingPresenter: ProductListingPresenterProtocol {
     
+    func didTapCartButton() {
+        router.navigate(.cart(suggestedProducts: self.suggestedProducts))
+    }
+    
     func viewDidLoad() {
-        fetchProducts()
-        view.setupCollectionView()
-        view.setupViews()
+        
     }
     
     func viewWillAppear() {
+        view.setupNavigationBar()
         view.setTitle()
-        view.reloadData()
+        if products.isEmpty {
+            fetchProducts()
+        }
+        else {
+            interactor.fetchProductInCart()
+        }
+        view.setupViews()
+        view.setupConstraints()
     }
     
     func product(_ index: Int) -> Product {
@@ -77,14 +93,23 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
 }
 
 extension ProductListingPresenter: ProductListingInteractorOutputProtocol {
+    
+    func fetchProductsInCartOutput(result: [Product]) {
+        let productsInCart = result
+        self.products = ProductService.shared.updateFetchedProducts(currentProducts: self.products, coreDataProducts: productsInCart)
+        self.suggestedProducts = ProductService.shared.updateFetchedProducts(currentProducts: self.suggestedProducts, coreDataProducts: productsInCart)
+        view.reloadData()
+    }
+    
     func fetchSuggestedProductsOutput(result: [Product]) {
         self.suggestedProducts = result
         view.reloadData()
     }
     
     func fetchProductsOutput(result: [Product]) {
-        view.hideLoadingView()
         self.products = result
         view.reloadData()
+        view.hideLoadingView()
     }
 }
+

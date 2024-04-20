@@ -9,11 +9,11 @@ import Foundation
 
 protocol ProductDetailPresenterProtocol: AnyObject {
     func viewDidLoad()
-    func fetchProduct()
     func getProduct() -> Product
     func tappedAddToCartButton()
     func countInCart() -> Int
     func tappedRemoveButton()
+    func didTapCartButton()
 }
 
 final class ProductDetailPresenter {
@@ -33,7 +33,7 @@ final class ProductDetailPresenter {
 extension ProductDetailPresenter: ProductDetailPresenterProtocol {
     
     func viewDidLoad() {
-        interactor.getProduct()
+        interactor.fetchProduct()
         view.setupNavigationBar()
         view.setupViews()
         view.setupConstraints()
@@ -48,7 +48,7 @@ extension ProductDetailPresenter: ProductDetailPresenterProtocol {
     func tappedAddToCartButton() {
         product.isInCart = true
         product.inCartCount += 1
-        interactor.productAddedToCart()
+        interactor.productAddedToCart(product: self.product)
         view.configureViewWithCartCount()
     }
     
@@ -61,13 +61,14 @@ extension ProductDetailPresenter: ProductDetailPresenterProtocol {
         if product.inCartCount == 0 {
             product.isInCart = false
         }
-        interactor.productRemovedFromCart()
+        interactor.productRemovedFromCart(product: self.product)
         view.configureViewWithCartCount()
     }
     
-    func fetchProduct() {
-        interactor.getProduct()
+    func didTapCartButton() {
+        router.navigate(.cart)
     }
+    
 }
 
 extension ProductDetailPresenter: ProductDetailInteractorOutputProtocol {

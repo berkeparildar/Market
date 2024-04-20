@@ -13,26 +13,29 @@ protocol ProductCellInteractorProtocol: AnyObject {
 }
 
 protocol ProductCellInteractorOutputProtocol: AnyObject {
+    func getProductOutput(result: Product)
 }
 
-
-
 final class ProductCellInteractor {
+    
+    var product: Product?
     weak var output: ProductCellInteractorOutputProtocol?
-    weak var navBarNotifier: UpdateNavigationBarProtocol?
+    weak var navBarDelegate: NavigationBarProtocol?
+    
 }
 
 extension ProductCellInteractor: ProductCellInteractorProtocol {
-
+    
     func tappedAddButton(product: Product) {
-        CartRepository.shared.updateProduct(product: product, quantityIncreased: true)
-        navBarNotifier?.updateNavigationBar()
+        ProductService.shared.addToCart(product: product)
+        navBarDelegate?.updatePriceInNavigationBar()
     }
     
     func tappedRemoveButton(product: Product) {
-        CartRepository.shared.updateProduct(product: product, quantityIncreased: false)
-        navBarNotifier?.updateNavigationBar()
+        ProductService.shared.removeFromCart(product: product)
+        navBarDelegate?.updatePriceInNavigationBar()
     }
+    
 }
 
 

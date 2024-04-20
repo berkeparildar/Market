@@ -7,13 +7,24 @@
 
 import UIKit
 
-protocol UpdateNavigationBarProtocol: AnyObject {
-    func updateNavigationBar()
+protocol NavigationBarProtocol: AnyObject {
+    func updatePriceInNavigationBar()
+    func didTapRightButton()
 }
 
 class CustomNavigationController: UINavigationController {
     
     var customNavigationBarView: CustomNavigationBarView?
+    
+    override init(rootViewController: UIViewController) {
+        super.init(rootViewController: rootViewController)
+        rootViewController.navigationItem.hidesBackButton = true
+        customNavigationBarView?.hideBackButton()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,21 +56,40 @@ class CustomNavigationController: UINavigationController {
         ])
     }
     
-    func updateNavigationBar() {
+    func updatePrice() {
         customNavigationBarView?.updateCartButtonAppearance()
     }
     
     func setTitle(title: String) {
         customNavigationBarView?.navigationTitle.text = title
-        if viewControllers.count > 1 {
-            customNavigationBarView?.addBackButton()
-        } else {
-            customNavigationBarView?.hideBackButton()
-        }
     }
     
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         super.pushViewController(viewController, animated: animated)
+        if viewControllers.count > 1 {
+            customNavigationBarView?.addBackButton()
+        }
+        customNavigationBarView?.addBackButton()
+        if viewControllers.last is CartViewController {
+            customNavigationBarView?.addTrashButton()
+        }
         viewController.navigationItem.hidesBackButton = true
+    }
+    
+    override func popViewController(animated: Bool) -> UIViewController? {
+        if viewControllers.last is CartViewController {
+            customNavigationBarView?.hideTrashButton()
+        }
+        super.popViewController(animated: animated)
+        if viewControllers.count == 1 {
+            customNavigationBarView?.hideBackButton()
+        }
+        return viewControllers.last
+    }
+    
+    func rightButtonTapped() {
+        if let visibleViewController = visibleViewController as? NavigationBarProtocol {
+            visibleViewController.didTapRightButton()
+        }
     }
 }

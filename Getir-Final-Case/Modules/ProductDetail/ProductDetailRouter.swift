@@ -8,7 +8,7 @@
 import Foundation
 
 enum ProductDetailRoutes {
-    case listing, cart
+    case cart
 }
 
 protocol ProductDetailRouterProtocol: AnyObject {
@@ -19,16 +19,15 @@ final class ProductDetailRouter {
     
     weak var viewController: ProductDetailViewController?
     
-    static func createModule(with product: Product) -> ProductDetailViewController {
+    static func createModule(product: Product) -> ProductDetailViewController {
         let view = ProductDetailViewController()
-        let interactor = ProductDetailInteractor(product: product)
+        let interactor = ProductDetailInteractor(product: product, productID: product.id)
         let router = ProductDetailRouter()
         
         let presenter = ProductDetailPresenter(view: view, router: router, interactor: interactor)
         
         view.presenter = presenter
         interactor.output = presenter
-        interactor.navBarNotifier = view
         router.viewController = view
         
         return view
@@ -37,7 +36,14 @@ final class ProductDetailRouter {
 
 extension ProductDetailRouter: ProductDetailRouterProtocol {
     func navigate(_ route: ProductDetailRoutes) {
-        
+        switch route {
+        case .cart:
+            /*
+            let productDetailVC = ProductDetailRouter.createModule()
+            viewController?.navigationController?.pushViewController(productDetailVC, animated: true)
+             */
+            break
+        }
     }
 }
 

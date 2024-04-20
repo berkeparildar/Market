@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol PopViewDelegate {
-    func popCurrentView()
-}
-
 class CustomNavigationBarView: UINavigationBar {
     
     var imageBackgroundWidthAnchor: NSLayoutConstraint!
@@ -26,6 +22,7 @@ class CustomNavigationBarView: UINavigationBar {
         label.textColor = .white
         label.textAlignment = .center
         label.text = "Ürünler"
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -35,19 +32,22 @@ class CustomNavigationBarView: UINavigationBar {
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(cartButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     lazy var cartImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "cartImage")
-        imageView.contentMode = .scaleToFill
+        imageView.image = UIImage(named: "Icon-2")
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     lazy var cartImageBackground: UIView = {
         let view = UIView()
         view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -58,6 +58,7 @@ class CustomNavigationBarView: UINavigationBar {
         label.textColor = .getirPurple
         label.textAlignment = .center
         label.text = "₺0,00"
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -65,6 +66,7 @@ class CustomNavigationBarView: UINavigationBar {
         var button = UIButton(type: .system)
         button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         button.isHidden = true
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -73,6 +75,24 @@ class CustomNavigationBarView: UINavigationBar {
         imageView.image = UIImage(named: "xMark")
         imageView.tintColor = .white
         imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    lazy var trashButton: UIButton = {
+        var button = UIButton(type: .system)
+        button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        button.isHidden = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isHidden = true
+        return button
+    }()
+    
+    lazy var trashButtonImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "trash")
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
@@ -89,6 +109,8 @@ class CustomNavigationBarView: UINavigationBar {
         addSubview(navigationTitle)
         backButton.addSubview(backButtonImage)
         addSubview(backButton)
+        trashButton.addSubview(trashButtonImage)
+        addSubview(trashButton)
         cartButton.addSubview(priceLabel)
         cartImageBackground.addSubview(cartImage)
         cartButton.addSubview(cartImageBackground)
@@ -100,9 +122,6 @@ class CustomNavigationBarView: UINavigationBar {
     }
     
     private func setupConstraints() {
-        [navigationTitle, cartImageBackground, priceLabel, cartImage, cartButton, backButton, backButtonImage].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
         
         imageBackgroundWidthAnchor = self.cartImageBackground.widthAnchor.constraint(equalToConstant: 34)
         imageBackgroundTrailingAnchor = self.cartImageBackground.trailingAnchor.constraint(equalTo: cartButton.trailingAnchor)
@@ -118,10 +137,20 @@ class CustomNavigationBarView: UINavigationBar {
             backButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
             backButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
             
+            trashButton.widthAnchor.constraint(equalToConstant: 24),
+            trashButton.heightAnchor.constraint(equalToConstant: 24),
+            trashButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12),
+            trashButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            
             backButtonImage.widthAnchor.constraint(equalToConstant: 12),
             backButtonImage.heightAnchor.constraint(equalToConstant: 12),
             backButtonImage.centerXAnchor.constraint(equalTo: backButton.centerXAnchor),
             backButtonImage.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
+            
+            trashButtonImage.widthAnchor.constraint(equalToConstant: 18),
+            trashButtonImage.heightAnchor.constraint(equalToConstant: 18),
+            trashButtonImage.centerXAnchor.constraint(equalTo: trashButton.centerXAnchor),
+            trashButtonImage.centerYAnchor.constraint(equalTo: trashButton.centerYAnchor),
             
             cartButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8),
             cartButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
@@ -135,7 +164,6 @@ class CustomNavigationBarView: UINavigationBar {
             cartImage.topAnchor.constraint(equalTo: cartImageBackground.topAnchor, constant: 5),
             cartImage.leadingAnchor.constraint(equalTo: cartImageBackground.leadingAnchor, constant: 5),
             cartImage.bottomAnchor.constraint(equalTo: cartImageBackground.bottomAnchor, constant: -5),
-            cartImage.widthAnchor.constraint(equalToConstant: 24),
             
             priceLabel.leadingAnchor.constraint(equalTo: cartImage.trailingAnchor, constant: 15),
             priceLabel.topAnchor.constraint(equalTo: cartButton.topAnchor, constant: 7),
@@ -150,11 +178,12 @@ class CustomNavigationBarView: UINavigationBar {
     }
     
     @objc private func cartButtonTapped() {
-        // router
+        if let controller = controller as? CustomNavigationController {
+            controller.rightButtonTapped()
+        }
     }
     
     @objc private func backButtonTapped() {
-        print("Back button tapped")
         controller?.popViewController(animated: true)
     }
     
@@ -166,13 +195,23 @@ class CustomNavigationBarView: UINavigationBar {
         self.backButton.isHidden = true
     }
     
+    func addTrashButton() {
+        cartButton.isHidden = true
+        trashButton.isHidden = false
+    }
+    
+    func hideTrashButton() {
+        trashButton.isHidden = true
+        cartButton.isHidden = false
+    }
+    
     func updateCartButtonAppearance() {
         updatePrice()
         cartButtonAnimationExpand()
     }
     
     func updatePrice() {
-        let currentItems = CartRepository.shared.fetchCart()
+        let currentItems = ProductService.shared.fetchCartProducts()
         var totalPrice = 0.0
         currentItems.forEach {
             totalPrice += $0.productPrice * Double($0.inCartCount)

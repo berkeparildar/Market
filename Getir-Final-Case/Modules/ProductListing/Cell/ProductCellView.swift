@@ -9,35 +9,23 @@ import UIKit
 import Kingfisher
 
 protocol ProductCellViewProtocol: AnyObject {
+    func configure(product: Product)
     func setupViews()
     func setupConstraints()
-    func setDeleteButtonImage()
-    func updateQuantityLabel()
-    func updateAddSection(isExpanded: Bool, animated: Bool)
+    func updateFloatingBar(product: Product, animated: Bool)
 }
 
 final class ProductCellView: UICollectionViewCell {
     
-    var presenter: ProductCellPresenter!
-    
+    static let identifier: String = "productCell"
     var addSectionHeightAnchor: NSLayoutConstraint!
     var addSectionShadowHeightAnchor: NSLayoutConstraint!
+    var presenter: ProductCellPresenter!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
         setupConstraints()
-    }
-    
-    func configureWithPresenter() {
-        let product = presenter.product
-        nameLabel.text = product.productName
-        attributeLabel.text = product.productDescription
-        priceLabel.text = product.productPriceText
-        productImage.kf.setImage(with: product.imageURL)
-        updateQuantityLabel()
-        setDeleteButtonImage()
-        updateAddSection(isExpanded: product.isInCart, animated: false)
     }
     
     required init?(coder: NSCoder) {
@@ -50,6 +38,7 @@ final class ProductCellView: UICollectionViewCell {
         label.lineBreakMode = .byTruncatingTail
         label.font = UIFont.boldSystemFont(ofSize: 12)
         label.textColor = .getirBlack
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -59,6 +48,7 @@ final class ProductCellView: UICollectionViewCell {
         imageView.layer.borderColor = UIColor.getirLightGray.cgColor
         imageView.layer.borderWidth = 1
         imageView.layer.cornerRadius = 16
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
@@ -66,6 +56,7 @@ final class ProductCellView: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .getirGray
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -73,6 +64,7 @@ final class ProductCellView: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textColor = .getirPurple
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -81,6 +73,7 @@ final class ProductCellView: UICollectionViewCell {
         view.backgroundColor = .white
         view.layer.cornerRadius = 8
         view.layer.masksToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -92,6 +85,7 @@ final class ProductCellView: UICollectionViewCell {
         view.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.layer.shadowRadius = 2
         view.layer.shadowOpacity = 0.3
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -104,6 +98,7 @@ final class ProductCellView: UICollectionViewCell {
         button.backgroundColor = .white
         button.layer.masksToBounds = false
         button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -115,6 +110,7 @@ final class ProductCellView: UICollectionViewCell {
         button.backgroundColor = .white
         button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
         button.isHidden = false
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -126,6 +122,7 @@ final class ProductCellView: UICollectionViewCell {
         label.textAlignment = .center
         label.text = "0"
         label.isHidden = false
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -155,10 +152,6 @@ extension ProductCellView: ProductCellViewProtocol {
     func setupConstraints() {
         addSectionHeightAnchor = addSection.heightAnchor.constraint(equalToConstant: 30)
         addSectionShadowHeightAnchor = addSectionShadow.heightAnchor.constraint(equalToConstant: 30)
-        
-        [nameLabel, attributeLabel, priceLabel, productImage, addSection, addSectionShadow, addButton, quantityLabel, deleteButton].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
         
         NSLayoutConstraint.activate([
             productImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
@@ -207,37 +200,31 @@ extension ProductCellView: ProductCellViewProtocol {
         ])
     }
     
-    func setDeleteButtonImage() {
-        let productCount = presenter.productCount()
-        if productCount > 1 {
-            self.deleteButton.setImage(UIImage(systemName: "minus"), for: .normal)
-        }
-        else {
-            self.deleteButton.setImage(UIImage(systemName: "trash"), for: .normal)
-        }
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            self.layoutIfNeeded()
-        })
-    }
-    
-    func updateAddSection(isExpanded: Bool, animated: Bool) {
-        addSectionHeightAnchor.constant = isExpanded ? 90 : 30
-        addSectionShadowHeightAnchor.constant = isExpanded ? 90 : 30
+    func updateFloatingBar(product: Product, animated: Bool) {
+        let productCount = product.inCartCount
+        addSectionHeightAnchor.constant = product.isInCart ? 90 : 30
+        addSectionShadowHeightAnchor.constant = product.isInCart ? 90 : 30
+        let newImage = productCount > 1 ? UIImage(systemName: "minus") : UIImage(systemName: "trash")
         if animated {
             UIView.animate(withDuration: 0.3) {
+                self.deleteButton.setImage(newImage, for: .normal)
+                self.quantityLabel.text = String(product.inCartCount)
                 self.layoutIfNeeded()
             }
         }
         else {
+            self.deleteButton.setImage(newImage, for: .normal)
+            self.quantityLabel.text = String(product.inCartCount)
             self.layoutIfNeeded()
         }
     }
     
-    func updateQuantityLabel() {
-        self.quantityLabel.text = String(presenter.productCount())
-        UIView.animate(withDuration: 0.3, animations: {
-            self.layoutIfNeeded()
-        }) 
+    func configure(product: Product) {
+        nameLabel.text = product.productName
+        attributeLabel.text = product.productDescription
+        priceLabel.text = product.productPriceText
+        productImage.kf.setImage(with: product.imageURL)
+        updateFloatingBar(product: product, animated: false)
     }
+    
 }

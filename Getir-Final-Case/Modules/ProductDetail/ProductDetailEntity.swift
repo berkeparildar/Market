@@ -7,6 +7,7 @@
 
 import UIKit
 
+// NOT SURE
 struct ProductDetailModel {
     var priceText: String
     var name: String

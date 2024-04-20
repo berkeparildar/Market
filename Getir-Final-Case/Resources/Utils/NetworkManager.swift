@@ -51,10 +51,8 @@ extension NetworkService: TargetType {
     }
 }
 
-struct NetworkManager {
-    static let shared = NetworkManager()
+class NetworkManager {
     let provider = MoyaProvider<NetworkService>()
-    
     func fetchProducts(fetchCommand: NetworkService, completion: @escaping (Result<[ProductAPI], Error>) -> Void) {
         provider.request(fetchCommand) { result in
             switch result {
