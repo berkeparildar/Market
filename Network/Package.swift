@@ -4,20 +4,26 @@
 import PackageDescription
 
 let package = Package(
-    name: "ProductAPI",
+    name: "Network",
+    platforms: [.iOS(.v14)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "ProductAPI",
-            targets: ["ProductAPI"]),
+            name: "Network",
+            targets: ["Network"]),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/Moya/Moya.git", .upToNextMajor(from: "15.0.0"))
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "ProductAPI"),
+            name: "Network",
+            dependencies: ["Moya"]
+        ),
         .testTarget(
-            name: "ProductAPITests",
-            dependencies: ["ProductAPI"]),
+            name: "NetworkTests",
+            dependencies: ["Network"]),
     ]
 )

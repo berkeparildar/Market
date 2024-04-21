@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Network
 
 protocol ProductServiceProtocol {
     func createProductModels(apiProducts: [ProductAPI]?)  -> [Product]
@@ -34,7 +35,7 @@ class ProductService {
 extension ProductService: ProductServiceProtocol {
     
     func fetchProducts(completion: @escaping ([Product]) -> Void) {
-        networkManager.fetchProducts(fetchCommand: .getProducts) { result in
+        networkManager.fetchProducts() { result in
             switch result {
             case .success(let APIproducts):
                 let generatedProducts = self.createProductModels(apiProducts: APIproducts)
@@ -48,7 +49,7 @@ extension ProductService: ProductServiceProtocol {
     }
     
     func fetchSuggestedProducts(completion: @escaping ([Product]) -> Void) {
-        networkManager.fetchProducts(fetchCommand: .getSuggestedProducts) { result in
+        networkManager.fetchSuggestedProducts() { result in
             switch result {
             case .success(let APIproducts):
                 let generatedProducts = self.createProductModels(apiProducts: APIproducts)
