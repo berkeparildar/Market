@@ -15,7 +15,7 @@ protocol ProductDetailViewControllerProtocol: AnyObject {
     func configureViewWithCartCount()
 }
 
-final class ProductDetailViewController: BaseViewController {
+final class ProductDetailViewController: UIViewController {
     
     var presenter: ProductDetailPresenter!
     var productIsInCartConstraints: [NSLayoutConstraint]!

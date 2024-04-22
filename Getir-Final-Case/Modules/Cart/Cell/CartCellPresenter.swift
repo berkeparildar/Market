@@ -38,15 +38,13 @@ extension CartCellPresenter: CartCellPresenterProtocol {
     
     func tappedQuantityIncreaseButton() {
         product.inCartCount += 1
-        view.updateQuantityLabel()
-        view.setDeleteButtonImage()
+        view.updateStepper()
         interactor.tappedAddButton(product: self.product)
     }
     
     func tappedQuantityDecreaseButton() {
         product.inCartCount -= 1
-        view.updateQuantityLabel()
-        view.setDeleteButtonImage()
+        view.updateStepper()
         interactor.tappedRemoveButton(product: self.product)
     }
 }

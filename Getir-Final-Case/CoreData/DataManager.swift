@@ -18,10 +18,10 @@ protocol DataManagerProtocol {
 
 class DataManager: DataManagerProtocol {
     
-    private let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    private let coreDataStack = CoreDataStack()
     
     func fetchCart() -> [Product] {
-        let context = appDelegate.persistentContainer.viewContext
+        let context = coreDataStack.persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "CartProduct")
         fetchRequest.predicate = NSPredicate(format: "isInCart == YES")
         var products = [Product]()
@@ -46,7 +46,7 @@ class DataManager: DataManagerProtocol {
     }
     
     func fetchProductWithID(id: String) -> Product? {
-        let context = appDelegate.persistentContainer.viewContext
+        let context = coreDataStack.persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "CartProduct")
         fetchRequest.predicate = NSPredicate(format: "id == %@", id)
         do {
@@ -69,7 +69,7 @@ class DataManager: DataManagerProtocol {
     }
     
     func removeProductFromCart(product: Product) {
-        let context = appDelegate.persistentContainer.viewContext
+        let context = coreDataStack.persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "CartProduct")
         fetchRequest.predicate = NSPredicate(format: "id == %@", product.id)
         do {
@@ -83,14 +83,28 @@ class DataManager: DataManagerProtocol {
             else {
                 context.delete(result)
             }
-            try context.save()
+            coreDataStack.saveContext()
         } catch {
             print("Save error")
         }
     }
     
+    func clearCart() {
+        let context = coreDataStack.persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "CartProduct")
+        do {
+            let results = try context.fetch(fetchRequest) as! [NSManagedObject]
+            for object in results {
+                context.delete(object)
+            }
+            coreDataStack.saveContext()
+        } catch {
+            print("Delete error: \(error)")
+        }
+    }
+    
     func addProductToCart(product: Product) {
-        let context = appDelegate.persistentContainer.viewContext
+        let context = coreDataStack.persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "CartProduct")
         fetchRequest.predicate = NSPredicate(format: "id == %@", product.id)
         do {
@@ -112,8 +126,7 @@ class DataManager: DataManagerProtocol {
                 newProduct.setValue(true, forKey: "isInCart")
                 newProduct.setValue(product.imageURL, forKey: "imageURL")
             }
-            try context.save()
-            
+            coreDataStack.saveContext()
         } catch {
             print("Save error")
         }

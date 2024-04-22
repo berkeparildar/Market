@@ -211,7 +211,7 @@ class CustomNavigationBarView: UINavigationBar {
     }
     
     func updatePrice() {
-        let currentItems = ProductService.shared.fetchCartProducts()
+        let currentItems = CartService.shared.getProductsInCart()
         var totalPrice = 0.0
         currentItems.forEach {
             totalPrice += $0.productPrice * Double($0.inCartCount)

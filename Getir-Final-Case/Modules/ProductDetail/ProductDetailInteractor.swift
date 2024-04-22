@@ -31,7 +31,7 @@ final class ProductDetailInteractor {
 extension ProductDetailInteractor: ProductDetailInteractorProtocol {
     
     func fetchProduct() {
-        let productInCart = ProductService.shared.fetchFromCartWithID(id: productID)
+        let productInCart = CartService.shared.getProductFromCartWithID(id: product.id)
         if let product = productInCart {
             self.output?.product(product: product)
         }
@@ -41,10 +41,10 @@ extension ProductDetailInteractor: ProductDetailInteractorProtocol {
     }
     
     func productAddedToCart(product: Product) {
-        ProductService.shared.addToCart(product: product)
+        CartService.shared.addProductToCart(product: product)
     }
     
     func productRemovedFromCart(product: Product) {
-        ProductService.shared.removeFromCart(product: product)
+        CartService.shared.removeProductFromCart(product: product)
     }
 }

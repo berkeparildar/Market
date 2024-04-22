@@ -7,21 +7,23 @@
 
 import UIKit
 
-protocol LoadingViewProtocol where Self: UIViewController {
+protocol LoadingShowable where Self: UIViewController {
     func showLoading()
     func hideLoading()
 }
 
-extension LoadingViewProtocol {
+extension LoadingShowable {
     func showLoading() {
         LoadingView.shared.startLoading()
     }
+    
     func hideLoading() {
         LoadingView.shared.hideLoading()
     }
 }
 
 class LoadingView {
+    
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
     static let shared = LoadingView()
     var blurView: UIVisualEffectView = UIVisualEffectView()

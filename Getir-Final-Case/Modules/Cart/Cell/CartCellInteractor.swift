@@ -30,12 +30,12 @@ final class CartCellInteractor {
 
 extension CartCellInteractor: CartCellInteractorProtocol {
     func tappedAddButton(product: Product) {
-        ProductService.shared.addToCart(product: product)
+        CartService.shared.addProductToCart(product: product)
         cartView?.addButtonTapped(product: product)
     }
     
     func tappedRemoveButton(product: Product) {
-        ProductService.shared.removeFromCart(product: product)
+        CartService.shared.removeProductFromCart(product: product)
         cartView?.deleteButtonTapped(product: product)
     }
     

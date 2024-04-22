@@ -14,9 +14,20 @@ protocol CartViewControllerProtocol: AnyObject {
     func showError(_ message: String)
     func setTitle()
     func updateTotalPrice(price: Double)
+    func insertCartItem(at indexPath: IndexPath)
+    func reloadCartItem(at indexPath: IndexPath)
+    func deleteCartItem(at indexPath: IndexPath)
 }
 
-class CartViewController: BaseViewController {
+protocol CartCellDelegate {
+    
+}
+
+protocol SuggestedProductCellDelegate {
+    
+}
+
+class CartViewController: UIViewController {
     
     var presenter: CartPresenter!
     
@@ -110,6 +121,18 @@ extension CartViewController: CartViewControllerProtocol {
         }
     }
     
+    func insertCartItem(at indexPath: IndexPath) {
+        collectionView.insertItems(at: [indexPath])
+    }
+    
+    func reloadCartItem(at indexPath: IndexPath) {
+        collectionView.reloadItems(at: [indexPath])
+    }
+    
+    func deleteCartItem(at indexPath: IndexPath) {
+        collectionView.deleteItems(at: [indexPath])
+    }
+    
     func setupViews() {
         view.addSubview(collectionView)
         bottomBlock.addSubview(buyButtonContainer)
@@ -157,7 +180,7 @@ extension CartViewController: CartViewControllerProtocol {
     }
     
     func showError(_ message: String) {
-        showAlert(title: "Error", message: message)
+        //showAlert(title: "Error", message: message)
     }
     
     func setTitle() {
@@ -225,7 +248,7 @@ extension CartViewController: UICollectionViewDataSource {
             return cellView
         }
         let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCellView.identifier, for: indexPath) as! ProductCellView
-        ProductCellBuilder.createModule(cellView: cellView, product: presenter.suggestedProduct(indexPath.item), navBarOwner: self)
+        ProductCellBuilder.createModule(cellView: cellView, product: presenter.suggestedProduct(indexPath.item), navBarOwner: self, cartPresenter: presenter)
         return cellView
     }
     
@@ -233,11 +256,12 @@ extension CartViewController: UICollectionViewDataSource {
         let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "CustomHeaderView", for: indexPath) as! SectionHeaderSuggestedProduct
         return headerView
     }
+    
 }
 
 extension CartViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter.tappedSuggestedProduct(index: indexPath.item)
+        presenter.tappedProduct(indexpath: indexPath)
     }
 }
 

@@ -10,34 +10,41 @@ import Foundation
 
 protocol ProductListingInteractorProtocol: AnyObject {
     func fetchProducts()
-    func fetchProductInCart()
+    func updateCartStatus(products: [Product])
+    func updateSuggestedCartStatus(products: [Product])
 }
 
 protocol ProductListingInteractorOutputProtocol: AnyObject {
-    func fetchProductsOutput(result: [Product])
-    func fetchSuggestedProductsOutput(result: [Product])
-    func fetchProductsInCartOutput(result: [Product])
+    func getProductsOutput(products: [Product])
+    func getsuggestedProductsOutput(suggestedProducts: [Product])
+    func updatedProductsOutput(products: [Product])
+    func updatedSuggestedProductsOutput(products: [Product])
 }
 
 final class ProductListingInteractor {
-
+    
     var output: ProductListingInteractorOutputProtocol?
 }
 
 extension ProductListingInteractor: ProductListingInteractorProtocol {
     
     func fetchProducts() {
-        ProductService.shared.fetchProducts { products in
-            self.output?.fetchProductsOutput(result: products)
+        ProductService.shared.getProducts { products in
+            self.output?.getProductsOutput(products: products)
         }
-        ProductService.shared.fetchSuggestedProducts { suggestedProducts in
-            self.output?.fetchSuggestedProductsOutput(result: suggestedProducts)
+        ProductService.shared.getSuggestedProducts { suggestedProducts in
+            self.output?.getsuggestedProductsOutput(suggestedProducts: suggestedProducts)
         }
     }
     
-    func fetchProductInCart() {
-        let cartProducts = ProductService.shared.fetchCartProducts()
-        self.output?.fetchProductsInCartOutput(result: cartProducts)
+    func updateCartStatus(products: [Product]) {
+        let updatedProducts = CartService.shared.updateCartStatusOfProducts(products: products)
+        self.output?.updatedProductsOutput(products: updatedProducts)
+    }
+    
+    func updateSuggestedCartStatus(products: [Product]) {
+        let updatedProducts = CartService.shared.updateCartStatusOfProducts(products: products)
+        self.output?.updatedSuggestedProductsOutput(products: updatedProducts)
     }
     
 }

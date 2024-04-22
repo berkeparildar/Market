@@ -15,10 +15,9 @@ protocol ProductListingViewControllerProtocol: AnyObject {
     func reloadData()
     func showLoadingView()
     func hideLoadingView()
-    func showError(_ message: String)
 }
 
-final class ProductListingViewController: BaseViewController {
+final class ProductListingViewController: UIViewController, LoadingShowable {
     
     var presenter: ProductListingPresenter!
     var customNavigationBar: CustomNavigationController!
@@ -115,13 +114,16 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
     func reloadData() {
         DispatchQueue.main.async {
-            self.collectionView.reloadData()
+            UIView.transition(with: self.collectionView,
+                              duration: 0.35,
+                              options: .transitionCrossDissolve,
+                              animations: { self.collectionView.reloadData() })
         }
     }
     
@@ -132,11 +134,6 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
     func hideLoadingView() {
         hideLoading()
     }
-    
-    func showError(_ message: String) {
-        showAlert(title: "Error", message: message)
-    }
-    
 }
 
 extension ProductListingViewController: UICollectionViewDataSource {
@@ -182,4 +179,9 @@ extension ProductListingViewController: NavigationBarProtocol {
         presenter.didTapCartButton()
     }
 
+}
+
+
+extension ProductListingViewController: ShowAlert {
+    
 }

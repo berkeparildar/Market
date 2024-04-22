@@ -27,7 +27,7 @@ final class CartInteractor {
 extension CartInteractor: CartInteractorProtocol {
     
     func fetchProductsInCart() {
-        let products = ProductService.shared.fetchCartProducts()
+        let products = CartService.shared.getProductsInCart()
         self.output?.fetchProductsInCartOutput(result: products)
     }
     
@@ -35,17 +35,17 @@ extension CartInteractor: CartInteractorProtocol {
         if let suggestedProducts = self.suggestedProducts {
             self.output?.fetchSuggestedProductsOutput(result: suggestedProducts)
         } else {
-            ProductService.shared.fetchSuggestedProducts { products in
+            ProductService.shared.getSuggestedProducts { products in
                 self.output?.fetchSuggestedProductsOutput(result: products)
             }
         }
     }
     
     func productAddedToCart(product: Product) {
-        ProductService.shared.removeFromCart(product: product)
+        CartService.shared.addProductToCart(product: product)
     }
     
     func productRemovedFromCart(product: Product) {
-        ProductService.shared.removeFromCart(product: product)
+        CartService.shared.removeProductFromCart(product: product)
     }
 }

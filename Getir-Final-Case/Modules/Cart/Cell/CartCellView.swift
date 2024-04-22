@@ -10,9 +10,9 @@ import UIKit
 protocol CartCellViewProtocol: AnyObject {
     func setupViews()
     func setupConstraints()
-    func setDeleteButtonImage()
-    func updateQuantityLabel()
+    func updateStepper()
     func configureWithPresenter()
+    
 }
 
 class CartCellView: UICollectionViewCell {
@@ -140,6 +140,8 @@ class CartCellView: UICollectionViewCell {
 }
 
 extension CartCellView: CartCellViewProtocol {
+ 
+    
     func setupViews() {
         baseView.addSubview(productImage)
         textSection.addSubview(nameLabel)
@@ -214,22 +216,11 @@ extension CartCellView: CartCellViewProtocol {
         ])
     }
     
-    func setDeleteButtonImage() {
+    func updateStepper() {
         let productCount = presenter.getProductCount()
-        if productCount > 1 {
-            self.deleteButton.setImage(UIImage(systemName: "minus"), for: .normal)
-        }
-        else {
-            self.deleteButton.setImage(UIImage(systemName: "trash"), for: .normal)
-        }
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            self.layoutIfNeeded()
-        })
-    }
-    
-    func updateQuantityLabel() {
-        self.quantityLabel.text = String(presenter.getProductCount())
+        let newImage = productCount > 1 ? UIImage(systemName: "minus") : UIImage(systemName: "minus")
+        self.deleteButton.setImage(newImage, for: .normal)
+        self.quantityLabel.text = String(productCount)
     }
     
     func configureWithPresenter() {
@@ -238,7 +229,9 @@ extension CartCellView: CartCellViewProtocol {
         attributeLabel.text = product.productDescription
         priceLabel.text = product.productPriceText
         productImage.kf.setImage(with: product.imageURL)
-        updateQuantityLabel()
-        setDeleteButtonImage()
+        self.quantityLabel.text = String(product.inCartCount)
+        let newImage = product.inCartCount > 1 ? UIImage(systemName: "minus") : UIImage(systemName: "minus")
+        self.deleteButton.setImage(newImage, for: .normal)
+        print("Hello")
     }
 }

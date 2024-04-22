@@ -45,20 +45,17 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
     }
     
     func viewDidLoad() {
-        
+        fetchProducts()
+        view.setupNavigationBar()
+        view.setTitle()
+        view.setupViews()
+        view.setupConstraints()
     }
     
     func viewWillAppear() {
-        view.setupNavigationBar()
-        view.setTitle()
-        if products.isEmpty {
-            fetchProducts()
-        }
-        else {
-            interactor.fetchProductInCart()
-        }
-        view.setupViews()
-        view.setupConstraints()
+        interactor.updateCartStatus(products: products)
+        interactor.updateSuggestedCartStatus(products: suggestedProducts)
+        view.reloadData()
     }
     
     func product(_ index: Int) -> Product {
@@ -94,22 +91,31 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
 
 extension ProductListingPresenter: ProductListingInteractorOutputProtocol {
     
-    func fetchProductsInCartOutput(result: [Product]) {
-        let productsInCart = result
-        self.products = ProductService.shared.updateFetchedProducts(currentProducts: self.products, coreDataProducts: productsInCart)
-        self.suggestedProducts = ProductService.shared.updateFetchedProducts(currentProducts: self.suggestedProducts, coreDataProducts: productsInCart)
-        view.reloadData()
+    func updatedProductsOutput(products: [Product]) {
+        self.products = products
     }
     
-    func fetchSuggestedProductsOutput(result: [Product]) {
-        self.suggestedProducts = result
-        view.reloadData()
+    func updatedSuggestedProductsOutput(products: [Product]) {
+        self.suggestedProducts = products
     }
     
-    func fetchProductsOutput(result: [Product]) {
-        self.products = result
-        view.reloadData()
-        view.hideLoadingView()
+    func getProductsOutput(products: [Product]) {
+        self.products = products
+        interactor.updateCartStatus(products: products)
+        if !self.suggestedProducts.isEmpty {
+            view.hideLoadingView()
+            view.reloadData()
+        }
     }
+    
+    func getsuggestedProductsOutput(suggestedProducts: [Product]) {
+        self.suggestedProducts = suggestedProducts
+        interactor.updateSuggestedCartStatus(products: suggestedProducts)
+        if !self.products.isEmpty {
+            view.hideLoadingView()
+            view.reloadData()
+        }
+    }
+    
 }
 

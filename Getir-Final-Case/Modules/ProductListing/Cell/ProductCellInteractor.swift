@@ -21,18 +21,21 @@ final class ProductCellInteractor {
     var product: Product?
     weak var output: ProductCellInteractorOutputProtocol?
     weak var navBarDelegate: NavigationBarProtocol?
+    weak var cartPresenter: CartPresenterProtocol?
     
 }
 
 extension ProductCellInteractor: ProductCellInteractorProtocol {
     
     func tappedAddButton(product: Product) {
-        ProductService.shared.addToCart(product: product)
+        CartService.shared.addProductToCart(product: product)
+        cartPresenter?.addButtonTappedFromSuggested(product: product)
         navBarDelegate?.updatePriceInNavigationBar()
     }
     
     func tappedRemoveButton(product: Product) {
-        ProductService.shared.removeFromCart(product: product)
+        CartService.shared.removeProductFromCart(product: product)
+        cartPresenter?.deleteButtonTappedFromSuggested(product: product)
         navBarDelegate?.updatePriceInNavigationBar()
     }
     
