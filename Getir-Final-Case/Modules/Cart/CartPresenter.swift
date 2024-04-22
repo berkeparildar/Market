@@ -57,13 +57,13 @@ extension CartPresenter: CartPresenterProtocol {
     }
     
     func viewDidLoad() {
-        view.setupNavigationBar()
         view.setupViews()
         view.setupConstraints()
         view.updateTotalPrice(price: calculateTotalPrice())
     }
     
     func viewWillAppear() {
+        view.setupNavigationBar()
         interactor.fetchProductsInCart()
         interactor.fetchSuggestedProducts()
         view.updateTotalPrice(price: calculateTotalPrice())
@@ -129,11 +129,6 @@ extension CartPresenter: UpdateCartViewProtocol {
     func addButtonTapped(product: Product) {
         let match = self.productsInCart.firstIndex { product.id == $0.id }
         self.productsInCart[match!].inCartCount += 1
-        if let suggestedMatch = self.suggestedProducts.firstIndex(where: { product.id == $0.id }) {
-            self.suggestedProducts[suggestedMatch].inCartCount += 1
-            let indexPath = IndexPath(item: suggestedMatch, section: 1)
-            view.reloadCartItem(at: indexPath)
-        }
         view.updateTotalPrice(price: calculateTotalPrice())
     }
     

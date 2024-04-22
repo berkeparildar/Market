@@ -140,7 +140,7 @@ final class ProductDetailViewController: UIViewController {
         let button = UIButton(type: .system)
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 12, weight: .bold, scale: .large)
         button.setPreferredSymbolConfiguration(largeConfig, forImageIn: .normal)
-        button.setImage(UIImage(systemName: "minus"), for: .normal)
+        button.setImage(UIImage(systemName: "trash"), for: .normal)
         button.tintColor = .getirPurple
         button.layer.cornerRadius = 8
         button.backgroundColor = .white
@@ -308,8 +308,15 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
     }
     
     func configureViewWithCartCount() {
-        if presenter.countInCart() > 0 {
+        let productCount = presenter.countInCart()
+        if productCount > 0 {
             showQuantityButtons()
+            let newImage = productCount == 1 ? UIImage(systemName: "trash") : UIImage(systemName: "minus")
+            UIView.animate(withDuration: 0.3) {
+                self.decreaseQuantityButton.setImage(newImage, for: .normal)
+                self.quantityLabel.text = String(productCount)
+                self.view.layoutIfNeeded()
+            }
         }
         else {
             showAddToCartButton()
@@ -324,9 +331,6 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
         self.quantityLabel.isHidden = false
         self.increaseQuantityButton.isHidden = false
         self.quantityLabel.text = String(presenter.countInCart())
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
     }
     
     func showAddToCartButton() {
@@ -336,9 +340,6 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
         self.decreaseQuantityButton.isHidden = true
         self.quantityLabel.isHidden = true
         self.increaseQuantityButton.isHidden = true
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
     }
 }
 
@@ -351,7 +352,5 @@ extension ProductDetailViewController: NavigationBarProtocol {
     func didTapRightButton() {
         presenter.didTapCartButton()
     }
-
-    func updateNavigationBar() {
-    }
+    
 }

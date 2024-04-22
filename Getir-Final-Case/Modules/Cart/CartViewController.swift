@@ -174,7 +174,7 @@ extension CartViewController: CartViewControllerProtocol {
             priceLabel.topAnchor.constraint(equalTo: buyButton.topAnchor),
             priceLabel.bottomAnchor.constraint(equalTo: buyButton.bottomAnchor),
             
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: bottomBlock.topAnchor),
@@ -200,7 +200,6 @@ extension CartViewController: CartViewControllerProtocol {
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 group.interItemSpacing = .flexible(16)
                 let section = NSCollectionLayoutSection(group: group)
-                section.interGroupSpacing = 16
                 let sectionBackground = NSCollectionLayoutDecorationItem.background(
                     elementKind: "background-element-kind")
                 section.decorationItems = [sectionBackground]

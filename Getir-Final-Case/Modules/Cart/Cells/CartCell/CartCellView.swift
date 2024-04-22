@@ -12,14 +12,13 @@ protocol CartCellViewProtocol: AnyObject {
     func setupConstraints()
     func updateStepper()
     func configureWithPresenter()
-    
 }
 
 class CartCellView: UICollectionViewCell {
     
-    var presenter: CartCellPresenter!
-    
     static let identifier = "cartCell"
+    
+    var presenter: CartCellPresenter!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -106,6 +105,13 @@ class CartCellView: UICollectionViewCell {
         return button
     }()
     
+    lazy var seperator: UIView = {
+        let view = UIView()
+        view.backgroundColor = .getirLightGray
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     lazy var deleteButton: UIButton = {
         let button = UIButton(type: .system)
         let largeConfig = UIImage.SymbolConfiguration(pointSize: 12, weight: .bold, scale: .large)
@@ -153,6 +159,7 @@ extension CartCellView: CartCellViewProtocol {
         buttonSection.addSubview(addButton)
         baseView.addSubview(buttonSection)
         addSubview(baseView)
+        addSubview(seperator)
     }
     
     func setupConstraints() {
@@ -212,15 +219,23 @@ extension CartCellView: CartCellViewProtocol {
             addButton.leadingAnchor.constraint(equalTo: quantityLabel.trailingAnchor),
             addButton.topAnchor.constraint(equalTo: buttonSection.topAnchor),
             addButton.bottomAnchor.constraint(equalTo: buttonSection.bottomAnchor),
-            addButton.trailingAnchor.constraint(equalTo: buttonSection.trailingAnchor)
+            addButton.trailingAnchor.constraint(equalTo: buttonSection.trailingAnchor),
+            
+            seperator.heightAnchor.constraint(equalToConstant: 1),
+            seperator.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            seperator.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            seperator.topAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
     
     func updateStepper() {
         let productCount = presenter.getProductCount()
-        let newImage = productCount > 1 ? UIImage(systemName: "minus") : UIImage(systemName: "minus")
-        self.deleteButton.setImage(newImage, for: .normal)
-        self.quantityLabel.text = String(productCount)
+        let newImage = productCount > 1 ? UIImage(systemName: "minus") : UIImage(systemName: "trash")
+        UIView.animate(withDuration: 0.3) {
+            self.deleteButton.setImage(newImage, for: .normal)
+            self.quantityLabel.text = String(productCount)
+            self.layoutIfNeeded()
+        }
     }
     
     func configureWithPresenter() {
@@ -230,7 +245,7 @@ extension CartCellView: CartCellViewProtocol {
         priceLabel.text = product.productPriceText
         productImage.kf.setImage(with: product.imageURL)
         self.quantityLabel.text = String(product.inCartCount)
-        let newImage = product.inCartCount > 1 ? UIImage(systemName: "minus") : UIImage(systemName: "minus")
+        let newImage = product.inCartCount > 1 ? UIImage(systemName: "minus") : UIImage(systemName: "trash")
         self.deleteButton.setImage(newImage, for: .normal)
     }
 }

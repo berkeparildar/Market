@@ -111,6 +111,12 @@ class CustomNavigationController: UINavigationController {
     }
     
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
+        if viewController is CartViewController {
+            if let cartVC = viewControllers.first(where: { $0 is CartViewController }) {
+                popToViewController(cartVC, animated: true)
+                return
+            }
+        }
         super.pushViewController(viewController, animated: animated)
         viewController.navigationItem.hidesBackButton = true
     }
