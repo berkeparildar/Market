@@ -15,9 +15,7 @@ protocol CartPresenterProtocol: AnyObject {
     func suggestedProduct(_ index: Int) -> Product
     func tappedProduct(indexpath: IndexPath)
     func didTapTrashButton()
-    func didAddOrRemoveSuggestedProduct()
     func addButtonTappedFromSuggested(product: Product)
-    func deleteButtonTappedFromSuggested(product: Product)
 }
 
 final class CartPresenter {
@@ -27,6 +25,7 @@ final class CartPresenter {
     
     private var productsInCart: [Product] = []
     private var suggestedProducts: [Product] = []
+    private var suggestedProductsFetched: [Product] = []
     
     init(view: CartViewControllerProtocol!, router: CartRouterProtocol!, interactor: CartInteractorProtocol!) {
         self.view = view
@@ -37,52 +36,28 @@ final class CartPresenter {
 
 extension CartPresenter: CartPresenterProtocol {
     
-    func didAddOrRemoveSuggestedProduct() {
-        interactor.fetchProductsInCart()
-        interactor.fetchSuggestedProducts()
-        self.suggestedProducts = CartService.shared.updateCartStatusOfProducts(products: suggestedProducts)
-        view.reloadData()
-    }
-    
     func addButtonTappedFromSuggested(product: Product) {
-        guard let matchIndex = self.productsInCart.firstIndex(where: { $0.id == product.id }) else {
+        if let matchIndex = self.productsInCart.firstIndex(where: { $0.id == product.id }) {
+            self.productsInCart[matchIndex].inCartCount += 1
+            let cartIndexPath = IndexPath(item: matchIndex, section: 0)
+            view.reloadCartItem(at: cartIndexPath)
+        } else {
             self.productsInCart.append(product)
             self.productsInCart[productsInCart.count - 1].inCartCount = 1
             self.productsInCart[productsInCart.count - 1].isInCart = true
-            let indexPath = IndexPath(item: productsInCart.count - 1, section: 0)
-            let suggestedIndex = self.suggestedProducts.firstIndex(where: { $0.id == product.id })
-            self.suggestedProducts[suggestedIndex!].inCartCount += 1
-            self.suggestedProducts[suggestedIndex!].isInCart = true
-            view.insertCartItem(at: indexPath)
-            view.updateTotalPrice(price: calculateTotalPrice())
-            return
+            let newCartIndexPath = IndexPath(item: productsInCart.count - 1, section: 0)
+            view.insertCartItem(at: newCartIndexPath)
         }
-        self.productsInCart[matchIndex].inCartCount += 1
-        let suggestedIndex = self.suggestedProducts.firstIndex(where: { $0.id == product.id })
-        self.suggestedProducts[suggestedIndex!].inCartCount += 1
-        let indexPath = IndexPath(item: matchIndex, section: 0)
-        view.reloadCartItem(at: indexPath)
-        view.updateTotalPrice(price: calculateTotalPrice())
-    }
-    
-    func deleteButtonTappedFromSuggested(product: Product) {
-        guard let matchIndex = self.productsInCart.firstIndex(where: { $0.id == product.id }) else { return }
-        self.productsInCart[matchIndex].inCartCount -= 1
-        if self.productsInCart[matchIndex].inCartCount == 0 {
-            self.productsInCart.remove(at: matchIndex)
-            let indexPath = IndexPath(item: matchIndex, section: 0)
-            view.deleteCartItem(at: indexPath)
-        } else {
-            let indexPath = IndexPath(item: matchIndex, section: 0)
-            view.reloadCartItem(at: indexPath)
+        if let suggestedIndex = self.suggestedProducts.firstIndex(where: { $0.id == product.id }) {
+            self.suggestedProducts.remove(at: suggestedIndex)
+            let suggestedIndexPath = IndexPath(item: suggestedIndex, section: 1)
+            view.deleteCartItem(at: suggestedIndexPath)
         }
-        let suggestedIndex = self.suggestedProducts.firstIndex(where: { $0.id == product.id })
-        self.suggestedProducts[suggestedIndex!].inCartCount -= 1
         view.updateTotalPrice(price: calculateTotalPrice())
     }
     
     func viewDidLoad() {
-        view.setTitle()
+        view.setupNavigationBar()
         view.setupViews()
         view.setupConstraints()
         view.updateTotalPrice(price: calculateTotalPrice())
@@ -91,6 +66,7 @@ extension CartPresenter: CartPresenterProtocol {
     func viewWillAppear() {
         interactor.fetchProductsInCart()
         interactor.fetchSuggestedProducts()
+        view.updateTotalPrice(price: calculateTotalPrice())
         self.suggestedProducts = CartService.shared.updateCartStatusOfProducts(products: suggestedProducts)
     }
     
@@ -120,7 +96,7 @@ extension CartPresenter: CartPresenterProtocol {
     }
     
     func didTapTrashButton() {
-        
+        interactor.clearCart()
     }
     
     func calculateTotalPrice() -> Double {
@@ -134,7 +110,13 @@ extension CartPresenter: CartPresenterProtocol {
 
 extension CartPresenter: CartInteractorOutputProtocol {
     func fetchSuggestedProductsOutput(result: [Product]) {
-        self.suggestedProducts = result
+        self.suggestedProductsFetched = result
+        self.suggestedProducts = self.suggestedProductsFetched
+        for product in self.productsInCart {
+            if let match = self.suggestedProducts.firstIndex(where: { $0.id == product.id}) {
+                suggestedProducts.remove(at: match)
+            }
+        }
         view.reloadData()
     }
     func fetchProductsInCartOutput(result: [Product]) {
@@ -158,15 +140,12 @@ extension CartPresenter: UpdateCartViewProtocol {
     func deleteButtonTapped(product: Product) {
         let match = self.productsInCart.firstIndex { product.id == $0.id }
         self.productsInCart[match!].inCartCount -= 1
-        if let suggestedMatch = self.suggestedProducts.firstIndex(where: { product.id == $0.id }) {
-            self.suggestedProducts[suggestedMatch].inCartCount -= 1
-            if self.suggestedProducts[suggestedMatch].inCartCount == 0 {
-                self.suggestedProducts[suggestedMatch].isInCart = false
-            }
-            let indexPath = IndexPath(item: suggestedMatch, section: 1)
-            view.reloadCartItem(at: indexPath)
-        }
         if self.productsInCart[match!].inCartCount == 0 {
+            if let suggestedMatch = self.suggestedProductsFetched.firstIndex(where: { product.id == $0.id }) {
+                self.suggestedProducts.insert(self.suggestedProductsFetched[suggestedMatch], at: 0)
+                let indexPath = IndexPath(item: 0, section: 1)
+                view.insertCartItem(at: indexPath)
+            }
             self.productsInCart.remove(at: match!)
             let indexPath = IndexPath(item: match!, section: 0)
             view.deleteCartItem(at: indexPath)

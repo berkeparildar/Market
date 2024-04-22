@@ -19,7 +19,7 @@ final class CartRouter {
     
     weak var viewController: CartViewController?
     
-    static func createModule(suggestedProducts: [Product]?) -> CartViewController {
+    static func createModule(suggestedProducts: [Product]? = nil) -> CartViewController {
         let view = CartViewController()
         let interactor = CartInteractor()
         let router = CartRouter()

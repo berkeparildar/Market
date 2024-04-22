@@ -1,32 +1,35 @@
 //
-//  ProductCellInteractor.swift
+//  SuggestedCellInteractor.swift
 //  Getir-Final-Case
 //
-//  Created by Berke Parıldar on 14.04.2024.
+//  Created by Berke Parıldar on 22.04.2024.
 //
 
 import Foundation
 
-protocol ProductCellInteractorProtocol: AnyObject {
+protocol SuggestedCellInteractorProtocol: AnyObject {
     func tappedAddButton(product: Product)
     func tappedRemoveButton(product: Product)
 }
 
-protocol ProductCellInteractorOutputProtocol: AnyObject {
+protocol SuggestedCellInteractorOutputProtocol: AnyObject {
     func getProductOutput(result: Product)
 }
 
-final class ProductCellInteractor {
+final class SuggestedCellInteractor {
     
     var product: Product?
-    weak var output: ProductCellInteractorOutputProtocol?
-    weak var navBarDelegate: NavigationBarProtocol?    
+    weak var output: SuggestedCellInteractorOutputProtocol?
+    weak var navBarDelegate: NavigationBarProtocol?
+    weak var cartPresenter: CartPresenterProtocol?
+    
 }
 
-extension ProductCellInteractor: ProductCellInteractorProtocol {
+extension SuggestedCellInteractor: SuggestedCellInteractorProtocol {
     
     func tappedAddButton(product: Product) {
         CartService.shared.addProductToCart(product: product)
+        cartPresenter?.addButtonTappedFromSuggested(product: product)
         navBarDelegate?.updatePriceInNavigationBar()
     }
     
@@ -36,5 +39,3 @@ extension ProductCellInteractor: ProductCellInteractorProtocol {
     }
     
 }
-
-

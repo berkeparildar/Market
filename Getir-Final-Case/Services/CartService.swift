@@ -55,14 +55,22 @@ extension CartService: CartServiceProtocol {
         return productsInCart.isEmpty
     }
     
+    func totalPrice() -> Double {
+        var totalPrice = 0.0
+        self.productsInCart.forEach {
+            totalPrice += $0.productPrice * Double($0.inCartCount)
+        }
+        return totalPrice
+    }
+    
     func getProductFromCartWithID(id: String) -> Product? {
         let product = dataManager.fetchProductWithID(id: id)
         return product
     }
     
     func clearProductsInCart() {
+        dataManager.clearCart()
         productsInCart.removeAll()
-        
     }
     
     func updateCartStatusOfProducts(products: [Product]) -> [Product] {

@@ -34,10 +34,22 @@ class CustomNavigationController: UINavigationController {
     private func setupCustomNavigationBar() {
         customNavigationBarView = CustomNavigationBarView()
         customNavigationBarView?.controller = self
+        setCartButtonVisibility()
+        setPriceLabel()
         let navigationBar = self.navigationBar
         navigationBar.addSubview(customNavigationBarView!)
         customNavigationBarView!.translatesAutoresizingMaskIntoConstraints = false
+        setupCustomNavigationBarAppearance()
         
+        NSLayoutConstraint.activate([
+            customNavigationBarView!.leadingAnchor.constraint(equalTo: navigationBar.leadingAnchor),
+            customNavigationBarView!.trailingAnchor.constraint(equalTo: navigationBar.trailingAnchor),
+            customNavigationBarView!.topAnchor.constraint(equalTo: navigationBar.topAnchor),
+            customNavigationBarView!.heightAnchor.constraint(equalToConstant: 44),
+        ])
+    }
+    
+    func setupCustomNavigationBarAppearance() {
         if #available(iOS 15, *) {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground()
@@ -48,43 +60,64 @@ class CustomNavigationController: UINavigationController {
             navigationBar.barTintColor = UIColor.getirPurple
         }
         
-        NSLayoutConstraint.activate([
-            customNavigationBarView!.leadingAnchor.constraint(equalTo: navigationBar.leadingAnchor),
-            customNavigationBarView!.trailingAnchor.constraint(equalTo: navigationBar.trailingAnchor),
-            customNavigationBarView!.topAnchor.constraint(equalTo: navigationBar.topAnchor),
-            customNavigationBarView!.heightAnchor.constraint(equalToConstant: 44),
-        ])
     }
     
     func updatePrice() {
-        customNavigationBarView?.updateCartButtonAppearance()
+        let updatedPrice = CartService.shared.totalPrice()
+        if Int(updatedPrice) == 0 {
+            customNavigationBarView?.hideCartButton()
+        }
+        else {
+            customNavigationBarView?.showCartButton()
+            customNavigationBarView?.cartButtonAnimation(updatedPrice: updatedPrice)
+        }
     }
     
     func setTitle(title: String) {
         customNavigationBarView?.navigationTitle.text = title
     }
     
-    override func pushViewController(_ viewController: UIViewController, animated: Bool) {
-        super.pushViewController(viewController, animated: animated)
+    func setButtonVisibility() {
+        setBackButtonVisibility()
+        setTrashButtonVisibility()
+        setCartButtonVisibility()
+    }
+    
+    func setBackButtonVisibility() {
         if viewControllers.count > 1 {
             customNavigationBarView?.addBackButton()
+        } else {
+            customNavigationBarView?.hideBackButton()
         }
-        customNavigationBarView?.addBackButton()
-        if viewControllers.last is CartViewController {
+    }
+    
+    func setTrashButtonVisibility() {
+        if visibleViewController is CartViewController {
             customNavigationBarView?.addTrashButton()
         }
+        else {
+            customNavigationBarView?.hideTrashButton()
+        }
+    }
+
+    func setCartButtonVisibility() {
+        let cartIsEmpty = CartService.shared.isCartEmpty()
+        let inCartView = visibleViewController is CartViewController
+        if cartIsEmpty || inCartView {
+            customNavigationBarView?.cartButtonIsHidden()
+        } else {
+            customNavigationBarView?.cartButtonIsVisible()
+        }
+    }
+    
+    override func pushViewController(_ viewController: UIViewController, animated: Bool) {
+        super.pushViewController(viewController, animated: animated)
         viewController.navigationItem.hidesBackButton = true
     }
     
-    override func popViewController(animated: Bool) -> UIViewController? {
-        if viewControllers.last is CartViewController {
-            customNavigationBarView?.hideTrashButton()
-        }
-        super.popViewController(animated: animated)
-        if viewControllers.count == 1 {
-            customNavigationBarView?.hideBackButton()
-        }
-        return viewControllers.last
+    func setPriceLabel() {
+        let totalPrice = CartService.shared.totalPrice()
+        customNavigationBarView?.updatePrice(updatedPrice: totalPrice)
     }
     
     func rightButtonTapped() {

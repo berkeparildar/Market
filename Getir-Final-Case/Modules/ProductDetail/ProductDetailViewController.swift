@@ -289,6 +289,9 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
     func setupNavigationBar() {
         if let customNavController = navigationController as? CustomNavigationController {
             customNavigationBar = customNavController
+            customNavigationBar.setTitle(title: "Ürünler")
+            customNavigationBar.setButtonVisibility()
+            customNavigationBar.setPriceLabel()
         }
     }
     

@@ -38,10 +38,8 @@ extension ProductDetailRouter: ProductDetailRouterProtocol {
     func navigate(_ route: ProductDetailRoutes) {
         switch route {
         case .cart:
-            /*
-            let productDetailVC = ProductDetailRouter.createModule()
-            viewController?.navigationController?.pushViewController(productDetailVC, animated: true)
-             */
+            let cartVC = CartRouter.createModule()
+            viewController?.navigationController?.pushViewController(cartVC, animated: true)
             break
         }
     }

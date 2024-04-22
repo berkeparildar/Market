@@ -23,7 +23,6 @@ extension LoadingShowable {
 }
 
 class LoadingView {
-    
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
     static let shared = LoadingView()
     var blurView: UIVisualEffectView = UIVisualEffectView()

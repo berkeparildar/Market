@@ -46,13 +46,12 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
     
     func viewDidLoad() {
         fetchProducts()
-        view.setupNavigationBar()
-        view.setTitle()
         view.setupViews()
         view.setupConstraints()
     }
     
     func viewWillAppear() {
+        view.setupNavigationBar()
         interactor.updateCartStatus(products: products)
         interactor.updateSuggestedCartStatus(products: suggestedProducts)
         view.reloadData()

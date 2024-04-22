@@ -9,6 +9,7 @@ import UIKit
 
 protocol CartViewControllerProtocol: AnyObject {
     func reloadData()
+    func setupNavigationBar()
     func setupViews()
     func setupConstraints()
     func showError(_ message: String)
@@ -17,14 +18,6 @@ protocol CartViewControllerProtocol: AnyObject {
     func insertCartItem(at indexPath: IndexPath)
     func reloadCartItem(at indexPath: IndexPath)
     func deleteCartItem(at indexPath: IndexPath)
-}
-
-protocol CartCellDelegate {
-    
-}
-
-protocol SuggestedProductCellDelegate {
-    
 }
 
 class CartViewController: UIViewController {
@@ -36,7 +29,7 @@ class CartViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.backgroundColor = .getirLightGray
-        collectionView.register(ProductCellView.self, forCellWithReuseIdentifier: ProductCellView.identifier)
+        collectionView.register(SuggestedCellView.self, forCellWithReuseIdentifier: SuggestedCellView.identifier)
         collectionView.register(CartCellView.self, forCellWithReuseIdentifier: CartCellView.identifier)
         collectionView.register(SectionHeaderSuggestedProduct.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "CustomHeaderView")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -114,6 +107,15 @@ class CartViewController: UIViewController {
 }
 
 extension CartViewController: CartViewControllerProtocol {
+    
+    func setupNavigationBar() {
+        if let customNavController = navigationController as? CustomNavigationController {
+            customNavController.setTitle(title: "Sepetim")
+            customNavController.setButtonVisibility()
+            customNavController.setPriceLabel()
+        }
+    }
+    
     
     func reloadData() {
         DispatchQueue.main.async {
@@ -247,8 +249,8 @@ extension CartViewController: UICollectionViewDataSource {
             CartCellBuilder.createModule(cellView: cellView, product: presenter.productInCart(indexPath.item), view: presenter)
             return cellView
         }
-        let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCellView.identifier, for: indexPath) as! ProductCellView
-        ProductCellBuilder.createModule(cellView: cellView, product: presenter.suggestedProduct(indexPath.item), navBarOwner: self, cartPresenter: presenter)
+        let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: SuggestedCellView.identifier, for: indexPath) as! SuggestedCellView
+        SuggestedCellBuilder.createModule(cellView: cellView, product: presenter.suggestedProduct(indexPath.item), navBarOwner: self, cartPresenter: presenter)
         return cellView
     }
     
@@ -265,12 +267,17 @@ extension CartViewController: UICollectionViewDelegate {
     }
 }
 
-extension CartViewController: NavigationBarProtocol {
+extension CartViewController: NavigationBarProtocol, ConfirmationShowable {
     func updatePriceInNavigationBar() {
         
     }
     
     func didTapRightButton() {
-        
+        showConfitmation {
+            self.presenter.didTapTrashButton()
+            if let customNavBar = self.navigationController as? CustomNavigationController {
+                customNavBar.popToRootViewController(animated: true)
+            }
+        }
     }
 }

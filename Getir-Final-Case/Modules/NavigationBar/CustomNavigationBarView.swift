@@ -11,10 +11,12 @@ class CustomNavigationBarView: UINavigationBar {
     
     var imageBackgroundWidthAnchor: NSLayoutConstraint!
     var imageBackgroundTrailingAnchor: NSLayoutConstraint!
-    var controller: UINavigationController?
     
-    var updatedPrice: Double = 0.0
-        
+    var buttonShowingTrailingAnchor: NSLayoutConstraint!
+    var buttonHidingTrailingAnchor: NSLayoutConstraint!
+    
+    var controller: UINavigationController?
+            
     lazy var navigationTitle: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "OpenSans-Bold", size: 14)
@@ -81,7 +83,7 @@ class CustomNavigationBarView: UINavigationBar {
     
     lazy var trashButton: UIButton = {
         var button = UIButton(type: .system)
-        button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(cartButtonTapped), for: .touchUpInside)
         button.isHidden = true
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isHidden = true
@@ -101,8 +103,6 @@ class CustomNavigationBarView: UINavigationBar {
         setupAppearance()
         setupViews()
         setupConstraints()
-        updatePrice()
-        self.priceLabel.text = String(format: "₺%.2f", self.updatedPrice)
     }
     
     private func setupViews() {
@@ -115,6 +115,7 @@ class CustomNavigationBarView: UINavigationBar {
         cartImageBackground.addSubview(cartImage)
         cartButton.addSubview(cartImageBackground)
         addSubview(cartButton)
+        cartButton.isHidden = CartService.shared.isCartEmpty()
     }
     
     required init?(coder: NSCoder) {
@@ -125,6 +126,9 @@ class CustomNavigationBarView: UINavigationBar {
         
         imageBackgroundWidthAnchor = self.cartImageBackground.widthAnchor.constraint(equalToConstant: 34)
         imageBackgroundTrailingAnchor = self.cartImageBackground.trailingAnchor.constraint(equalTo: cartButton.trailingAnchor)
+        
+        buttonShowingTrailingAnchor = cartButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8)
+        buttonHidingTrailingAnchor = cartButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 120)
         
         NSLayoutConstraint.activate([
             
@@ -152,7 +156,6 @@ class CustomNavigationBarView: UINavigationBar {
             trashButtonImage.centerXAnchor.constraint(equalTo: trashButton.centerXAnchor),
             trashButtonImage.centerYAnchor.constraint(equalTo: trashButton.centerYAnchor),
             
-            cartButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8),
             cartButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
             cartButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant:  -5),
 
@@ -175,6 +178,10 @@ class CustomNavigationBarView: UINavigationBar {
     
     private func setupAppearance() {
         self.backgroundColor = .getirPurple
+    }
+    
+    func updatePrice(updatedPrice: Double) {
+        self.priceLabel.text = String(format: "₺%.2f", updatedPrice)
     }
     
     @objc private func cartButtonTapped() {
@@ -205,39 +212,53 @@ class CustomNavigationBarView: UINavigationBar {
         cartButton.isHidden = false
     }
     
-    func updateCartButtonAppearance() {
-        updatePrice()
-        cartButtonAnimationExpand()
-    }
-    
-    func updatePrice() {
-        let currentItems = CartService.shared.getProductsInCart()
-        var totalPrice = 0.0
-        currentItems.forEach {
-            totalPrice += $0.productPrice * Double($0.inCartCount)
+    func hideCartButton() {
+        buttonShowingTrailingAnchor.isActive = false
+        buttonHidingTrailingAnchor.isActive = true
+        UIView.animate(withDuration: 0.3) {
+            self.layoutIfNeeded()
+        } completion: { _ in
+            self.cartButton.isHidden = true
         }
-        self.updatedPrice = totalPrice
     }
     
-    func cartButtonAnimationExpand() {
+    func showCartButton() {
+        if cartButton.isHidden {
+            cartButton.isHidden = false
+            buttonHidingTrailingAnchor.isActive = false
+            buttonShowingTrailingAnchor.isActive = true
+            UIView.animate(withDuration: 0.3) {
+                self.layoutIfNeeded()
+            }
+        }
+    }
+    
+    func cartButtonIsHidden() {
+        cartButton.isHidden = true
+        buttonShowingTrailingAnchor.isActive = false
+        buttonHidingTrailingAnchor.isActive = true
+    }
+    
+    func cartButtonIsVisible() {
+        cartButton.isHidden = false
+        buttonHidingTrailingAnchor.isActive = false
+        buttonShowingTrailingAnchor.isActive = true
+    }
+    
+    func cartButtonAnimation(updatedPrice: Double) {
         imageBackgroundWidthAnchor.isActive = false
         imageBackgroundTrailingAnchor.isActive = true
         UIView.animate(withDuration: 0.3) {
             self.layoutIfNeeded()
         } completion: { _ in
-            self.priceLabel.text = String(format: "₺%.2f", self.updatedPrice)
-            self.cartButtonAnimationContract()
+            self.priceLabel.text = String(format: "₺%.2f", updatedPrice)
+            self.imageBackgroundTrailingAnchor.isActive = false
+            self.imageBackgroundWidthAnchor.isActive = true
+            UIView.animate(withDuration: 0.3) {
+                self.layoutIfNeeded()
+            }
         }
     }
     
-    func cartButtonAnimationContract() {
-        imageBackgroundTrailingAnchor.isActive = false
-        imageBackgroundWidthAnchor.isActive = true
-        UIView.animate(withDuration: 0.3) {
-            self.layoutIfNeeded()
-        } completion: { _ in
-            // ok
-        }
-    }
 }
 

@@ -9,7 +9,6 @@ import UIKit
 
 protocol ProductListingViewControllerProtocol: AnyObject {
     func setupNavigationBar()
-    func setTitle()
     func setupViews()
     func setupConstraints()
     func reloadData()
@@ -26,6 +25,7 @@ final class ProductListingViewController: UIViewController, LoadingShowable {
         let layout = createCollectionViewLayout()
         let collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
         collectionView.dataSource = self
+        collectionView.delaysContentTouches = false
         collectionView.delegate = self
         collectionView.backgroundColor = .getirLightGray
         collectionView.register(ProductCellView.self, forCellWithReuseIdentifier: ProductCellView.identifier)
@@ -98,11 +98,10 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
     func setupNavigationBar() {
         if let customNavController = navigationController as? CustomNavigationController {
             customNavigationBar = customNavController
+            customNavigationBar.setTitle(title: "Ürünler")
+            customNavigationBar.setButtonVisibility()
+            customNavigationBar.setPriceLabel()
         }
-    }
-    
-    func setTitle() {
-        customNavigationBar.setTitle(title: "Ürünler")
     }
     
     func setupViews() {
@@ -120,10 +119,7 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
     
     func reloadData() {
         DispatchQueue.main.async {
-            UIView.transition(with: self.collectionView,
-                              duration: 0.35,
-                              options: .transitionCrossDissolve,
-                              animations: { self.collectionView.reloadData() })
+            self.collectionView.reloadData()
         }
     }
     
@@ -178,10 +174,5 @@ extension ProductListingViewController: NavigationBarProtocol {
     func didTapRightButton() {
         presenter.didTapCartButton()
     }
-
-}
-
-
-extension ProductListingViewController: ShowAlert {
     
 }

@@ -232,6 +232,5 @@ extension CartCellView: CartCellViewProtocol {
         self.quantityLabel.text = String(product.inCartCount)
         let newImage = product.inCartCount > 1 ? UIImage(systemName: "minus") : UIImage(systemName: "minus")
         self.deleteButton.setImage(newImage, for: .normal)
-        print("Hello")
     }
 }

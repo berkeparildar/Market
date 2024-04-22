@@ -12,6 +12,7 @@ protocol CartInteractorProtocol: AnyObject {
     func fetchSuggestedProducts()
     func productAddedToCart(product: Product)
     func productRemovedFromCart(product: Product)
+    func clearCart()
 }
 
 protocol CartInteractorOutputProtocol: AnyObject {
@@ -25,6 +26,9 @@ final class CartInteractor {
 }
 
 extension CartInteractor: CartInteractorProtocol {
+    func clearCart() {
+        CartService.shared.clearProductsInCart()
+    }
     
     func fetchProductsInCart() {
         let products = CartService.shared.getProductsInCart()
