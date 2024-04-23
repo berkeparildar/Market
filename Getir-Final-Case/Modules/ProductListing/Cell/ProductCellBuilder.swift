@@ -11,11 +11,9 @@ final class ProductCellBuilder {
     static func createModule(cellView: ProductCellView, product: Product, cellOwner: ProductCellOwnerDelegate) {
         let interactor = ProductCellInteractor()
         interactor.cellOwnerDelegate = cellOwner
-        interactor.product = product
         let presenter = ProductCellPresenter(interactor: interactor, view: cellView)
         presenter.product = product
         cellView.presenter = presenter
-        interactor.output = presenter
         cellView.configure(product: product)
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 
 protocol SuggestedCellPresenterProtocol: AnyObject {
     func getProduct() -> Product
-    func tappedAdd()
+    func didTapAddButton()
 }
         
 final class SuggestedCellPresenter {
@@ -31,18 +31,10 @@ extension SuggestedCellPresenter: SuggestedCellPresenterProtocol {
         return self.product
     }
     
-    func tappedAdd() {
+    func didTapAddButton() {
         product.isInCart = true
         product.inCartCount += 1
         interactor.tappedAddButton(product: product)
-    }
-    
-}
-
-extension SuggestedCellPresenter: SuggestedCellInteractorOutputProtocol {
-    
-    func getProductOutput(result: Product) {
-        self.product = result
     }
     
 }

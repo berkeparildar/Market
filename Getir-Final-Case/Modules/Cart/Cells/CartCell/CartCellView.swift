@@ -136,11 +136,11 @@ class CartCellView: UICollectionViewCell {
     }()
     
     @objc func addButtonTapped() {
-        presenter.tappedQuantityIncreaseButton()
+        presenter.didTapAddButton()
     }
     
     @objc func deleteButtonTapped() {
-        presenter.tappedQuantityDecreaseButton()
+        presenter.didTapRemoveButton()
     }
     
 }

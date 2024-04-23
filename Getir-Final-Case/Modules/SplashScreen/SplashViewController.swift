@@ -9,10 +9,10 @@ import UIKit
 
 protocol SplashViewControllerProtocol: AnyObject {
     func noInternetConnection()
-    func setupUI()
+    func setupViews()
 }
 
-class SplashViewController: UIViewController {
+class SplashViewController: UIViewController, ShowAlert {
     
     var presenter: SplashPresenterProtocol?
     
@@ -32,13 +32,13 @@ class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter?.viewDidAppear()
-        setupUI()
+        setupViews()
     }
 }
 
 extension SplashViewController: SplashViewControllerProtocol {
     
-    func setupUI() {
+    func setupViews() {
         self.background.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(background)
         splashLogo.translatesAutoresizingMaskIntoConstraints = false
@@ -58,6 +58,6 @@ extension SplashViewController: SplashViewControllerProtocol {
     }
     
     func noInternetConnection() {
-        //showAlert(title: "No Internet Connection", message: "Please try again after")
+        showAlert(title: "İnternet bağlantısı yok", message: "Bağlantıyı sağlayıp tekrar deneyin")
     }
 }

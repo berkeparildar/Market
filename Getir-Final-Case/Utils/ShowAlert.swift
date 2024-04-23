@@ -14,7 +14,7 @@ protocol ShowAlert {
 extension ShowAlert where Self: UIViewController {
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let ok = UIAlertAction(title: "Ok", style: .default)
+        let ok = UIAlertAction(title: "Tamam", style: .default)
         alert.addAction(ok)
         DispatchQueue.main.async {
             self.present(alert, animated: true)

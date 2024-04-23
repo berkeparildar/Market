@@ -18,14 +18,13 @@ protocol ProductDetailViewControllerProtocol: AnyObject {
 final class ProductDetailViewController: UIViewController {
     
     var presenter: ProductDetailPresenter!
-    var productIsInCartConstraints: NSLayoutConstraint!
-    var productIsNotInCartConstraints: NSLayoutConstraint!
-    var customNavigationBar: CustomNavigationController!
-    
+    private var productIsInCartConstraints: NSLayoutConstraint!
+    private var productIsNotInCartConstraints: NSLayoutConstraint!
+    private var customNavigationBar: CustomNavigationController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        presenter.viewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -33,59 +32,63 @@ final class ProductDetailViewController: UIViewController {
         presenter.viewWillAppear()
     }
     
-    override func viewDidLayoutSubviews() {
-    }
-    
-    lazy var productBlock: UIView = {
+    //MARK: - Views
+    private let productBlock: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.1
         view.layer.shadowOffset = CGSize(width: 0, height: 1)
         view.layer.shadowRadius = 3
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    lazy var productImage: UIImageView = {
+    private let productImage: UIImageView = {
         let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    lazy var priceLabel: UILabel = {
+    private let priceLabel: UILabel = {
         let label = UILabel()
         label.textColor = .getirPurple
         label.font = UIFont(name: "OpenSans-Bold", size: 20)
         label.text = "₺0,00"
         label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    lazy var nameLabel: UILabel = {
+    private let nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .getirBlack
         label.numberOfLines = 0
         label.font = UIFont(name: "OpenSans-Bold", size: 16)
         label.text = "Product Name"
         label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    lazy var attributeLabel: UILabel = {
+    private let attributeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .getirGray
         label.font = UIFont(name: "OpenSans-Semibold", size: 12)
         label.text = "Attribute"
         label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    lazy var buttonBlock: UIView = {
+    private let buttonBlock: UIView = {
         let view = UIView()
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.1
         view.layer.shadowOffset = CGSize(width: 0, height: -4)
         view.layer.shadowRadius = 8
         view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -95,6 +98,7 @@ final class ProductDetailViewController: UIViewController {
         button.layer.cornerRadius = 10
         button.addTarget(self, action: #selector(didTapAddToCartButton), for: .touchUpInside)
         button.isHidden = true
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -105,6 +109,7 @@ final class ProductDetailViewController: UIViewController {
         label.backgroundColor = .getirPurple
         label.text = "Sepete Ekle"
         label.isHidden = true
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -117,6 +122,7 @@ final class ProductDetailViewController: UIViewController {
         view.layer.shadowOffset = CGSize(width: 0, height: 0)
         view.layer.shadowRadius = 6
         view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -128,6 +134,7 @@ final class ProductDetailViewController: UIViewController {
         label.textAlignment = .center
         label.text = "0"
         label.isHidden = true
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -141,6 +148,7 @@ final class ProductDetailViewController: UIViewController {
         button.layer.cornerRadius = 8
         button.addTarget(self, action: #selector(didTapIncreaseQuantityButton), for: .touchUpInside)
         button.isHidden = true
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -154,26 +162,36 @@ final class ProductDetailViewController: UIViewController {
         button.backgroundColor = .white
         button.addTarget(self, action: #selector(didTapDecreaseQuantityButton), for: .touchUpInside)
         button.isHidden = true
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     @objc func didTapAddToCartButton() {
-        presenter.tappedAddToCartButton()
+        presenter.didTapAddToCartButton()
         customNavigationBar.updatePrice()
     }
     
     @objc func didTapIncreaseQuantityButton() {
-        presenter.tappedAddToCartButton()
+        presenter.didTapAddToCartButton()
         customNavigationBar.updatePrice()
     }
     
     @objc func didTapDecreaseQuantityButton() {
-        presenter.tappedRemoveButton()
+        presenter.didTapRemoveFromCartButton()
         customNavigationBar.updatePrice()
     }
 }
 
 extension ProductDetailViewController: ProductDetailViewControllerProtocol {
+    
+    func setupNavigationBar() {
+        if let customNavController = navigationController as? CustomNavigationController {
+            customNavigationBar = customNavController
+            customNavigationBar.setTitle(title: "Ürün Detayı")
+            customNavigationBar.setButtonVisibility()
+            customNavigationBar.setPriceLabel()
+        }
+    }
     
     func setupViews() {
         view.backgroundColor = .white
@@ -192,10 +210,6 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
     }
     
     func setupConstraints() {
-        [productBlock, productImage, priceLabel, nameLabel, attributeLabel, buttonTextLabel, addToCartButton, buttonBlock, quantityButtonsBackground, increaseQuantityButton, decreaseQuantityButton, quantityLabel].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
-        
         let bottomInsets = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.safeAreaInsets.bottom
         
         productIsNotInCartConstraints = addToCartButton.topAnchor.constraint(equalTo: buttonBlock.topAnchor, constant: 16)
@@ -261,19 +275,6 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
             increaseQuantityButton.trailingAnchor.constraint(equalTo: quantityButtonsBackground.trailingAnchor),
         ])
     }
-    
-    func setupNavigationBar() {
-        if let customNavController = navigationController as? CustomNavigationController {
-            customNavigationBar = customNavController
-            customNavigationBar.setTitle(title: "Ürün Detayı")
-            customNavigationBar.setButtonVisibility()
-            customNavigationBar.setPriceLabel()
-        }
-    }
-    
-    func setTitle() {
-        customNavigationBar.setTitle(title: "Ürün Detayı")
-    }
 
     func setProductData(_ product: Product) {
         self.priceLabel.text = product.productPriceText
@@ -284,7 +285,7 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
     }
     
     func configureViewWithCartCount() {
-        let productCount = presenter.countInCart()
+        let productCount = presenter.getProductQuantity()
         if productCount > 0 {
             showQuantityButtons()
             let newImage = productCount == 1 ? UIImage(systemName: "trash") : UIImage(systemName: "minus")
@@ -306,7 +307,7 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
         self.decreaseQuantityButton.isHidden = false
         self.quantityLabel.isHidden = false
         self.increaseQuantityButton.isHidden = false
-        self.quantityLabel.text = String(presenter.countInCart())
+        self.quantityLabel.text = String(presenter.getProductQuantity())
         productIsNotInCartConstraints.isActive = false
         productIsInCartConstraints.isActive = true
     }

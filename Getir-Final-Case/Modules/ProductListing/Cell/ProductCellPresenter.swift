@@ -8,16 +8,15 @@
 import Foundation
 
 protocol ProductCellPresenterProtocol: AnyObject {
-    func getProduct() -> Product
-    func tappedAdd()
-    func tappedRemove()
+    func didTapAddButton()
+    func didTapRemoveButton()
 }
 
 final class ProductCellPresenter {
     
     var product: Product!
     unowned var view: ProductCellViewProtocol!
-    let interactor: ProductCellInteractorProtocol!
+    private let interactor: ProductCellInteractorProtocol!
     
     init(interactor: ProductCellInteractorProtocol!, view: ProductCellViewProtocol!) {
         self.interactor = interactor
@@ -28,18 +27,14 @@ final class ProductCellPresenter {
 
 extension ProductCellPresenter: ProductCellPresenterProtocol {
     
-    func getProduct() -> Product {
-        return self.product
-    }
-    
-    func tappedAdd() {
+    func didTapAddButton() {
         product.isInCart = true
         product.inCartCount += 1
-        interactor.tappedAddButton(product: product)
+        interactor.addProductToCart(product: product)
         view.updateFloatingBar(product: product, animated: true)
     }
     
-    func tappedRemove() {
+    func didTapRemoveButton() {
         if product.inCartCount > 0 {
             if product.inCartCount == 1 {
                 product.inCartCount = 0
@@ -49,13 +44,7 @@ extension ProductCellPresenter: ProductCellPresenterProtocol {
                 product.inCartCount -= 1
             }
             view.updateFloatingBar(product: product, animated: true)
-            interactor.tappedRemoveButton(product: product)
+            interactor.removeProductFromCart(product: product)
         }
-    }
-}
-
-extension ProductCellPresenter: ProductCellInteractorOutputProtocol {
-    func getProductOutput(result: Product) {
-        self.product = result
     }
 }

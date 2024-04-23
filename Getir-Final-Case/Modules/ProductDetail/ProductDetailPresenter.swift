@@ -8,18 +8,20 @@
 import Foundation
 
 protocol ProductDetailPresenterProtocol: AnyObject {
+    func viewDidLoad()
     func viewWillAppear()
     func getProduct() -> Product
-    func tappedAddToCartButton()
-    func countInCart() -> Int
-    func tappedRemoveButton()
+    func getProductQuantity() -> Int
+    func didTapAddToCartButton()
+    func didTapRemoveFromCartButton()
     func didTapCartButton()
 }
 
 final class ProductDetailPresenter {
+    
     unowned var view: ProductDetailViewControllerProtocol!
-    let router: ProductDetailRouterProtocol!
-    let interactor: ProductDetailInteractorProtocol!
+    private let router: ProductDetailRouterProtocol!
+    private let interactor: ProductDetailInteractorProtocol!
     
     private var product: Product!
         
@@ -32,12 +34,15 @@ final class ProductDetailPresenter {
 
 extension ProductDetailPresenter: ProductDetailPresenterProtocol {
     
-    func viewWillAppear() {
+    func viewDidLoad() {
         interactor.fetchProduct()
-        view.setupNavigationBar()
         view.setupViews()
-        view.setProductData(self.product)
         view.setupConstraints()
+    }
+    
+    func viewWillAppear() {
+        view.setupNavigationBar()
+        view.setProductData(self.product)
         view.configureViewWithCartCount()
     }
     
@@ -45,23 +50,23 @@ extension ProductDetailPresenter: ProductDetailPresenterProtocol {
         return self.product
     }
     
-    func tappedAddToCartButton() {
-        product.isInCart = true
-        product.inCartCount += 1
-        interactor.productAddedToCart(product: self.product)
-        view.configureViewWithCartCount()
-    }
-    
-    func countInCart() -> Int {
+    func getProductQuantity() -> Int {
         return product.inCartCount
     }
     
-    func tappedRemoveButton() {
+    func didTapAddToCartButton() {
+        product.isInCart = true
+        product.inCartCount += 1
+        interactor.addProductToCart(product: self.product)
+        view.configureViewWithCartCount()
+    }
+    
+    func didTapRemoveFromCartButton() {
         product.inCartCount -= 1
         if product.inCartCount == 0 {
             product.isInCart = false
         }
-        interactor.productRemovedFromCart(product: self.product)
+        interactor.removeProductFromCart(product: self.product)
         view.configureViewWithCartCount()
     }
     
@@ -76,4 +81,5 @@ extension ProductDetailPresenter: ProductDetailInteractorOutputProtocol {
     func product(product: Product) {
         self.product = product
     }
+    
 }

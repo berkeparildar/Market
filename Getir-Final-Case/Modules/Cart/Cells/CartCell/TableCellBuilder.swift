@@ -11,10 +11,9 @@ final class CartCellBuilder {
     static func createModule(cellView: CartCellView, product: Product, cellOwner: CartCellOwnerDelegate) {
         let interactor = CartCellInteractor()
         interactor.cellOwner = cellOwner
-        interactor.product = product
         let presenter = CartCellPresenter(view: cellView, interactor: interactor)
+        presenter.product = product
         cellView.presenter = presenter
-        interactor.output = presenter
         cellView.configureWithPresenter()
     }
 }

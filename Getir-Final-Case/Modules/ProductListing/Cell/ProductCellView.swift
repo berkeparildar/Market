@@ -9,17 +9,17 @@ import UIKit
 import Kingfisher
 
 protocol ProductCellViewProtocol: AnyObject {
-    func configure(product: Product)
     func setupViews()
     func setupConstraints()
+    func configure(product: Product)
     func updateFloatingBar(product: Product, animated: Bool)
 }
 
 final class ProductCellView: UICollectionViewCell {
     
     static let identifier: String = "productCell"
-    var addSectionHeightAnchor: NSLayoutConstraint!
-    var addSectionShadowHeightAnchor: NSLayoutConstraint!
+    private var addSectionHeightAnchor: NSLayoutConstraint!
+    private var addSectionShadowHeightAnchor: NSLayoutConstraint!
     var presenter: ProductCellPresenter!
     
     override init(frame: CGRect) {
@@ -32,7 +32,7 @@ final class ProductCellView: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var nameLabel: UILabel = {
+    private let nameLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
         label.lineBreakMode = .byTruncatingTail
@@ -42,7 +42,7 @@ final class ProductCellView: UICollectionViewCell {
         return label
     }()
     
-    lazy var productImage: UIImageView = {
+    private let productImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.layer.borderColor = UIColor.getirLightGray.cgColor
@@ -52,7 +52,7 @@ final class ProductCellView: UICollectionViewCell {
         return imageView
     }()
     
-    lazy var attributeLabel: UILabel = {
+    private let attributeLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "OpenSans-SemiBold", size: 12)
         label.textColor = .getirGray
@@ -60,7 +60,7 @@ final class ProductCellView: UICollectionViewCell {
         return label
     }()
     
-    lazy var priceLabel: UILabel = {
+    private let priceLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "OpenSans-Bold", size: 14)
         label.textColor = .getirPurple
@@ -130,11 +130,11 @@ final class ProductCellView: UICollectionViewCell {
     }()
     
     @objc func addButtonTapped() {
-        presenter.tappedAdd()
+        presenter.didTapAddButton()
     }
     
     @objc func deleteButtonTapped() {
-        presenter.tappedRemove()
+        presenter.didTapRemoveButton()
     }
 }
 
@@ -203,6 +203,14 @@ extension ProductCellView: ProductCellViewProtocol {
         ])
     }
     
+    func configure(product: Product) {
+        nameLabel.text = product.productName
+        attributeLabel.text = product.productDescription
+        priceLabel.text = product.productPriceText
+        productImage.kf.setImage(with: product.imageURL)
+        updateFloatingBar(product: product, animated: false)
+    }
+    
     func updateFloatingBar(product: Product, animated: Bool) {
         let productCount = product.inCartCount
         addSectionHeightAnchor.constant = product.isInCart ? 90 : 30
@@ -224,21 +232,13 @@ extension ProductCellView: ProductCellViewProtocol {
         }
     }
     
-    func configure(product: Product) {
-        nameLabel.text = product.productName
-        attributeLabel.text = product.productDescription
-        priceLabel.text = product.productPriceText
-        productImage.kf.setImage(with: product.imageURL)
-        updateFloatingBar(product: product, animated: false)
-    }
-    
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        let pointForTargetView = addButton.convert(point, from: self)
-        if addButton.bounds.contains(pointForTargetView) {
+        let addButtonPoint = addButton.convert(point, from: self)
+        if addButton.bounds.contains(addButtonPoint) {
             return addButton
         }
-        let pointForDeleteButtonView = deleteButton.convert(point, from: self)
-        if deleteButton.bounds.contains(pointForDeleteButtonView) {
+        let deleteButtonPoint = deleteButton.convert(point, from: self)
+        if deleteButton.bounds.contains(deleteButtonPoint) {
             return deleteButton
         }
         return super.hitTest(point, with: event)

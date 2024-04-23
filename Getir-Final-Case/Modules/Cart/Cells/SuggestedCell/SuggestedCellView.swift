@@ -101,7 +101,7 @@ final class SuggestedCellView: UICollectionViewCell {
 
     
     @objc func addButtonTapped() {
-        presenter.tappedAdd()
+        presenter.didTapAddButton()
     }
 
 }

@@ -24,9 +24,23 @@ protocol ProductCellOwnerDelegate: AnyObject {
 final class ProductListingViewController: UIViewController, LoadingShowable {
     
     var presenter: ProductListingPresenter!
-    var customNavigationBar: CustomNavigationController!
+    private var customNavigationBar: CustomNavigationController!
     
-    lazy var collectionView: UICollectionView = {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        presenter.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.viewWillAppear()
+    }
+    
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
+    }
+    
+    private lazy var collectionView: UICollectionView = {
         let layout = createCollectionViewLayout()
         let collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
         collectionView.dataSource = self
@@ -39,25 +53,10 @@ final class ProductListingViewController: UIViewController, LoadingShowable {
         return collectionView
     }()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        presenter.viewDidLoad()
-    }
-    
-    override var prefersHomeIndicatorAutoHidden: Bool {
-        return true
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        presenter.viewWillAppear()
-    }
-    
     func createCollectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
             return sectionIndex == 0 ? self.horizontalSectionLayout() : self.verticalSectionLayout()
         }
-        layout.configuration.interSectionSpacing = 16
         layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
         return layout
     }
@@ -143,7 +142,7 @@ extension ProductListingViewController: ProductListingViewControllerProtocol {
 extension ProductListingViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return section == 0 ? presenter.numberOfSuggestedProducts() : presenter.numberOfProducts()
+        return section == 0 ? presenter.getSuggestedProductCount() : presenter.getProductCount()
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -152,7 +151,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: "productCell", for: indexPath) as! ProductCellView
-        let product = indexPath.section == 0 ? presenter.suggestedProduct(indexPath.item) : presenter.product(indexPath.item)
+        let product = indexPath.section == 0 ? presenter.getSuggestedProduct(indexPath.item) : presenter.getProduct(indexPath.item)
         ProductCellBuilder.createModule(cellView: cellView, product: product, cellOwner: self)
         return cellView
     }
@@ -168,7 +167,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
 extension ProductListingViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter.didSelectItemAt(section: indexPath.section, index: indexPath.row)
+        presenter.didSelectItemAt(indexPath: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {

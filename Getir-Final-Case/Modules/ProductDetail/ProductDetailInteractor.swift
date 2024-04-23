@@ -8,9 +8,9 @@
 import Foundation
 
 protocol ProductDetailInteractorProtocol {
-    func productAddedToCart(product: Product)
-    func productRemovedFromCart(product: Product)
     func fetchProduct()
+    func addProductToCart(product: Product)
+    func removeProductFromCart(product: Product)
 }
 
 protocol ProductDetailInteractorOutputProtocol {
@@ -40,11 +40,12 @@ extension ProductDetailInteractor: ProductDetailInteractorProtocol {
         }
     }
     
-    func productAddedToCart(product: Product) {
+    func addProductToCart(product: Product) {
         CartService.shared.addProductToCart(product: product)
     }
     
-    func productRemovedFromCart(product: Product) {
+    func removeProductFromCart(product: Product) {
         CartService.shared.removeProductFromCart(product: product)
     }
+    
 }

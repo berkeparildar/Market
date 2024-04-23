@@ -10,8 +10,8 @@ import Foundation
 protocol CartInteractorProtocol: AnyObject {
     func fetchProductsInCart()
     func fetchSuggestedProducts()
-    func productAddedToCart(product: Product)
-    func productRemovedFromCart(product: Product)
+    func addProductToCart(product: Product)
+    func removeProductFromCart(product: Product)
     func clearCart()
 }
 
@@ -26,6 +26,7 @@ final class CartInteractor {
 }
 
 extension CartInteractor: CartInteractorProtocol {
+    
     func clearCart() {
         CartService.shared.clearProductsInCart()
     }
@@ -45,11 +46,12 @@ extension CartInteractor: CartInteractorProtocol {
         }
     }
     
-    func productAddedToCart(product: Product) {
+    func addProductToCart(product: Product) {
         CartService.shared.addProductToCart(product: product)
     }
     
-    func productRemovedFromCart(product: Product) {
+    func removeProductFromCart(product: Product) {
         CartService.shared.removeProductFromCart(product: product)
     }
+    
 }

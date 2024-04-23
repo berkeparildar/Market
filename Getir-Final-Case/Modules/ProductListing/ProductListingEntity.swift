@@ -8,7 +8,6 @@
 import Foundation
 
 struct Product {
-    
     var id: String
     var productName: String
     var productDescription: String
@@ -17,5 +16,4 @@ struct Product {
     var isInCart: Bool
     var inCartCount: Int
     var imageURL: URL
-    
 }

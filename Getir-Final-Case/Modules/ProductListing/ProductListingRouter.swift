@@ -33,9 +33,11 @@ final class ProductListingRouter {
         
         return view
     }
+    
 }
 
 extension ProductListingRouter: ProductListingRouterProtocol {
+    
     func navigate(_ route: ProductListingRoutes) {
         switch route {
         case .detail(product: let product):
@@ -46,5 +48,6 @@ extension ProductListingRouter: ProductListingRouterProtocol {
             viewController?.navigationController?.pushViewController(cartVC, animated: true)
         }
     }
+    
 }
 

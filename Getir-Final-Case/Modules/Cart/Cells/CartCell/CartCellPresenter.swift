@@ -9,8 +9,8 @@ import Foundation
 
 protocol CartCellPresenterProtocol {
     func getProduct() -> Product
-    func tappedQuantityIncreaseButton()
-    func tappedQuantityDecreaseButton()
+    func didTapAddButton()
+    func didTapRemoveButton()
     func getProductCount() -> Int
 }
 
@@ -28,7 +28,6 @@ final class CartCellPresenter {
 extension CartCellPresenter: CartCellPresenterProtocol {
     
     func getProduct() -> Product {
-        interactor.fetchProduct()
         return self.product
     }
     
@@ -36,21 +35,16 @@ extension CartCellPresenter: CartCellPresenterProtocol {
         return product.inCartCount
     }
     
-    func tappedQuantityIncreaseButton() {
+    func didTapAddButton() {
         product.inCartCount += 1
         view.updateStepper()
         interactor.tappedAddButton(product: self.product)
     }
     
-    func tappedQuantityDecreaseButton() {
+    func didTapRemoveButton() {
         product.inCartCount -= 1
         view.updateStepper()
         interactor.tappedRemoveButton(product: self.product)
     }
-}
-
-extension CartCellPresenter: CartCellInteractorOutputProtocol {
-    func getProductOutput(result: Product) {
-        self.product = result
-    }
+    
 }

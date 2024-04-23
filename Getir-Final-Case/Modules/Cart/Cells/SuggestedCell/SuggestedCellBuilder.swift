@@ -11,11 +11,9 @@ final class SuggestedCellBuilder {
     static func createModule(cellView: SuggestedCellView, product: Product, cellOwner: SuggestedCellOwnerDelegate? = nil) {
         let interactor = SuggestedCellInteractor()
         interactor.cellOwner = cellOwner
-        interactor.product = product
         let presenter = SuggestedCellPresenter(view: cellView, interactor: interactor)
         presenter.product = product
         cellView.presenter = presenter
-        interactor.output = presenter
         cellView.configure(product: product)
     }
 }

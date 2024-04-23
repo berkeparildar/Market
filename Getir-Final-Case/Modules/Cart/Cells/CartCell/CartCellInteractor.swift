@@ -10,32 +10,19 @@ import Foundation
 protocol CartCellInteractorProtocol: AnyObject {
     func tappedAddButton(product: Product)
     func tappedRemoveButton(product: Product)
-    func fetchProduct()
-}
-
-protocol CartCellInteractorOutputProtocol: AnyObject {
-    func getProductOutput(result: Product)
 }
 
 final class CartCellInteractor {
-    var product: Product?
-    weak var output: CartCellInteractorOutputProtocol?
     weak var cellOwner: CartCellOwnerDelegate?
 }
 
 extension CartCellInteractor: CartCellInteractorProtocol {
     func tappedAddButton(product: Product) {
-        CartService.shared.addProductToCart(product: product)
-        cellOwner?.addButtonTapped(product: product)
+        cellOwner?.didTapAddButtonFromCart(product: product)
     }
     
     func tappedRemoveButton(product: Product) {
-        CartService.shared.removeProductFromCart(product: product)
-        cellOwner?.deleteButtonTapped(product: product)
+        cellOwner?.didTapRemoveButtonFromCart(product: product)
     }
-    
-    func fetchProduct() {
-        guard let product = self.product else { return }
-        self.output?.getProductOutput(result: product)
-    }
+
 }

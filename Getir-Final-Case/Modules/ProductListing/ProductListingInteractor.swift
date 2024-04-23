@@ -10,8 +10,8 @@ import Foundation
 
 protocol ProductListingInteractorProtocol: AnyObject {
     func fetchProducts()
-    func updateCartStatus(products: [Product])
-    func updateSuggestedCartStatus(products: [Product])
+    func updateCartStatusOfProducts(products: [Product])
+    func updateCartStatusOfSuggestedProducts(products: [Product])
     func addProductToCart(product: Product)
     func removeProductFromCart(product: Product)
 }
@@ -24,11 +24,11 @@ protocol ProductListingInteractorOutputProtocol: AnyObject {
 }
 
 final class ProductListingInteractor {
-    
     var output: ProductListingInteractorOutputProtocol?
 }
 
 extension ProductListingInteractor: ProductListingInteractorProtocol {
+    
     func addProductToCart(product: Product) {
         CartService.shared.addProductToCart(product: product)
     }
@@ -36,7 +36,6 @@ extension ProductListingInteractor: ProductListingInteractorProtocol {
     func removeProductFromCart(product: Product) {
         CartService.shared.removeProductFromCart(product: product)
     }
-    
     
     func fetchProducts() {
         ProductService.shared.getProducts { products in
@@ -47,12 +46,12 @@ extension ProductListingInteractor: ProductListingInteractorProtocol {
         }
     }
     
-    func updateCartStatus(products: [Product]) {
+    func updateCartStatusOfProducts(products: [Product]) {
         let updatedProducts = CartService.shared.updateCartStatusOfProducts(products: products)
         self.output?.updatedProductsOutput(products: updatedProducts)
     }
     
-    func updateSuggestedCartStatus(products: [Product]) {
+    func updateCartStatusOfSuggestedProducts(products: [Product]) {
         let updatedProducts = CartService.shared.updateCartStatusOfProducts(products: products)
         self.output?.updatedSuggestedProductsOutput(products: updatedProducts)
     }

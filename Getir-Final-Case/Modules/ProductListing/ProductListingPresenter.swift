@@ -9,21 +9,22 @@ import Foundation
 
 protocol ProductListingPresenterProtocol: AnyObject {
     func viewDidLoad()
-    func numberOfProducts() -> Int
-    func numberOfSuggestedProducts() -> Int
-    func product(_ index: Int) -> Product
+    func viewWillAppear()
+    func getProduct(_ index: Int) -> Product
+    func getProductCount() -> Int
+    func getSuggestedProduct(_ index: Int) -> Product
+    func getSuggestedProductCount() -> Int
+    func didSelectItemAt(indexPath: IndexPath)
+    func didTapCartButton()
     func didTapAddButtonFromCell(product: Product)
     func didTapRemoveButtonFromCell(product: Product)
-    func suggestedProduct(_ index: Int) -> Product
-    func didSelectItemAt(section: Int, index: Int)
-    func didTapCartButton()
 }
 
 final class ProductListingPresenter {
     
     unowned var view: ProductListingViewControllerProtocol!
-    let router: ProductListingRouterProtocol!
-    let interactor: ProductListingInteractorProtocol!
+    private let router: ProductListingRouterProtocol!
+    private let interactor: ProductListingInteractorProtocol!
     
     private var products: [Product] = []
     private var suggestedProducts: [Product] = []
@@ -36,6 +37,53 @@ final class ProductListingPresenter {
 }
 
 extension ProductListingPresenter: ProductListingPresenterProtocol {
+    
+    func viewDidLoad() {
+        fetchProducts()
+        view.setupViews()
+        view.setupConstraints()
+    }
+    
+    func viewWillAppear() {
+        view.setupNavigationBar()
+        interactor.updateCartStatusOfProducts(products: products)
+        interactor.updateCartStatusOfSuggestedProducts(products: suggestedProducts)
+        view.reloadData()
+    }
+    
+    func getProduct(_ index: Int) -> Product {
+        return products[safe: index]!
+    }
+    
+    func getSuggestedProduct(_ index: Int) -> Product {
+        return suggestedProducts[safe: index]!
+    }
+    
+    func getProductCount() -> Int {
+        return products.count
+    }
+    
+    func getSuggestedProductCount() -> Int {
+        return suggestedProducts.count
+    }
+    
+    func didSelectItemAt(indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            router.navigate(.detail(product: suggestedProducts[indexPath.item]))
+        }
+        else {
+            router.navigate(.detail(product: products[indexPath.item]))
+        }
+    }
+    
+    func didTapCartButton() {
+        router.navigate(.cart(suggestedProducts: self.suggestedProducts))
+    }
+
+    private func fetchProducts() {
+        view.showLoadingView()
+        interactor.fetchProducts()
+    }
     
     func didTapAddButtonFromCell(product: Product) {
         if let match = products.firstIndex(where: { $0.id == product.id }) {
@@ -69,52 +117,8 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
         interactor.removeProductFromCart(product: product)
     }
     
-    func didTapCartButton() {
-        router.navigate(.cart(suggestedProducts: self.suggestedProducts))
-    }
+   
     
-    func viewDidLoad() {
-        fetchProducts()
-        view.setupViews()
-        view.setupConstraints()
-    }
-    
-    func viewWillAppear() {
-        view.setupNavigationBar()
-        interactor.updateCartStatus(products: products)
-        interactor.updateSuggestedCartStatus(products: suggestedProducts)
-        view.reloadData()
-    }
-    
-    func product(_ index: Int) -> Product {
-        return products[safe: index]!
-    }
-    
-    func suggestedProduct(_ index: Int) -> Product {
-        return suggestedProducts[safe: index]!
-    }
-    
-    func didSelectItemAt(section: Int, index: Int) {
-        if section == 0 {
-            router.navigate(.detail(product: suggestedProducts[index]))
-        }
-        else {
-            router.navigate(.detail(product: products[index]))
-        }
-    }
-    
-    func numberOfProducts() -> Int {
-        return products.count
-    }
-    
-    func numberOfSuggestedProducts() -> Int {
-        return suggestedProducts.count
-    }
-
-    private func fetchProducts() {
-        view.showLoadingView()
-        interactor.fetchProducts()
-    }
 }
 
 extension ProductListingPresenter: ProductListingInteractorOutputProtocol {
@@ -129,7 +133,7 @@ extension ProductListingPresenter: ProductListingInteractorOutputProtocol {
     
     func getProductsOutput(products: [Product]) {
         self.products = products
-        interactor.updateCartStatus(products: products)
+        interactor.updateCartStatusOfProducts(products: products)
         if !self.suggestedProducts.isEmpty {
             view.hideLoadingView()
             view.reloadData()
@@ -138,7 +142,7 @@ extension ProductListingPresenter: ProductListingInteractorOutputProtocol {
     
     func getsuggestedProductsOutput(suggestedProducts: [Product]) {
         self.suggestedProducts = suggestedProducts
-        interactor.updateSuggestedCartStatus(products: suggestedProducts)
+        interactor.updateCartStatusOfSuggestedProducts(products: suggestedProducts)
         if !self.products.isEmpty {
             view.hideLoadingView()
             view.reloadData()

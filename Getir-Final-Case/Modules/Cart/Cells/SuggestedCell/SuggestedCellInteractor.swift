@@ -11,14 +11,8 @@ protocol SuggestedCellInteractorProtocol: AnyObject {
     func tappedAddButton(product: Product)
 }
 
-protocol SuggestedCellInteractorOutputProtocol: AnyObject {
-    func getProductOutput(result: Product)
-}
-
 final class SuggestedCellInteractor {
     
-    var product: Product?
-    weak var output: SuggestedCellInteractorOutputProtocol?
     weak var cellOwner: SuggestedCellOwnerDelegate?
     
 }
@@ -26,7 +20,6 @@ final class SuggestedCellInteractor {
 extension SuggestedCellInteractor: SuggestedCellInteractorProtocol {
     
     func tappedAddButton(product: Product) {
-        CartService.shared.addProductToCart(product: product)
-        cellOwner?.didTapAddButton(product: product)
+        cellOwner?.didTapAddButtonFromSuggested(product: product)
     }
 }

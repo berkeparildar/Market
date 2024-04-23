@@ -8,12 +8,10 @@
 import UIKit
 
 protocol CartViewControllerProtocol: AnyObject {
-    func reloadData()
     func setupNavigationBar()
     func setupViews()
     func setupConstraints()
-    func showError(_ message: String)
-    func setTitle()
+    func reloadData()
     func updateTotalPrice(price: Double, isAnimated: Bool)
     func insertCartItem(at indexPath: IndexPath)
     func reloadCartItem(at indexPath: IndexPath)
@@ -21,21 +19,32 @@ protocol CartViewControllerProtocol: AnyObject {
 }
 
 protocol SuggestedCellOwnerDelegate: AnyObject {
-    func didTapAddButton(product: Product)
+    func didTapAddButtonFromSuggested(product: Product)
 }
 
 protocol CartCellOwnerDelegate: AnyObject {
-    func addButtonTapped(product: Product)
-    func deleteButtonTapped(product: Product)
+    func didTapAddButtonFromCart(product: Product)
+    func didTapRemoveButtonFromCart(product: Product)
 }
 
 
 class CartViewController: UIViewController {
     
     var presenter: CartPresenter!
+    private var customNavigationBar: CustomNavigationController!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        presenter.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.viewWillAppear()
+    }
     
     lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: view.frame, collectionViewLayout: createLayout())
+        let collectionView = UICollectionView(frame: view.frame, collectionViewLayout: createCollectionViewLayout())
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.backgroundColor = .getirLightGray
@@ -46,7 +55,7 @@ class CartViewController: UIViewController {
         return collectionView
     }()
     
-    lazy var bottomBlock: UIView = {
+    private let bottomBlock: UIView = {
         let view = UIView()
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.1
@@ -57,7 +66,7 @@ class CartViewController: UIViewController {
         return view
     }()
     
-    lazy var buyButtonContainer: UIView = {
+    private let buyButtonContainer: UIView = {
         let view = UIView()
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.1
@@ -79,7 +88,7 @@ class CartViewController: UIViewController {
         return button
     }()
     
-    lazy var buttonLabel: UILabel = {
+    private let buttonLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.font = UIFont(name: "OpenSans-Bold", size: 14)
@@ -90,7 +99,7 @@ class CartViewController: UIViewController {
         return label
     }()
     
-    lazy var priceLabel: UILabel = {
+    private let priceLabel: UILabel = {
         let label = UILabel()
         label.textColor = .getirPurple
         label.font = UIFont(name: "OpenSans-Bold", size: 20)
@@ -101,15 +110,44 @@ class CartViewController: UIViewController {
         return label
     }()
     
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        presenter.viewDidLoad()
+    func createCollectionViewLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
+            return sectionIndex == 0 ? self.verticalSectionLayout() : self.horizontalSectionLayout()
+        }
+        layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
+        return layout
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        presenter.viewWillAppear()
+    func horizontalSectionLayout() -> NSCollectionLayoutSection {
+        let fixedWidth = 92.0
+        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(fixedWidth), heightDimension: .estimated(150))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: item.layoutSize.heightDimension)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 16
+        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+        let sectionBackground = NSCollectionLayoutDecorationItem.background(
+            elementKind: "background-element-kind")
+        section.decorationItems = [sectionBackground]
+        section.orthogonalScrollingBehavior = .continuous
+        let headerSize = NSCollectionLayoutSize(widthDimension: .absolute(self.view.frame.width), heightDimension: .estimated(48))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+        section.boundarySupplementaryItems = [header]
+        return section
+    }
+    
+    func verticalSectionLayout() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(102))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: item.layoutSize.heightDimension)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = .flexible(16)
+        let section = NSCollectionLayoutSection(group: group)
+        let sectionBackground = NSCollectionLayoutDecorationItem.background(
+            elementKind: "background-element-kind")
+        section.decorationItems = [sectionBackground]
+        return section
     }
 }
 
@@ -117,29 +155,11 @@ extension CartViewController: CartViewControllerProtocol {
     
     func setupNavigationBar() {
         if let customNavController = navigationController as? CustomNavigationController {
-            customNavController.setTitle(title: "Sepetim")
-            customNavController.setButtonVisibility()
-            customNavController.setPriceLabel()
+            customNavigationBar = customNavController
+            customNavigationBar.setTitle(title: "Sepetim")
+            customNavigationBar.setButtonVisibility()
+            customNavigationBar.setPriceLabel()
         }
-    }
-    
-    
-    func reloadData() {
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
-        }
-    }
-    
-    func insertCartItem(at indexPath: IndexPath) {
-        collectionView.insertItems(at: [indexPath])
-    }
-    
-    func reloadCartItem(at indexPath: IndexPath) {
-        collectionView.reloadItems(at: [indexPath])
-    }
-    
-    func deleteCartItem(at indexPath: IndexPath) {
-        collectionView.deleteItems(at: [indexPath])
     }
     
     func setupViews() {
@@ -149,17 +169,6 @@ extension CartViewController: CartViewControllerProtocol {
         buyButton.addSubview(buttonLabel)
         buyButton.addSubview(priceLabel)
         view.addSubview(bottomBlock)
-    }
-    func updateTotalPrice(price: Double, isAnimated: Bool) {
-        if isAnimated {
-            UIView.animate(withDuration: 0.3) {
-                self.priceLabel.text = String(format: "₺%.2f", price)
-                self.view.layoutIfNeeded()
-            }
-        }
-        else {
-            self.priceLabel.text = String(format: "₺%.2f", price)
-        }
     }
     
     func setupConstraints() {
@@ -196,61 +205,45 @@ extension CartViewController: CartViewControllerProtocol {
         ])
     }
     
-    func showError(_ message: String) {
-        //showAlert(title: "Error", message: message)
-    }
-    
-    func setTitle() {
-        if let customNavBar = navigationController as? CustomNavigationController {
-            customNavBar.setTitle(title: "Sepetim")
+    func reloadData() {
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
         }
     }
     
-    func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
-            if sectionIndex == 0 {
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(102))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: item.layoutSize.heightDimension)
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-                group.interItemSpacing = .flexible(16)
-                let section = NSCollectionLayoutSection(group: group)
-                let sectionBackground = NSCollectionLayoutDecorationItem.background(
-                    elementKind: "background-element-kind")
-                section.decorationItems = [sectionBackground]
-                return section
-                
-            } else {
-                let fixedWidth = 92.0
-                let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(fixedWidth), heightDimension: .estimated(150))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: item.layoutSize.heightDimension)
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-                let section = NSCollectionLayoutSection(group: group)
-                section.interGroupSpacing = 16
-                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
-                let sectionBackground = NSCollectionLayoutDecorationItem.background(
-                    elementKind: "background-element-kind")
-                section.decorationItems = [sectionBackground]
-                section.orthogonalScrollingBehavior = .continuous
-                let headerSize = NSCollectionLayoutSize(widthDimension: .absolute(self.view.frame.width), heightDimension: .estimated(48))
-                let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-                section.boundarySupplementaryItems = [header]
-                return section
+    func insertCartItem(at indexPath: IndexPath) {
+        collectionView.insertItems(at: [indexPath])
+    }
+    
+    func reloadCartItem(at indexPath: IndexPath) {
+        collectionView.reloadItems(at: [indexPath])
+    }
+    
+    func deleteCartItem(at indexPath: IndexPath) {
+        collectionView.deleteItems(at: [indexPath])
+    }
+    
+    func updateTotalPrice(price: Double, isAnimated: Bool) {
+        if isAnimated {
+            UIView.animate(withDuration: 0.3) {
+                self.priceLabel.text = String(format: "₺%.2f", price)
+                self.view.layoutIfNeeded()
             }
         }
-        layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
-        return layout
+        else {
+            self.priceLabel.text = String(format: "₺%.2f", price)
+        }
     }
+
 }
 
 extension CartViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
-            return presenter.numberOfProductsInCart()
+            return presenter.getProductInCartCount()
         }
-        return presenter.numberOfSuggestedProducts()
+        return presenter.getSuggestedProductCount()
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -260,11 +253,11 @@ extension CartViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
             let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: CartCellView.identifier, for: indexPath) as! CartCellView
-            CartCellBuilder.createModule(cellView: cellView, product: presenter.productInCart(indexPath.item), cellOwner: self)
+            CartCellBuilder.createModule(cellView: cellView, product: presenter.getProductInCart(indexPath.item), cellOwner: self)
             return cellView
         }
         let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: SuggestedCellView.identifier, for: indexPath) as! SuggestedCellView
-        SuggestedCellBuilder.createModule(cellView: cellView, product: presenter.suggestedProduct(indexPath.item), cellOwner: self)
+        SuggestedCellBuilder.createModule(cellView: cellView, product: presenter.getSuggestedProduct(indexPath.item), cellOwner: self)
         return cellView
     }
     
@@ -278,14 +271,14 @@ extension CartViewController: UICollectionViewDataSource {
 extension CartViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter.tappedProduct(indexpath: indexPath)
+        presenter.didSelectItemAt(indexpath: indexPath)
     }
     
 }
 
 extension CartViewController: SuggestedCellOwnerDelegate {
     
-    func didTapAddButton(product: Product) {
+    func didTapAddButtonFromSuggested(product: Product) {
         presenter.addButtonTappedFromSuggested(product: product)
     }
     
@@ -293,12 +286,12 @@ extension CartViewController: SuggestedCellOwnerDelegate {
 
 extension CartViewController: CartCellOwnerDelegate {
     
-    func addButtonTapped(product: Product) {
-        presenter.addButtonTapped(product: product)
+    func didTapAddButtonFromCart(product: Product) {
+        presenter.addButtonTappedFromCart(product: product)
     }
     
-    func deleteButtonTapped(product: Product) {
-        presenter.deleteButtonTapped(product: product)
+    func didTapRemoveButtonFromCart(product: Product) {
+        presenter.deleteButtonTappedFromCart(product: product)
     }
     
 }
