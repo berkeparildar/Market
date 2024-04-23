@@ -36,7 +36,7 @@ final class ProductCellView: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 2
         label.lineBreakMode = .byTruncatingTail
-        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.font = UIFont(name: "OpenSans-SemiBold", size: 12)
         label.textColor = .getirBlack
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -54,7 +54,7 @@ final class ProductCellView: UICollectionViewCell {
     
     lazy var attributeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont(name: "OpenSans-SemiBold", size: 12)
         label.textColor = .getirGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -62,7 +62,7 @@ final class ProductCellView: UICollectionViewCell {
     
     lazy var priceLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.font = UIFont(name: "OpenSans-Bold", size: 14)
         label.textColor = .getirPurple
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -118,7 +118,7 @@ final class ProductCellView: UICollectionViewCell {
     
     lazy var quantityLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = UIFont(name: "OpenSans-Bold", size: 12)
         label.backgroundColor = .getirPurple
         label.textColor = .white
         label.textAlignment = .center
@@ -207,18 +207,20 @@ extension ProductCellView: ProductCellViewProtocol {
         let productCount = product.inCartCount
         addSectionHeightAnchor.constant = product.isInCart ? 90 : 30
         addSectionShadowHeightAnchor.constant = product.isInCart ? 90 : 30
+        let targetColor = product.isInCart ? UIColor.getirPurple.cgColor : UIColor.getirLightGray.cgColor
         let newImage = productCount > 1 ? UIImage(systemName: "minus") : UIImage(systemName: "trash")
         if animated {
             UIView.animate(withDuration: 0.3) {
                 self.deleteButton.setImage(newImage, for: .normal)
                 self.quantityLabel.text = String(product.inCartCount)
+                self.productImage.layer.borderColor = targetColor
                 self.layoutIfNeeded()
             }
         }
         else {
             self.deleteButton.setImage(newImage, for: .normal)
             self.quantityLabel.text = String(product.inCartCount)
-            self.layoutIfNeeded()
+            self.productImage.layer.borderColor = targetColor
         }
     }
     

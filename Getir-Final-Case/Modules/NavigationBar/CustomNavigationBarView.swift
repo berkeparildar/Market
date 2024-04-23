@@ -43,6 +43,7 @@ class CustomNavigationBarView: UINavigationBar {
         imageView.image = UIImage(named: "Icon-2")
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isUserInteractionEnabled = false
         return imageView
     }()
     
@@ -50,6 +51,7 @@ class CustomNavigationBarView: UINavigationBar {
         let view = UIView()
         view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = false
         return view
     }()
     

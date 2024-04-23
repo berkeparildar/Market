@@ -12,6 +12,8 @@ protocol ProductListingInteractorProtocol: AnyObject {
     func fetchProducts()
     func updateCartStatus(products: [Product])
     func updateSuggestedCartStatus(products: [Product])
+    func addProductToCart(product: Product)
+    func removeProductFromCart(product: Product)
 }
 
 protocol ProductListingInteractorOutputProtocol: AnyObject {
@@ -27,6 +29,14 @@ final class ProductListingInteractor {
 }
 
 extension ProductListingInteractor: ProductListingInteractorProtocol {
+    func addProductToCart(product: Product) {
+        CartService.shared.addProductToCart(product: product)
+    }
+    
+    func removeProductFromCart(product: Product) {
+        CartService.shared.removeProductFromCart(product: product)
+    }
+    
     
     func fetchProducts() {
         ProductService.shared.getProducts { products in

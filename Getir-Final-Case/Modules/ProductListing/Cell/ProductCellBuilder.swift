@@ -8,9 +8,9 @@
 import Foundation
 
 final class ProductCellBuilder {
-    static func createModule(cellView: ProductCellView, product: Product, navBarOwner: NavigationBarProtocol) {
+    static func createModule(cellView: ProductCellView, product: Product, cellOwner: ProductCellOwnerDelegate) {
         let interactor = ProductCellInteractor()
-        interactor.navBarDelegate = navBarOwner
+        interactor.cellOwnerDelegate = cellOwner
         interactor.product = product
         let presenter = ProductCellPresenter(interactor: interactor, view: cellView)
         presenter.product = product

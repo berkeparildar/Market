@@ -11,7 +11,7 @@ class SectionBackground: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .white
-        
+        self.isUserInteractionEnabled = false
     }
     
     required init?(coder: NSCoder) {
@@ -26,6 +26,7 @@ class SectionHeaderSuggestedProduct: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .getirLightGray
+        self.isUserInteractionEnabled = false
         configureUILabel()
     }
     

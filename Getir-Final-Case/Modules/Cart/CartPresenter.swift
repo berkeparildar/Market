@@ -106,26 +106,7 @@ extension CartPresenter: CartPresenterProtocol {
         }
         return totalPrice
     }
-}
-
-extension CartPresenter: CartInteractorOutputProtocol {
-    func fetchSuggestedProductsOutput(result: [Product]) {
-        self.suggestedProductsFetched = result
-        self.suggestedProducts = self.suggestedProductsFetched
-        for product in self.productsInCart {
-            if let match = self.suggestedProducts.firstIndex(where: { $0.id == product.id}) {
-                suggestedProducts.remove(at: match)
-            }
-        }
-        view.reloadData()
-    }
-    func fetchProductsInCartOutput(result: [Product]) {
-        self.productsInCart = result
-        view.reloadData()
-    }
-}
-
-extension CartPresenter: UpdateCartViewProtocol {
+    
     func addButtonTapped(product: Product) {
         let match = self.productsInCart.firstIndex { product.id == $0.id }
         self.productsInCart[match!].inCartCount += 1
@@ -147,4 +128,25 @@ extension CartPresenter: UpdateCartViewProtocol {
         }
         view.updateTotalPrice(price: calculateTotalPrice())
     }
+}
+
+extension CartPresenter: CartInteractorOutputProtocol {
+    func fetchSuggestedProductsOutput(result: [Product]) {
+        self.suggestedProductsFetched = result
+        self.suggestedProducts = self.suggestedProductsFetched
+        for product in self.productsInCart {
+            if let match = self.suggestedProducts.firstIndex(where: { $0.id == product.id}) {
+                suggestedProducts.remove(at: match)
+            }
+        }
+        view.reloadData()
+    }
+    func fetchProductsInCartOutput(result: [Product]) {
+        self.productsInCart = result
+        view.reloadData()
+    }
+}
+
+extension CartPresenter: CartCellOwnerDelegate {
+    
 }

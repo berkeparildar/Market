@@ -9,7 +9,6 @@ import Foundation
 
 protocol SuggestedCellInteractorProtocol: AnyObject {
     func tappedAddButton(product: Product)
-    func tappedRemoveButton(product: Product)
 }
 
 protocol SuggestedCellInteractorOutputProtocol: AnyObject {
@@ -20,8 +19,7 @@ final class SuggestedCellInteractor {
     
     var product: Product?
     weak var output: SuggestedCellInteractorOutputProtocol?
-    weak var navBarDelegate: NavigationBarProtocol?
-    weak var cartPresenter: CartPresenterProtocol?
+    weak var cellOwner: SuggestedCellOwnerDelegate?
     
 }
 
@@ -29,13 +27,6 @@ extension SuggestedCellInteractor: SuggestedCellInteractorProtocol {
     
     func tappedAddButton(product: Product) {
         CartService.shared.addProductToCart(product: product)
-        cartPresenter?.addButtonTappedFromSuggested(product: product)
-        navBarDelegate?.updatePriceInNavigationBar()
+        cellOwner?.didTapAddButton(product: product)
     }
-    
-    func tappedRemoveButton(product: Product) {
-        CartService.shared.removeProductFromCart(product: product)
-        navBarDelegate?.updatePriceInNavigationBar()
-    }
-    
 }

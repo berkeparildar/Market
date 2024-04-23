@@ -33,7 +33,7 @@ final class SuggestedCellView: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 2
         label.lineBreakMode = .byTruncatingTail
-        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.font = UIFont(name: "OpenSans-SemiBold", size: 12)
         label.textColor = .getirBlack
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -51,7 +51,7 @@ final class SuggestedCellView: UICollectionViewCell {
     
     lazy var attributeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont(name: "OpenSans-SemiBold", size: 12)
         label.textColor = .getirGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -59,7 +59,7 @@ final class SuggestedCellView: UICollectionViewCell {
     
     lazy var priceLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.font = UIFont(name: "OpenSans-Bold", size: 14)
         label.textColor = .getirPurple
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -163,5 +163,13 @@ extension SuggestedCellView: SuggestedCellViewProtocol {
         attributeLabel.text = product.productDescription
         priceLabel.text = product.productPriceText
         productImage.kf.setImage(with: product.imageURL)
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let pointForTargetView = addButton.convert(point, from: self)
+        if addButton.bounds.contains(pointForTargetView) {
+            return addButton
+        }
+        return super.hitTest(point, with: event)
     }
 }

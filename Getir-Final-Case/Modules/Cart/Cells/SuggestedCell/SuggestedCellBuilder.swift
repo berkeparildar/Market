@@ -8,10 +8,9 @@
 import Foundation
 
 final class SuggestedCellBuilder {
-    static func createModule(cellView: SuggestedCellView, product: Product, navBarOwner: NavigationBarProtocol, cartPresenter: CartPresenterProtocol? = nil) {
+    static func createModule(cellView: SuggestedCellView, product: Product, cellOwner: SuggestedCellOwnerDelegate? = nil) {
         let interactor = SuggestedCellInteractor()
-        interactor.navBarDelegate = navBarOwner
-        interactor.cartPresenter = cartPresenter
+        interactor.cellOwner = cellOwner
         interactor.product = product
         let presenter = SuggestedCellPresenter(view: cellView, interactor: interactor)
         presenter.product = product

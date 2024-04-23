@@ -18,14 +18,22 @@ protocol ProductDetailViewControllerProtocol: AnyObject {
 final class ProductDetailViewController: UIViewController {
     
     var presenter: ProductDetailPresenter!
-    var productIsInCartConstraints: [NSLayoutConstraint]!
-    var productIsNotInCartConstraints: [NSLayoutConstraint]!
+    var productIsInCartConstraints: NSLayoutConstraint!
+    var productIsNotInCartConstraints: NSLayoutConstraint!
     var customNavigationBar: CustomNavigationController!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.viewDidLoad()
+
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.viewWillAppear()
+    }
+    
+    override func viewDidLayoutSubviews() {
     }
     
     lazy var productBlock: UIView = {
@@ -150,6 +158,8 @@ final class ProductDetailViewController: UIViewController {
     }()
     
     @objc func didTapAddToCartButton() {
+        print(view.safeAreaInsets.bottom)
+
         presenter.tappedAddToCartButton()
         customNavigationBar.updatePrice()
     }
@@ -168,6 +178,7 @@ final class ProductDetailViewController: UIViewController {
 extension ProductDetailViewController: ProductDetailViewControllerProtocol {
     
     func setupViews() {
+        print(view.safeAreaInsets.bottom)
         view.backgroundColor = .white
         productBlock.addSubview(productImage)
         productBlock.addSubview(priceLabel)
@@ -188,41 +199,10 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        productIsInCartConstraints = [
-            quantityButtonsBackground.heightAnchor.constraint(equalToConstant: 48),
-            quantityButtonsBackground.centerXAnchor.constraint(equalTo: buttonBlock.centerXAnchor),
-            quantityButtonsBackground.centerYAnchor.constraint(equalTo: buttonBlock.centerYAnchor),
-            
-            decreaseQuantityButton.heightAnchor.constraint(equalToConstant: 48),
-            decreaseQuantityButton.widthAnchor.constraint(equalToConstant: 48),
-            decreaseQuantityButton.centerYAnchor.constraint(equalTo: quantityButtonsBackground.centerYAnchor),
-            decreaseQuantityButton.leadingAnchor.constraint(equalTo: quantityButtonsBackground.leadingAnchor),
-            
-            quantityLabel.heightAnchor.constraint(equalToConstant: 48),
-            quantityLabel.centerYAnchor.constraint(equalTo: quantityButtonsBackground.centerYAnchor),
-            quantityLabel.leadingAnchor.constraint(equalTo: decreaseQuantityButton.trailingAnchor),
-            quantityLabel.trailingAnchor.constraint(equalTo: increaseQuantityButton.leadingAnchor),
-            
-            increaseQuantityButton.heightAnchor.constraint(equalToConstant: 48),
-            increaseQuantityButton.widthAnchor.constraint(equalToConstant: 48),
-            increaseQuantityButton.centerYAnchor.constraint(equalTo: quantityButtonsBackground.centerYAnchor),
-            increaseQuantityButton.leadingAnchor.constraint(equalTo: quantityLabel.trailingAnchor),
-            increaseQuantityButton.trailingAnchor.constraint(equalTo: quantityButtonsBackground.trailingAnchor)
-            
-            
-        ]
+        let bottomInsets = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.safeAreaInsets.bottom
         
-        productIsNotInCartConstraints = [
-            addToCartButton.topAnchor.constraint(equalTo: buttonBlock.topAnchor, constant: 16),
-            addToCartButton.leadingAnchor.constraint(equalTo: buttonBlock.leadingAnchor, constant: 16),
-            addToCartButton.trailingAnchor.constraint(equalTo: buttonBlock.trailingAnchor, constant: -16),
-            addToCartButton.bottomAnchor.constraint(equalTo: buttonBlock.bottomAnchor, constant: -16),
-            
-            buttonTextLabel.centerXAnchor.constraint(equalTo: addToCartButton.centerXAnchor),
-            buttonTextLabel.centerYAnchor.constraint(equalTo: addToCartButton.centerYAnchor),
-            buttonTextLabel.topAnchor.constraint(equalTo: addToCartButton.topAnchor, constant: 15),
-            buttonTextLabel.bottomAnchor.constraint(equalTo: addToCartButton.bottomAnchor, constant: -15)
-        ]
+        productIsNotInCartConstraints = addToCartButton.topAnchor.constraint(equalTo: buttonBlock.topAnchor, constant: 16)
+        productIsInCartConstraints = quantityButtonsBackground.topAnchor.constraint(equalTo: buttonBlock.topAnchor, constant: 16)
         
         NSLayoutConstraint.activate([
             productBlock.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
@@ -250,21 +230,20 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
             
             buttonBlock.widthAnchor.constraint(equalTo: view.widthAnchor),
             buttonBlock.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            buttonBlock.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            buttonBlock.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            addToCartButton.topAnchor.constraint(equalTo: buttonBlock.topAnchor, constant: 16),
+            addToCartButton.bottomAnchor.constraint(equalTo: buttonBlock.bottomAnchor, constant: bottomInsets! > 0 ? -bottomInsets! : -bottomInsets! - 16),
+            addToCartButton.heightAnchor.constraint(equalToConstant: 50),
             addToCartButton.leadingAnchor.constraint(equalTo: buttonBlock.leadingAnchor, constant: 16),
             addToCartButton.trailingAnchor.constraint(equalTo: buttonBlock.trailingAnchor, constant: -16),
-            addToCartButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
             
             buttonTextLabel.centerXAnchor.constraint(equalTo: addToCartButton.centerXAnchor),
             buttonTextLabel.centerYAnchor.constraint(equalTo: addToCartButton.centerYAnchor),
             buttonTextLabel.topAnchor.constraint(equalTo: addToCartButton.topAnchor, constant: 15),
             buttonTextLabel.bottomAnchor.constraint(equalTo: addToCartButton.bottomAnchor, constant: -15),
             
+            quantityButtonsBackground.bottomAnchor.constraint(equalTo: buttonBlock.bottomAnchor, constant: bottomInsets! > 0 ? -bottomInsets! : -bottomInsets! - 16),
             quantityButtonsBackground.heightAnchor.constraint(equalToConstant: 48),
-            quantityButtonsBackground.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             quantityButtonsBackground.centerXAnchor.constraint(equalTo: buttonBlock.centerXAnchor),
             
             decreaseQuantityButton.heightAnchor.constraint(equalToConstant: 48),
@@ -289,7 +268,7 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
     func setupNavigationBar() {
         if let customNavController = navigationController as? CustomNavigationController {
             customNavigationBar = customNavController
-            customNavigationBar.setTitle(title: "Ürünler")
+            customNavigationBar.setTitle(title: "Ürün Detayı")
             customNavigationBar.setButtonVisibility()
             customNavigationBar.setPriceLabel()
         }
@@ -331,23 +310,23 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
         self.quantityLabel.isHidden = false
         self.increaseQuantityButton.isHidden = false
         self.quantityLabel.text = String(presenter.countInCart())
+        productIsNotInCartConstraints.isActive = false
+        productIsInCartConstraints.isActive = true
     }
     
     func showAddToCartButton() {
-        self.addToCartButton.isHidden = false
-        self.buttonTextLabel.isHidden = false
-        self.quantityButtonsBackground.isHidden = true
-        self.decreaseQuantityButton.isHidden = true
-        self.quantityLabel.isHidden = true
-        self.increaseQuantityButton.isHidden = true
+        addToCartButton.isHidden = false
+        buttonTextLabel.isHidden = false
+        quantityButtonsBackground.isHidden = true
+        decreaseQuantityButton.isHidden = true
+        quantityLabel.isHidden = true
+        productIsInCartConstraints.isActive = false
+        productIsNotInCartConstraints.isActive = true
     }
+    
 }
 
-extension ProductDetailViewController: NavigationBarProtocol {
-    
-    func updatePriceInNavigationBar() {
-        self.customNavigationBar.updatePrice()
-    }
+extension ProductDetailViewController: RightNavigationButtonProtocol {
     
     func didTapRightButton() {
         presenter.didTapCartButton()

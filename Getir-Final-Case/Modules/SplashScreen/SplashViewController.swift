@@ -18,13 +18,13 @@ class SplashViewController: UIViewController {
     
     var background: UIView = {
         var backgroundView = UIView()
-        backgroundView.backgroundColor = .white
+        backgroundView.backgroundColor = .getirLightGray
         return backgroundView
     }()
     
     var splashLogo: UIImageView = {
         var logo = UIImageView()
-        logo.image = UIImage(systemName: "globe")
+        logo.image = UIImage(named: "GetirLogo")
         logo.tintColor = .systemPurple
         return logo
     }()
@@ -50,8 +50,8 @@ extension SplashViewController: SplashViewControllerProtocol {
             self.background.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.splashLogo.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.splashLogo.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            self.splashLogo.widthAnchor.constraint(equalToConstant: 100),
-            self.splashLogo.heightAnchor.constraint(equalToConstant: 100),
+            self.splashLogo.widthAnchor.constraint(equalToConstant: 120),
+            self.splashLogo.heightAnchor.constraint(equalToConstant: 120),
  
         ])
         

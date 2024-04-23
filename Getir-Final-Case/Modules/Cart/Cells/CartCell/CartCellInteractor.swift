@@ -13,11 +13,6 @@ protocol CartCellInteractorProtocol: AnyObject {
     func fetchProduct()
 }
 
-protocol UpdateCartViewProtocol: AnyObject {
-    func addButtonTapped(product: Product)
-    func deleteButtonTapped(product: Product)
-}
-
 protocol CartCellInteractorOutputProtocol: AnyObject {
     func getProductOutput(result: Product)
 }
@@ -25,18 +20,18 @@ protocol CartCellInteractorOutputProtocol: AnyObject {
 final class CartCellInteractor {
     var product: Product?
     weak var output: CartCellInteractorOutputProtocol?
-    weak var cartView: UpdateCartViewProtocol?
+    weak var cellOwner: CartCellOwnerDelegate?
 }
 
 extension CartCellInteractor: CartCellInteractorProtocol {
     func tappedAddButton(product: Product) {
         CartService.shared.addProductToCart(product: product)
-        cartView?.addButtonTapped(product: product)
+        cellOwner?.addButtonTapped(product: product)
     }
     
     func tappedRemoveButton(product: Product) {
         CartService.shared.removeProductFromCart(product: product)
-        cartView?.deleteButtonTapped(product: product)
+        cellOwner?.deleteButtonTapped(product: product)
     }
     
     func fetchProduct() {

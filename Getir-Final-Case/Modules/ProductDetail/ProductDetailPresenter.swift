@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ProductDetailPresenterProtocol: AnyObject {
-    func viewDidLoad()
+    func viewWillAppear()
     func getProduct() -> Product
     func tappedAddToCartButton()
     func countInCart() -> Int
@@ -32,12 +32,12 @@ final class ProductDetailPresenter {
 
 extension ProductDetailPresenter: ProductDetailPresenterProtocol {
     
-    func viewDidLoad() {
+    func viewWillAppear() {
         interactor.fetchProduct()
         view.setupNavigationBar()
         view.setupViews()
-        view.setupConstraints()
         view.setProductData(self.product)
+        view.setupConstraints()
         view.configureViewWithCartCount()
     }
     

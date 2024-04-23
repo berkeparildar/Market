@@ -16,6 +16,11 @@ protocol ProductListingViewControllerProtocol: AnyObject {
     func hideLoadingView()
 }
 
+protocol ProductCellOwnerDelegate: AnyObject {
+    func didTapAddButton(product: Product)
+    func didTapRemoveButton(product: Product)
+}
+
 final class ProductListingViewController: UIViewController, LoadingShowable {
     
     var presenter: ProductListingPresenter!
@@ -39,6 +44,10 @@ final class ProductListingViewController: UIViewController, LoadingShowable {
         presenter.viewDidLoad()
     }
     
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         presenter.viewWillAppear()
@@ -57,7 +66,7 @@ final class ProductListingViewController: UIViewController, LoadingShowable {
         let fixedWidth = 92.0
         let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(fixedWidth), heightDimension: .estimated(150))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: item.layoutSize.heightDimension)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(fixedWidth), heightDimension: item.layoutSize.heightDimension)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 16
@@ -73,8 +82,7 @@ final class ProductListingViewController: UIViewController, LoadingShowable {
     }
     
     func verticalSectionLayout() -> NSCollectionLayoutSection {
-        let fixedWidth = 103.67
-        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(fixedWidth), heightDimension: .estimated(200))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .estimated(200))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: item.layoutSize.heightDimension)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 3)
@@ -145,7 +153,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: "productCell", for: indexPath) as! ProductCellView
         let product = indexPath.section == 0 ? presenter.suggestedProduct(indexPath.item) : presenter.product(indexPath.item)
-        ProductCellBuilder.createModule(cellView: cellView, product: product, navBarOwner: self)
+        ProductCellBuilder.createModule(cellView: cellView, product: product, cellOwner: self)
         return cellView
     }
     
@@ -163,9 +171,26 @@ extension ProductListingViewController: UICollectionViewDelegate {
         presenter.didSelectItemAt(section: indexPath.section, index: indexPath.row)
     }
     
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        cell.layer.zPosition = 1
+    }
+    
 }
 
-extension ProductListingViewController: NavigationBarProtocol {
+extension ProductListingViewController: ProductCellOwnerDelegate {
+    
+    func didTapAddButton(product: Product) {
+        presenter.didTapAddButtonFromCell(product: product)
+        customNavigationBar.updatePrice()
+    }
+    
+    func didTapRemoveButton(product: Product) {
+        presenter.didTapRemoveButtonFromCell(product: product)
+        customNavigationBar.updatePrice()
+    }
+}
+
+extension ProductListingViewController: RightNavigationButtonProtocol {
     
     func updatePriceInNavigationBar() {
         customNavigationBar.updatePrice()

@@ -1,26 +1,27 @@
 //
-//  ConfirmationDialogue.swift
+//  SuccessDialogue.swift
 //  Getir-Final-Case
 //
-//  Created by Berke Parıldar on 22.04.2024.
+//  Created by Berke Parıldar on 23.04.2024.
 //
 
 import UIKit
 
-protocol ConfirmationShowable where Self: UIViewController {
+protocol SuccessShowable where Self: UIViewController {
 }
 
-extension ConfirmationShowable {
-    func showConfitmation(confirm: @escaping () -> Void) {
-        ConfirmationDialog.shared.showDialog(confirm: confirm)
+extension SuccessShowable {
+    func showSuccessMessage(price: String, confirm: @escaping () -> Void) {
+        SuccessDialogue.shared.showDialog(price: price, confirm: confirm)
     }
 }
 
-class ConfirmationDialog {
-    static let shared = ConfirmationDialog()
+class SuccessDialogue {
+    static let shared = SuccessDialogue()
     private var backgroundView: UIView!
     private var dialogView: UIView!
     private var confirmAction: (() -> Void)?
+    private var messageLabel: UILabel!
     
     private var showingConstraint: NSLayoutConstraint!
     private var hidingConstraint: NSLayoutConstraint!
@@ -39,13 +40,13 @@ class ConfirmationDialog {
         dialogView.translatesAutoresizingMaskIntoConstraints = false
         dialogView.layer.masksToBounds = true
         
-        let messageLabel = UILabel()
-        messageLabel.text = "Sepetini boşaltmak istediğinden emin misin?"
-        messageLabel.font = UIFont(name: "OpenSans-SemiBold", size: 14)
+        messageLabel = UILabel()
+        messageLabel.font = UIFont(name: "OpenSans-SemiBold", size: 12)
+        messageLabel.numberOfLines = 0
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let confirmButton = UIButton(type: .system)
-        confirmButton.setTitle("Evet", for: .normal)
+        confirmButton.setTitle("Tamam", for: .normal)
         confirmButton.setTitleColor(.white, for: .normal)
         confirmButton.titleLabel?.font = UIFont(name: "OpenSans-Bold", size: 14)
         confirmButton.layer.cornerRadius = 8
@@ -53,58 +54,37 @@ class ConfirmationDialog {
         confirmButton.addTarget(self, action: #selector(handleConfirm), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         
-        let cancelButton = UIButton(type: .system)
-        cancelButton.setTitle("Hayır", for: .normal)
-        cancelButton.setTitleColor(.white, for: .normal)
-        cancelButton.titleLabel?.font = UIFont(name: "OpenSans-Bold", size: 14)
-        cancelButton.layer.cornerRadius = 8
-        cancelButton.addTarget(self, action: #selector(handleCancel), for: .touchUpInside)
-        cancelButton.backgroundColor = .getirGray
-        cancelButton.translatesAutoresizingMaskIntoConstraints = false
-        
         backgroundView.addSubview(dialogView)
         dialogView.addSubview(messageLabel)
         dialogView.addSubview(confirmButton)
-        dialogView.addSubview(cancelButton)
         
         showingConstraint = dialogView.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor)
         hidingConstraint = dialogView.topAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: 320)
         
         NSLayoutConstraint.activate([
             dialogView.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
+            dialogView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 20),
+            dialogView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -20),
             hidingConstraint,
 
             messageLabel.topAnchor.constraint(equalTo: dialogView.topAnchor, constant: 20),
             messageLabel.centerXAnchor.constraint(equalTo: dialogView.centerXAnchor),
-            messageLabel.leadingAnchor.constraint(equalTo: dialogView.leadingAnchor, constant: 20),
-            messageLabel.trailingAnchor.constraint(equalTo: dialogView.trailingAnchor, constant: -20),
-            
-            confirmButton.widthAnchor.constraint(equalToConstant: 160),
+        
             confirmButton.heightAnchor.constraint(equalToConstant: 52),
             confirmButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 20),
-            cancelButton.leadingAnchor.constraint(equalTo: dialogView.leadingAnchor, constant: 10),
-            cancelButton.trailingAnchor.constraint(equalTo: dialogView.centerXAnchor, constant: -5),
             confirmButton.bottomAnchor.constraint(equalTo: dialogView.bottomAnchor, constant: -10),
-            
-            cancelButton.widthAnchor.constraint(equalToConstant: 160),
-            cancelButton.heightAnchor.constraint(equalToConstant: 52),
-            cancelButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 20),
-            confirmButton.leadingAnchor.constraint(equalTo: dialogView.centerXAnchor, constant: 5),
+            confirmButton.leadingAnchor.constraint(equalTo: dialogView.leadingAnchor, constant: 10),
             confirmButton.trailingAnchor.constraint(equalTo: dialogView.trailingAnchor, constant: -10),
-            cancelButton.bottomAnchor.constraint(equalTo: dialogView.bottomAnchor, constant: -10)
         ])
     }
     
     @objc private func handleConfirm() {
-        dismissDialog(animated: false)
+        dismissDialog(animated: true)
         confirmAction?()
     }
     
-    @objc private func handleCancel() {
-        dismissDialog(animated: true)
-    }
-    
-    func showDialog(confirm: @escaping () -> Void) {
+    func showDialog(price: String, confirm: @escaping () -> Void) {
+        messageLabel.text = "\(price) tutarındaki siparişin alındı, teşekkürler 🙏"
         confirmAction = confirm
         
         if let window = UIApplication.shared.windows.first(where: \.isKeyWindow) {
@@ -135,3 +115,4 @@ class ConfirmationDialog {
         }
     }
 }
+

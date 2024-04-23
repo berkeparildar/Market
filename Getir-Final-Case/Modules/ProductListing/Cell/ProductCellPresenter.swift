@@ -40,15 +40,17 @@ extension ProductCellPresenter: ProductCellPresenterProtocol {
     }
     
     func tappedRemove() {
-        if product.inCartCount == 1 {
-            product.inCartCount = 0
-            product.isInCart = false
+        if product.inCartCount > 0 {
+            if product.inCartCount == 1 {
+                product.inCartCount = 0
+                product.isInCart = false
+            }
+            else {
+                product.inCartCount -= 1
+            }
+            view.updateFloatingBar(product: product, animated: true)
+            interactor.tappedRemoveButton(product: product)
         }
-        else {
-            product.inCartCount -= 1
-        }
-        view.updateFloatingBar(product: product, animated: true)
-        interactor.tappedRemoveButton(product: product)
     }
 }
 

@@ -20,6 +20,16 @@ protocol CartViewControllerProtocol: AnyObject {
     func deleteCartItem(at indexPath: IndexPath)
 }
 
+protocol SuggestedCellOwnerDelegate: AnyObject {
+    func didTapAddButton(product: Product)
+}
+
+protocol CartCellOwnerDelegate: AnyObject {
+    func addButtonTapped(product: Product)
+    func deleteButtonTapped(product: Product)
+}
+
+
 class CartViewController: UIViewController {
     
     var presenter: CartPresenter!
@@ -91,9 +101,6 @@ class CartViewController: UIViewController {
         return label
     }()
     
-    @objc func didTapBuyButton() {
-        
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -245,11 +252,11 @@ extension CartViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
             let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: CartCellView.identifier, for: indexPath) as! CartCellView
-            CartCellBuilder.createModule(cellView: cellView, product: presenter.productInCart(indexPath.item), view: presenter)
+            CartCellBuilder.createModule(cellView: cellView, product: presenter.productInCart(indexPath.item), cellOwner: self)
             return cellView
         }
         let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: SuggestedCellView.identifier, for: indexPath) as! SuggestedCellView
-        SuggestedCellBuilder.createModule(cellView: cellView, product: presenter.suggestedProduct(indexPath.item), navBarOwner: self, cartPresenter: presenter)
+        SuggestedCellBuilder.createModule(cellView: cellView, product: presenter.suggestedProduct(indexPath.item), cellOwner: self)
         return cellView
     }
     
@@ -261,18 +268,46 @@ extension CartViewController: UICollectionViewDataSource {
 }
 
 extension CartViewController: UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         presenter.tappedProduct(indexpath: indexPath)
     }
+    
 }
 
-extension CartViewController: NavigationBarProtocol, ConfirmationShowable {
-    func updatePriceInNavigationBar() {
-        
+extension CartViewController: SuggestedCellOwnerDelegate {
+    
+    func didTapAddButton(product: Product) {
+        presenter.addButtonTappedFromSuggested(product: product)
     }
+    
+}
+
+extension CartViewController: CartCellOwnerDelegate {
+    
+    func addButtonTapped(product: Product) {
+        presenter.addButtonTapped(product: product)
+    }
+    
+    func deleteButtonTapped(product: Product) {
+        presenter.deleteButtonTapped(product: product)
+    }
+    
+}
+
+extension CartViewController: RightNavigationButtonProtocol, ConfirmationShowable, SuccessShowable {
     
     func didTapRightButton() {
         showConfitmation {
+            self.presenter.didTapTrashButton()
+            if let customNavBar = self.navigationController as? CustomNavigationController {
+                customNavBar.popToRootViewController(animated: true)
+            }
+        }
+    }
+    
+    @objc func didTapBuyButton() {
+        showSuccessMessage(price: String(format: "₺%.2f", self.presenter.calculateTotalPrice())) {
             self.presenter.didTapTrashButton()
             if let customNavBar = self.navigationController as? CustomNavigationController {
                 customNavBar.popToRootViewController(animated: true)

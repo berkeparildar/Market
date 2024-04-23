@@ -45,6 +45,4 @@ extension SuggestedCellPresenter: SuggestedCellInteractorOutputProtocol {
         self.product = result
     }
     
-    
-    
 }

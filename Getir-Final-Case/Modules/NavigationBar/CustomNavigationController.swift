@@ -7,8 +7,7 @@
 
 import UIKit
 
-protocol NavigationBarProtocol: AnyObject {
-    func updatePriceInNavigationBar()
+protocol RightNavigationButtonProtocol: AnyObject {
     func didTapRightButton()
 }
 
@@ -127,7 +126,7 @@ class CustomNavigationController: UINavigationController {
     }
     
     func rightButtonTapped() {
-        if let visibleViewController = visibleViewController as? NavigationBarProtocol {
+        if let visibleViewController = visibleViewController as? RightNavigationButtonProtocol {
             visibleViewController.didTapRightButton()
         }
     }
