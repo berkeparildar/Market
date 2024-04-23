@@ -53,20 +53,19 @@ extension CartPresenter: CartPresenterProtocol {
             let suggestedIndexPath = IndexPath(item: suggestedIndex, section: 1)
             view.deleteCartItem(at: suggestedIndexPath)
         }
-        view.updateTotalPrice(price: calculateTotalPrice())
+        view.updateTotalPrice(price: calculateTotalPrice(), isAnimated: true)
     }
     
     func viewDidLoad() {
-        view.setupViews()
-        view.setupConstraints()
-        view.updateTotalPrice(price: calculateTotalPrice())
-    }
+            }
     
     func viewWillAppear() {
+        view.setupViews()
+        view.setupConstraints()
         view.setupNavigationBar()
         interactor.fetchProductsInCart()
         interactor.fetchSuggestedProducts()
-        view.updateTotalPrice(price: calculateTotalPrice())
+        view.updateTotalPrice(price: calculateTotalPrice(), isAnimated: false)
         self.suggestedProducts = CartService.shared.updateCartStatusOfProducts(products: suggestedProducts)
     }
     
@@ -110,7 +109,7 @@ extension CartPresenter: CartPresenterProtocol {
     func addButtonTapped(product: Product) {
         let match = self.productsInCart.firstIndex { product.id == $0.id }
         self.productsInCart[match!].inCartCount += 1
-        view.updateTotalPrice(price: calculateTotalPrice())
+        view.updateTotalPrice(price: calculateTotalPrice(), isAnimated: true)
     }
     
     func deleteButtonTapped(product: Product) {
@@ -126,7 +125,7 @@ extension CartPresenter: CartPresenterProtocol {
             let indexPath = IndexPath(item: match!, section: 0)
             view.deleteCartItem(at: indexPath)
         }
-        view.updateTotalPrice(price: calculateTotalPrice())
+        view.updateTotalPrice(price: calculateTotalPrice(), isAnimated: true)
     }
 }
 
@@ -145,8 +144,4 @@ extension CartPresenter: CartInteractorOutputProtocol {
         self.productsInCart = result
         view.reloadData()
     }
-}
-
-extension CartPresenter: CartCellOwnerDelegate {
-    
 }

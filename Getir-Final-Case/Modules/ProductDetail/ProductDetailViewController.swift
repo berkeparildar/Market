@@ -158,8 +158,6 @@ final class ProductDetailViewController: UIViewController {
     }()
     
     @objc func didTapAddToCartButton() {
-        print(view.safeAreaInsets.bottom)
-
         presenter.tappedAddToCartButton()
         customNavigationBar.updatePrice()
     }
@@ -178,7 +176,6 @@ final class ProductDetailViewController: UIViewController {
 extension ProductDetailViewController: ProductDetailViewControllerProtocol {
     
     func setupViews() {
-        print(view.safeAreaInsets.bottom)
         view.backgroundColor = .white
         productBlock.addSubview(productImage)
         productBlock.addSubview(priceLabel)

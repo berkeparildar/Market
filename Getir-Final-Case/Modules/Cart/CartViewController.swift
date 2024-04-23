@@ -14,7 +14,7 @@ protocol CartViewControllerProtocol: AnyObject {
     func setupConstraints()
     func showError(_ message: String)
     func setTitle()
-    func updateTotalPrice(price: Double)
+    func updateTotalPrice(price: Double, isAnimated: Bool)
     func insertCartItem(at indexPath: IndexPath)
     func reloadCartItem(at indexPath: IndexPath)
     func deleteCartItem(at indexPath: IndexPath)
@@ -150,8 +150,16 @@ extension CartViewController: CartViewControllerProtocol {
         buyButton.addSubview(priceLabel)
         view.addSubview(bottomBlock)
     }
-    func updateTotalPrice(price: Double) {
-        self.priceLabel.text = String(format: "₺%.2f", price)
+    func updateTotalPrice(price: Double, isAnimated: Bool) {
+        if isAnimated {
+            UIView.animate(withDuration: 0.3) {
+                self.priceLabel.text = String(format: "₺%.2f", price)
+                self.view.layoutIfNeeded()
+            }
+        }
+        else {
+            self.priceLabel.text = String(format: "₺%.2f", price)
+        }
     }
     
     func setupConstraints() {

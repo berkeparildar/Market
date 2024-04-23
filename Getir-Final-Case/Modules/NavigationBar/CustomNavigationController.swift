@@ -83,10 +83,10 @@ class CustomNavigationController: UINavigationController {
     }
     
     func setBackButtonVisibility() {
-        if viewControllers.count > 1 {
-            customNavigationBarView?.addBackButton()
-        } else {
+        if visibleViewController is ProductListingViewController {
             customNavigationBarView?.hideBackButton()
+        } else {
+            customNavigationBarView?.addBackButton()
         }
     }
     
