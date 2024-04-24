@@ -12,6 +12,7 @@ protocol CartViewControllerProtocol: AnyObject {
     func setupViews()
     func setupConstraints()
     func reloadData()
+    func goBackToListing()
     func updateTotalPrice(price: Double, isAnimated: Bool)
     func insertCartItem(at indexPath: IndexPath)
     func reloadCartItem(at indexPath: IndexPath)
@@ -112,43 +113,12 @@ class CartViewController: UIViewController {
     
     func createCollectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
-            return sectionIndex == 0 ? self.verticalSectionLayout() : self.horizontalSectionLayout()
+            return sectionIndex == 0 ? CollectionViewLayoutStyle.tableStyle : CollectionViewLayoutStyle.suggestedStyle
         }
         layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
         return layout
     }
     
-    func horizontalSectionLayout() -> NSCollectionLayoutSection {
-        let fixedWidth = 92.0
-        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(fixedWidth), heightDimension: .estimated(150))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: item.layoutSize.heightDimension)
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 16
-        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
-        let sectionBackground = NSCollectionLayoutDecorationItem.background(
-            elementKind: "background-element-kind")
-        section.decorationItems = [sectionBackground]
-        section.orthogonalScrollingBehavior = .continuous
-        let headerSize = NSCollectionLayoutSize(widthDimension: .absolute(self.view.frame.width), heightDimension: .estimated(48))
-        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-        section.boundarySupplementaryItems = [header]
-        return section
-    }
-    
-    func verticalSectionLayout() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(102))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: item.layoutSize.heightDimension)
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.interItemSpacing = .flexible(16)
-        let section = NSCollectionLayoutSection(group: group)
-        let sectionBackground = NSCollectionLayoutDecorationItem.background(
-            elementKind: "background-element-kind")
-        section.decorationItems = [sectionBackground]
-        return section
-    }
 }
 
 extension CartViewController: CartViewControllerProtocol {
@@ -234,6 +204,10 @@ extension CartViewController: CartViewControllerProtocol {
             self.priceLabel.text = String(format: "₺%.2f", price)
         }
     }
+    
+    func goBackToListing() {
+        customNavigationBar.popToRootViewController(animated: true)
+    }
 
 }
 
@@ -291,12 +265,12 @@ extension CartViewController: CartCellOwnerDelegate {
     }
     
     func didTapRemoveButtonFromCart(product: Product) {
-        presenter.deleteButtonTappedFromCart(product: product)
+        presenter.removeButtonTappedFromCart(product: product)
     }
     
 }
 
-extension CartViewController: RightNavigationButtonProtocol, ConfirmationShowable, SuccessShowable {
+extension CartViewController: RightNavigationButtonDelegate, ConfirmationShowable, SuccessShowable {
     
     func didTapRightButton() {
         showConfitmation {

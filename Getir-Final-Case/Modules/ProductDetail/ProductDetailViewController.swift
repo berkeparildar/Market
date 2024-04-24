@@ -18,8 +18,10 @@ protocol ProductDetailViewControllerProtocol: AnyObject {
 final class ProductDetailViewController: UIViewController {
     
     var presenter: ProductDetailPresenter!
+    /* Constraint values for the button block.  */
     private var productIsInCartConstraints: NSLayoutConstraint!
     private var productIsNotInCartConstraints: NSLayoutConstraint!
+    
     private var customNavigationBar: CustomNavigationController!
     
     override func viewDidLoad() {
@@ -180,10 +182,13 @@ final class ProductDetailViewController: UIViewController {
         presenter.didTapRemoveFromCartButton()
         customNavigationBar.updatePrice()
     }
+    //MARK: -
 }
 
 extension ProductDetailViewController: ProductDetailViewControllerProtocol {
     
+    /* Sets up the navigation bar as CustomNavigationBar, updates the title, the cart button's visibility,
+     and the price seen in the cart button. */
     func setupNavigationBar() {
         if let customNavController = navigationController as? CustomNavigationController {
             customNavigationBar = customNavController
@@ -193,6 +198,7 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
         }
     }
     
+    /* Add subviews to view. */
     func setupViews() {
         view.backgroundColor = .white
         productBlock.addSubview(productImage)
@@ -209,8 +215,12 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
         view.addSubview(buttonBlock)
     }
     
+    /* Set the constraints according to design */
     func setupConstraints() {
-        let bottomInsets = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.safeAreaInsets.bottom
+        
+        /* The value of the current window's bottom insets, the position of the
+         button block at the bottom varies according to this*/
+        let bottomInsets = UIApplication.shared.windows.first(where: \.isKeyWindow)?.safeAreaInsets.bottom
         
         productIsNotInCartConstraints = addToCartButton.topAnchor.constraint(equalTo: buttonBlock.topAnchor, constant: 16)
         productIsInCartConstraints = quantityButtonsBackground.topAnchor.constraint(equalTo: buttonBlock.topAnchor, constant: 16)
@@ -276,14 +286,18 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
         ])
     }
 
+    /* Configure the view according to the Product data*/
     func setProductData(_ product: Product) {
         self.priceLabel.text = product.productPriceText
         self.nameLabel.text = product.productName
         self.attributeLabel.text = product.productDescription
         self.productImage.kf.setImage(with: product.imageURL)
-        self.quantityLabel.text = String(product.inCartCount)
+        self.quantityLabel.text = String(product.quantityInCart)
     }
     
+    /* Configuration to whether to show the "Add to cart" button or the steppers
+    by checking the current count in the cart. Also sets the image of remove
+     button to trash if count is one. */
     func configureViewWithCartCount() {
         let productCount = presenter.getProductQuantity()
         if productCount > 0 {
@@ -300,6 +314,7 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
         }
     }
     
+    // Hide addToCart button, show stepper, activate the constraints
     func showQuantityButtons() {
         self.addToCartButton.isHidden = true
         self.buttonTextLabel.isHidden = true
@@ -312,6 +327,7 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
         productIsInCartConstraints.isActive = true
     }
     
+    // Show addToCart button, hide stepper, activate the constraints
     func showAddToCartButton() {
         addToCartButton.isHidden = false
         buttonTextLabel.isHidden = false
@@ -324,8 +340,10 @@ extension ProductDetailViewController: ProductDetailViewControllerProtocol {
     
 }
 
-extension ProductDetailViewController: RightNavigationButtonProtocol {
-    
+
+extension ProductDetailViewController: RightNavigationButtonDelegate {
+    /* CustomNavigationBar has a RightNavigationButtonDelegate, and calles it's didTapRightButton method when the
+    button currently locating at the right of the navigation bar is tapped. For this view's case, it is the cart button. */
     func didTapRightButton() {
         presenter.didTapCartButton()
     }

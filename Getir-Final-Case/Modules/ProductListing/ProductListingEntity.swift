@@ -13,7 +13,13 @@ struct Product {
     var productDescription: String
     var productPrice: Double
     var productPriceText: String
-    var isInCart: Bool
-    var inCartCount: Int
+    var isInCart: Bool  // Boolean value representing if the product is in the cart
+    var quantityInCart: Int  // Integer value representing the current amount in the cart
     var imageURL: URL
+}
+
+extension Product: Equatable {
+    static func ==(lhs: Product, rhs: Product) -> Bool {
+        return lhs.id == rhs.id
+    }
 }

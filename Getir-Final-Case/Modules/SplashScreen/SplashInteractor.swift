@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Network
 
 protocol SplashInteractorProtocol: AnyObject {
     func checkInternetConnection()
@@ -21,7 +22,15 @@ final class SplashInteractor {
 
 extension SplashInteractor: SplashInteractorProtocol {
     func checkInternetConnection() {
-        let internetStatus = false
+        let networkMonitor = NWPathMonitor()
+        var internetStatus = true
+        networkMonitor.pathUpdateHandler = { path in
+            if path.status == .satisfied {
+                internetStatus = true
+            } else {
+                internetStatus = false
+            }
+        }
         self.output?.internetConnection(status: internetStatus)
     }
 }

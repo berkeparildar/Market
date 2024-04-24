@@ -5,7 +5,6 @@
 //  Created by Berke Parıldar on 9.04.2024.
 //
 
-import RxSwift
 import Foundation
 
 protocol ProductListingInteractorProtocol: AnyObject {
@@ -29,14 +28,20 @@ final class ProductListingInteractor {
 
 extension ProductListingInteractor: ProductListingInteractorProtocol {
     
+    /* Tells Cart Service to add the given product to cart, called when the add-remove buttons are tapped from the
+     cells */
     func addProductToCart(product: Product) {
         CartService.shared.addProductToCart(product: product)
     }
     
+    /* Tells Cart Service to remove the given product to cart, called when the add-remove buttons are tapped from the
+     cells */
     func removeProductFromCart(product: Product) {
         CartService.shared.removeProductFromCart(product: product)
     }
     
+    /* Function for fetching the products. Note that the products are fetched from the ProductService, after they have
+     been converted to the Product models which the module will use. */
     func fetchProducts() {
         ProductService.shared.getProducts { products in
             self.output?.getProductsOutput(products: products)
@@ -46,6 +51,7 @@ extension ProductListingInteractor: ProductListingInteractorProtocol {
         }
     }
     
+    /* Functions for updating the cart attributes of the products. Called in the viewWillAppear of the view. */
     func updateCartStatusOfProducts(products: [Product]) {
         let updatedProducts = CartService.shared.updateCartStatusOfProducts(products: products)
         self.output?.updatedProductsOutput(products: updatedProducts)

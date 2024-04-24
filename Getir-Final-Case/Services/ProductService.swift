@@ -6,55 +6,55 @@
 //
 
 import Foundation
-import Network
+import ProductsAPI
 
 protocol ProductServiceProtocol {
-    func createProductModels(apiProducts: [ProductAPI]?)  -> [Product]
-    func getProducts(completion: @escaping ([Product]) -> Void)
-    func getSuggestedProducts(completion: @escaping ([Product]) -> Void)
-    func updateFetchedProducts(currentProducts: [Product], coreDataProducts: [Product]) -> [Product]
+    func getProducts(completion: @escaping ProductsCompletion)
+    func getSuggestedProducts(completion: @escaping ProductsCompletion)
+    func buildProducts(apiProducts: [ProductAPI]?)  -> [Product]
 }
 
-protocol CartUpdateDelegate {
-    func didAddProductToCart(product: Product)
-    func didRemoveProductFromCart(product: Product)
-}
+final class ProductService {
 
-class ProductService {
-
-    private let networkManager = NetworkManager()
-    private let dataManager = DataManager()
+    private let networkManager = NetworkManager() // Network Manager fetched the API models to this service
     static let shared = ProductService()
-
+    
 }
 
-extension ProductService {
+extension ProductService: ProductServiceProtocol {
     
-    func getProducts(completion: @escaping ([Product]) -> Void) {
-        networkManager.fetchProducts() { result in
+    /* These two functions fetches the data from the API, uses the buildProducts() method of this class to
+     turn the API models to the models that will be used by the modules. Called from the interactor of Listing Page*/
+    func getProducts(completion: @escaping ProductsCompletion) {
+        networkManager.fetchProducts() { [weak self] result in
             switch result {
             case .success(let APIproducts):
+                guard let self = self else { return }
                 let generatedProducts = self.buildProducts(apiProducts: APIproducts)
                 completion(generatedProducts)
             case .failure(_):
-                print("There was an error fetching")
+                debugPrint("There was an error fetching")
             }
         }
     }
     
-    func getSuggestedProducts(completion: @escaping ([Product]) -> Void) {
-        networkManager.fetchSuggestedProducts() { result in
+    func getSuggestedProducts(completion: @escaping ProductsCompletion) {
+        networkManager.fetchSuggestedProducts() { [weak self] result in
             switch result {
             case .success(let APIproducts):
+                guard let self = self else { return }
                 let generatedProducts = self.buildProducts(apiProducts: APIproducts)
                 completion(generatedProducts)
             case .failure(_):
-                print("There was an error fetching")
+                debugPrint("There was an error fetching")
             }
         }
     }
     
-    func buildProducts(apiProducts: [ProductAPI]?)  -> [Product] {
+    /*This function converts the freshly fetched API models to the model that will be used by the modules.
+     The ProductAPI models are converted the Product models with non-optional values with nil checking*/
+    // See Product model in ProductListing module's entity file.
+    func buildProducts(apiProducts: [ProductAPI]?) -> [Product] {
         var generatedProducts = [Product]()
         if let fetchedProducts = apiProducts {
             generatedProducts = fetchedProducts.map {
@@ -64,7 +64,7 @@ extension ProductService {
                 let price = $0.price ?? 59.2
                 let priceText = $0.priceText ?? "59.2"
                 let imageURL = $0.imageURL ?? $0.squareThumbnailURL ?? $0.thumbnailURL ?? URL(string: "https://market-product-images-cdn.getirapi.com/product/62a59d8a-4dc4-4b4d-8435-643b1167f636.jpg")!
-                return Product(id: id, productName: name, productDescription: description, productPrice: price, productPriceText: priceText, isInCart: false, inCartCount: 0, imageURL: imageURL)
+                return Product(id: id, productName: name, productDescription: description, productPrice: price, productPriceText: priceText, isInCart: false, quantityInCart: 0, imageURL: imageURL)
             }
             return generatedProducts
         }

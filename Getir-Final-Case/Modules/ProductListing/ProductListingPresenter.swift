@@ -16,6 +16,7 @@ protocol ProductListingPresenterProtocol: AnyObject {
     func getSuggestedProductCount() -> Int
     func didSelectItemAt(indexPath: IndexPath)
     func didTapCartButton()
+    func fetchProducts()
     func didTapAddButtonFromCell(product: Product)
     func didTapRemoveButtonFromCell(product: Product)
 }
@@ -51,22 +52,27 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
         view.reloadData()
     }
     
+    // Returns the product with the given index, used assigning product to collection view cells.
     func getProduct(_ index: Int) -> Product {
         return products[safe: index]!
     }
-    
+    // Returns the suggested product with the given index, used assigning product to collection view cells.
     func getSuggestedProduct(_ index: Int) -> Product {
         return suggestedProducts[safe: index]!
     }
     
+    // Returns the number of products, used for collectionView's cell count
     func getProductCount() -> Int {
         return products.count
     }
     
+    // Returns the number of suggested products, used for collectionView's cell count
     func getSuggestedProductCount() -> Int {
         return suggestedProducts.count
     }
     
+    /* Function for handling the tap from the collection view, call's router's navigate function to Product Detail
+     page, with the product tapped. Gets the product from either one of it's array according to the section of cell*/
     func didSelectItemAt(indexPath: IndexPath) {
         if indexPath.section == 0 {
             router.navigate(.detail(product: suggestedProducts[indexPath.item]))
@@ -75,42 +81,47 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
             router.navigate(.detail(product: products[indexPath.item]))
         }
     }
-    
+    /* Function for handling the tap on the cart button, navigates to the Cart View, passes the suggested products
+     it currently holds, so that Cart won't need to fetch it. */
     func didTapCartButton() {
         router.navigate(.cart(suggestedProducts: self.suggestedProducts))
     }
 
-    private func fetchProducts() {
+    /* Function for fetching the products, loading view is shown for this process. */
+     func fetchProducts() {
         view.showLoadingView()
         interactor.fetchProducts()
     }
     
+    /* The add and remove functions that are called when the user taps on one of the buttons on the cell. This
+     function updates the quantityInCart and isInCart attributes of the products, and tells interactor to update the
+     cart using CartService */
     func didTapAddButtonFromCell(product: Product) {
-        if let match = products.firstIndex(where: { $0.id == product.id }) {
-            if products[match].inCartCount == 0 {
+        if let match = products.firstIndex(where: { $0 == product }) {
+            if products[match].quantityInCart == 0 {
                 products[match].isInCart = true
             }
-            products[match].inCartCount += 1
+            products[match].quantityInCart += 1
         }
-        if let suggestedMatch = suggestedProducts.firstIndex(where: { $0.id == product.id}) {
-            if suggestedProducts[suggestedMatch].inCartCount == 0 {
+        if let suggestedMatch = suggestedProducts.firstIndex(where: { $0 == product }) {
+            if suggestedProducts[suggestedMatch].quantityInCart == 0 {
                 suggestedProducts[suggestedMatch].isInCart = true
             }
-            suggestedProducts[suggestedMatch].inCartCount += 1
+            suggestedProducts[suggestedMatch].quantityInCart += 1
         }
         interactor.addProductToCart(product: product)
     }
     
     func didTapRemoveButtonFromCell(product: Product) {
-        if let match = products.firstIndex(where: { $0.id == product.id }) {
-            products[match].inCartCount -= 1
-            if products[match].inCartCount == 0 {
+        if let match = products.firstIndex(where: { $0 == product }) {
+            products[match].quantityInCart -= 1
+            if products[match].quantityInCart == 0 {
                 products[match].isInCart = false
             }
         }
-        if let suggestedMatch = suggestedProducts.firstIndex(where: { $0.id == product.id}) {
-            suggestedProducts[suggestedMatch].inCartCount -= 1
-            if suggestedProducts[suggestedMatch].inCartCount == 0 {
+        if let suggestedMatch = suggestedProducts.firstIndex(where: { $0 == product}) {
+            suggestedProducts[suggestedMatch].quantityInCart -= 1
+            if suggestedProducts[suggestedMatch].quantityInCart == 0 {
                 suggestedProducts[suggestedMatch].isInCart = false
             }
         }

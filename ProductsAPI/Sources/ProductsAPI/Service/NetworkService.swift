@@ -2,7 +2,7 @@
 //  NetworkService.swift
 //
 //
-//  Created by Berke Parıldar on 21.04.2024.
+//  Created by Berke Parıldar on 24.04.2024.
 //
 
 import Foundation
@@ -47,3 +47,4 @@ extension NetworkService: TargetType {
         return ["Content-type": "application/json"]
     }
 }
+

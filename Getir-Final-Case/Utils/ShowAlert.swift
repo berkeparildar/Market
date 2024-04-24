@@ -7,6 +7,11 @@
 
 import UIKit
 
+/*
+ This function displays a native alert dialog with a single option of "OK". This is used only when there is no
+ internet connection available during the start of application.
+ */
+
 protocol ShowAlert {
     func showAlert(title: String, message: String)
 }

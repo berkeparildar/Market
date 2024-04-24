@@ -1,7 +1,7 @@
 import XCTest
-@testable import Network
+@testable import ProductsAPI
 
-final class NetworkTests: XCTestCase {
+final class ProductsAPITests: XCTestCase {
     func testExample() throws {
         // XCTest Documentation
         // https://developer.apple.com/documentation/xctest

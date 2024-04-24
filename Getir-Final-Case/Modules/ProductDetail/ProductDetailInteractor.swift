@@ -19,31 +19,28 @@ protocol ProductDetailInteractorOutputProtocol {
 
 final class ProductDetailInteractor {
     var output: ProductDetailInteractorOutputProtocol?
-    var productID: String!
     var product: Product!
     
-    init(product: Product, productID: String) {
+    init(product: Product) {
         self.product = product
-        self.productID = productID
     }
 }
 
 extension ProductDetailInteractor: ProductDetailInteractorProtocol {
     
+    /* Function for forwarding the given product to the presenter */
     func fetchProduct() {
-        let productInCart = CartService.shared.getProductFromCartWithID(id: product.id)
-        if let product = productInCart {
-            self.output?.product(product: product)
-        }
-        else {
-            self.output?.product(product: product)
-        }
+        self.output?.product(product: product)
     }
     
+    /* Tells Cart Service to add the given product to cart, called when the  buttons are tapped from the
+     button block at the bottom*/
     func addProductToCart(product: Product) {
         CartService.shared.addProductToCart(product: product)
     }
     
+    /* Tells Cart Service to remove the given product to cart, called when the  buttons are tapped from the
+     button block at the bottom*/
     func removeProductFromCart(product: Product) {
         CartService.shared.removeProductFromCart(product: product)
     }

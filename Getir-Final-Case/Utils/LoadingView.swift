@@ -7,6 +7,11 @@
 
 import UIKit
 
+/*
+ This is the LoadingView that is shown after splash screen, and is shown until the products are fetched in the
+ Product Listing page. Product Listing page controlls this view by conforming to LoadingShowable.
+ */
+
 protocol LoadingShowable where Self: UIViewController {
     func showLoading()
     func hideLoading()
@@ -22,7 +27,7 @@ extension LoadingShowable {
     }
 }
 
-class LoadingView {
+final class LoadingView {
     
     static let shared = LoadingView()
     

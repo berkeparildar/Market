@@ -10,7 +10,6 @@ import Foundation
 protocol ProductDetailPresenterProtocol: AnyObject {
     func viewDidLoad()
     func viewWillAppear()
-    func getProduct() -> Product
     func getProductQuantity() -> Int
     func didTapAddToCartButton()
     func didTapRemoveFromCartButton()
@@ -46,24 +45,20 @@ extension ProductDetailPresenter: ProductDetailPresenterProtocol {
         view.configureViewWithCartCount()
     }
     
-    func getProduct() -> Product {
-        return self.product
-    }
-    
     func getProductQuantity() -> Int {
-        return product.inCartCount
+        return product.quantityInCart
     }
     
     func didTapAddToCartButton() {
         product.isInCart = true
-        product.inCartCount += 1
+        product.quantityInCart += 1
         interactor.addProductToCart(product: self.product)
         view.configureViewWithCartCount()
     }
     
     func didTapRemoveFromCartButton() {
-        product.inCartCount -= 1
-        if product.inCartCount == 0 {
+        product.quantityInCart -= 1
+        if product.quantityInCart == 0 {
             product.isInCart = false
         }
         interactor.removeProductFromCart(product: self.product)

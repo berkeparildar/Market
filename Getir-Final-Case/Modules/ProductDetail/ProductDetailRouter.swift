@@ -21,7 +21,7 @@ final class ProductDetailRouter {
     
     static func createModule(product: Product) -> ProductDetailViewController {
         let view = ProductDetailViewController()
-        let interactor = ProductDetailInteractor(product: product, productID: product.id)
+        let interactor = ProductDetailInteractor(product: product)
         let router = ProductDetailRouter()
         
         let presenter = ProductDetailPresenter(view: view, router: router, interactor: interactor)

@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Network">
+      location = "group:ProductsAPI">
    </FileRef>
    <FileRef
       location = "container:Getir-Final-Case.xcodeproj">

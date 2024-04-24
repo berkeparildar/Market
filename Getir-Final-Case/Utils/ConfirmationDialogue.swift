@@ -7,8 +7,13 @@
 
 import UIKit
 
-protocol ConfirmationShowable where Self: UIViewController {
-}
+/*
+ This class manages a modal confirmation dialog that will appear when the Trash Button in the Cart View is pressed,
+ allowing users to either confirm or cancel clearing the Cart. The action is passed, meaning the action of clearing
+ the cart is not done here.
+ */
+
+protocol ConfirmationShowable where Self: UIViewController {}
 
 extension ConfirmationShowable {
     func showConfitmation(confirm: @escaping () -> Void) {
@@ -16,7 +21,7 @@ extension ConfirmationShowable {
     }
 }
 
-class ConfirmationDialog {
+final class ConfirmationDialog {
     static let shared = ConfirmationDialog()
     private var backgroundView: UIView!
     private var dialogView: UIView!

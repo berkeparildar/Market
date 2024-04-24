@@ -12,14 +12,17 @@ protocol ProductCellViewProtocol: AnyObject {
     func setupViews()
     func setupConstraints()
     func configure(product: Product)
-    func updateFloatingBar(product: Product, animated: Bool)
+    func updateFloatingStepper(product: Product, animated: Bool)
 }
 
 final class ProductCellView: UICollectionViewCell {
     
+    // This cell's identifier
     static let identifier: String = "productCell"
+    /* Constraint values representing the floating stepper's current status. */
     private var addSectionHeightAnchor: NSLayoutConstraint!
     private var addSectionShadowHeightAnchor: NSLayoutConstraint!
+    
     var presenter: ProductCellPresenter!
     
     override init(frame: CGRect) {
@@ -32,6 +35,7 @@ final class ProductCellView: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - VIEWS
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
@@ -128,6 +132,7 @@ final class ProductCellView: UICollectionViewCell {
         label.isUserInteractionEnabled = false
         return label
     }()
+    //MARK: -
     
     @objc func addButtonTapped() {
         presenter.didTapAddButton()
@@ -140,6 +145,7 @@ final class ProductCellView: UICollectionViewCell {
 
 extension ProductCellView: ProductCellViewProtocol {
     
+    /* Add subviews to view. */
     func setupViews() {
         addSection.addSubview(deleteButton)
         addSection.addSubview(quantityLabel)
@@ -152,6 +158,7 @@ extension ProductCellView: ProductCellViewProtocol {
         addSubview(addSectionShadow)
     }
     
+    /* Set the constraints according to design */
     func setupConstraints() {
         addSectionHeightAnchor = addSection.heightAnchor.constraint(equalToConstant: 30)
         addSectionShadowHeightAnchor = addSectionShadow.heightAnchor.constraint(equalToConstant: 30)
@@ -203,16 +210,20 @@ extension ProductCellView: ProductCellViewProtocol {
         ])
     }
     
+    /* Configure the cell views according to the Product data*/
     func configure(product: Product) {
         nameLabel.text = product.productName
         attributeLabel.text = product.productDescription
         priceLabel.text = product.productPriceText
         productImage.kf.setImage(with: product.imageURL)
-        updateFloatingBar(product: product, animated: false)
+        updateFloatingStepper(product: product, animated: false)
     }
     
-    func updateFloatingBar(product: Product, animated: Bool) {
-        let productCount = product.inCartCount
+    /* Updates the floating stepper's visuals. Sets expanded or not whether product is in the cart.
+     Sets the remove button's image according to the count of product.
+     For configuration when cell's are being reused, all of this is done with no animation. */
+    func updateFloatingStepper(product: Product, animated: Bool) {
+        let productCount = product.quantityInCart
         addSectionHeightAnchor.constant = product.isInCart ? 90 : 30
         addSectionShadowHeightAnchor.constant = product.isInCart ? 90 : 30
         let targetColor = product.isInCart ? UIColor.getirPurple.cgColor : UIColor.getirLightGray.cgColor
@@ -220,18 +231,20 @@ extension ProductCellView: ProductCellViewProtocol {
         if animated {
             UIView.animate(withDuration: 0.3) {
                 self.deleteButton.setImage(newImage, for: .normal)
-                self.quantityLabel.text = String(product.inCartCount)
+                self.quantityLabel.text = String(product.quantityInCart)
                 self.productImage.layer.borderColor = targetColor
                 self.layoutIfNeeded()
             }
         }
         else {
             self.deleteButton.setImage(newImage, for: .normal)
-            self.quantityLabel.text = String(product.inCartCount)
+            self.quantityLabel.text = String(product.quantityInCart)
             self.productImage.layer.borderColor = targetColor
         }
     }
     
+    
+    /* Hit test for add and remove buttons*/
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let addButtonPoint = addButton.convert(point, from: self)
         if addButton.bounds.contains(addButtonPoint) {

@@ -7,8 +7,12 @@
 
 import UIKit
 
-protocol SuccessShowable where Self: UIViewController {
-}
+/*
+ This class displays modal of success message dialog that is shown when the order is completed. It displays the
+ message with the total price, and has a single action of "OK". 
+ */
+
+protocol SuccessShowable where Self: UIViewController {}
 
 extension SuccessShowable {
     func showSuccessMessage(price: String, confirm: @escaping () -> Void) {

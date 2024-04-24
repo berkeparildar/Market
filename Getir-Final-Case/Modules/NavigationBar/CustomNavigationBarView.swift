@@ -117,7 +117,6 @@ class CustomNavigationBarView: UINavigationBar {
         cartImageBackground.addSubview(cartImage)
         cartButton.addSubview(cartImageBackground)
         addSubview(cartButton)
-        cartButton.isHidden = CartService.shared.isCartEmpty()
     }
     
     required init?(coder: NSCoder) {

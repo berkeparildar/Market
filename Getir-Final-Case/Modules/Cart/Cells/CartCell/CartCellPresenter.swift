@@ -32,17 +32,17 @@ extension CartCellPresenter: CartCellPresenterProtocol {
     }
     
     func getProductCount() -> Int {
-        return product.inCartCount
+        return product.quantityInCart
     }
     
     func didTapAddButton() {
-        product.inCartCount += 1
+        product.quantityInCart += 1
         view.updateStepper()
         interactor.tappedAddButton(product: self.product)
     }
     
     func didTapRemoveButton() {
-        product.inCartCount -= 1
+        product.quantityInCart -= 1
         view.updateStepper()
         interactor.tappedRemoveButton(product: self.product)
     }

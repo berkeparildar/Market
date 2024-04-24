@@ -7,6 +7,12 @@
 
 import UIKit
 
+/*
+ These two classes are used by the CollectionViews in the Product Listing and Cart page.
+ Section background is used for the background for sections, SectionHeaderSuggestedProduct is used in the Cart Page's
+ Suggested Products' header.
+ */
+
 class SectionBackground: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)

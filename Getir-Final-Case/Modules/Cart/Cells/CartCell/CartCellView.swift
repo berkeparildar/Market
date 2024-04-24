@@ -244,8 +244,8 @@ extension CartCellView: CartCellViewProtocol {
         attributeLabel.text = product.productDescription
         priceLabel.text = product.productPriceText
         productImage.kf.setImage(with: product.imageURL)
-        self.quantityLabel.text = String(product.inCartCount)
-        let newImage = product.inCartCount > 1 ? UIImage(systemName: "minus") : UIImage(systemName: "trash")
+        self.quantityLabel.text = String(product.quantityInCart)
+        let newImage = product.quantityInCart > 1 ? UIImage(systemName: "minus") : UIImage(systemName: "trash")
         self.deleteButton.setImage(newImage, for: .normal)
     }
 }

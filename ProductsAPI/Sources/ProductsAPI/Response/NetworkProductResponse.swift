@@ -1,8 +1,8 @@
 //
-//  File.swift
-//  
+//  NetworkProductResponse.swift
 //
-//  Created by Berke Parıldar on 21.04.2024.
+//
+//  Created by Berke Parıldar on 24.04.2024.
 //
 
 import Foundation
@@ -25,3 +25,4 @@ public struct NetworkProductResponse: Decodable {
         }
     }
 }
+

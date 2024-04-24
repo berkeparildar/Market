@@ -18,13 +18,14 @@ protocol ProductCellInteractorOutputProtocol: AnyObject {
 
 final class ProductCellInteractor {
     
-    var product: Product!
     weak var cellOwnerDelegate: ProductCellOwnerDelegate?
     
 }
 
 extension ProductCellInteractor: ProductCellInteractorProtocol {
     
+    /* These functions tell their delegate, in this case the ProductListingViewController that the buttons have been
+    tapped */
     func addProductToCart(product: Product) {
         cellOwnerDelegate?.didTapAddButton(product: product)
     }

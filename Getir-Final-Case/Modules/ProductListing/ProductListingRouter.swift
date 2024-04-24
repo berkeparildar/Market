@@ -7,6 +7,11 @@
 
 import UIKit
 
+/*
+ Routing module for the Product Listing page, with the only two available routes being Product Detail and the Cart.
+ Passes the Product to the Product Detail, and the SuggestedProducts array to the cart. 
+ */
+
 enum ProductListingRoutes {
     case detail(product: Product),
          cart(suggestedProducts: [Product])

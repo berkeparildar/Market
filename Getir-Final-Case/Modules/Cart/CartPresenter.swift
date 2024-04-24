@@ -16,6 +16,8 @@ protocol CartPresenterProtocol: AnyObject {
     func getSuggestedProductCount() -> Int
     func didSelectItemAt(indexpath: IndexPath)
     func didTapTrashButton()
+    func addButtonTappedFromCart(product: Product)
+    func removeButtonTappedFromCart(product: Product)
     func addButtonTappedFromSuggested(product: Product)
 }
 
@@ -81,23 +83,23 @@ extension CartPresenter: CartPresenterProtocol {
     func calculateTotalPrice() -> Double {
         var totalPrice = 0.0
         productsInCart.forEach {
-            totalPrice += ($0.productPrice * Double($0.inCartCount))
+            totalPrice += ($0.productPrice * Double($0.quantityInCart))
         }
         return totalPrice
     }
     
     func addButtonTappedFromCart(product: Product) {
-        let match = self.productsInCart.firstIndex { product.id == $0.id }
-        self.productsInCart[match!].inCartCount += 1
+        let match = self.productsInCart.firstIndex { product == $0 }
+        self.productsInCart[match!].quantityInCart += 1
         view.updateTotalPrice(price: calculateTotalPrice(), isAnimated: true)
         interactor.addProductToCart(product: product)
     }
     
-    func deleteButtonTappedFromCart(product: Product) {
-        let match = self.productsInCart.firstIndex { product.id == $0.id }
-        self.productsInCart[match!].inCartCount -= 1
-        if self.productsInCart[match!].inCartCount == 0 {
-            if let suggestedMatch = self.suggestedProductsFetched.firstIndex(where: { product.id == $0.id }) {
+    func removeButtonTappedFromCart(product: Product) {
+        let match = self.productsInCart.firstIndex { product == $0 }
+        self.productsInCart[match!].quantityInCart -= 1
+        if self.productsInCart[match!].quantityInCart == 0 {
+            if let suggestedMatch = self.suggestedProductsFetched.firstIndex(where: { product == $0 }) {
                 self.suggestedProducts.insert(self.suggestedProductsFetched[suggestedMatch], at: 0)
                 let indexPath = IndexPath(item: 0, section: 1)
                 view.insertCartItem(at: indexPath)
@@ -108,21 +110,25 @@ extension CartPresenter: CartPresenterProtocol {
         }
         view.updateTotalPrice(price: calculateTotalPrice(), isAnimated: true)
         interactor.removeProductFromCart(product: product)
+        if productsInCart.isEmpty {
+            interactor.clearCart()
+            view.goBackToListing()
+        }
     }
     
     func addButtonTappedFromSuggested(product: Product) {
-        if let matchIndex = self.productsInCart.firstIndex(where: { $0.id == product.id }) {
-            self.productsInCart[matchIndex].inCartCount += 1
+        if let matchIndex = self.productsInCart.firstIndex(where: { $0 == product }) {
+            self.productsInCart[matchIndex].quantityInCart += 1
             let cartIndexPath = IndexPath(item: matchIndex, section: 0)
             view.reloadCartItem(at: cartIndexPath)
         } else {
             self.productsInCart.append(product)
-            self.productsInCart[productsInCart.count - 1].inCartCount = 1
+            self.productsInCart[productsInCart.count - 1].quantityInCart = 1
             self.productsInCart[productsInCart.count - 1].isInCart = true
             let newCartIndexPath = IndexPath(item: productsInCart.count - 1, section: 0)
             view.insertCartItem(at: newCartIndexPath)
         }
-        if let suggestedIndex = self.suggestedProducts.firstIndex(where: { $0.id == product.id }) {
+        if let suggestedIndex = self.suggestedProducts.firstIndex(where: { $0 == product }) {
             self.suggestedProducts.remove(at: suggestedIndex)
             let suggestedIndexPath = IndexPath(item: suggestedIndex, section: 1)
             view.deleteCartItem(at: suggestedIndexPath)
@@ -139,7 +145,7 @@ extension CartPresenter: CartInteractorOutputProtocol {
         self.suggestedProductsFetched = result
         self.suggestedProducts = self.suggestedProductsFetched
         for product in self.productsInCart {
-            if let match = self.suggestedProducts.firstIndex(where: { $0.id == product.id}) {
+            if let match = self.suggestedProducts.firstIndex(where: { $0 == product }) {
                 suggestedProducts.remove(at: match)
             }
         }

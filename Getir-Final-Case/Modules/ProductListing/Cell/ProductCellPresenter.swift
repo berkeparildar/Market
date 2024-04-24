@@ -27,23 +27,22 @@ final class ProductCellPresenter {
 
 extension ProductCellPresenter: ProductCellPresenterProtocol {
     
+    /* These functions tell the interactor module that the add or remove buttons have been tapped. The floating
+     stepper is updated each time, and the product's data that the presenter holds is updated*/
     func didTapAddButton() {
         product.isInCart = true
-        product.inCartCount += 1
+        product.quantityInCart += 1
         interactor.addProductToCart(product: product)
-        view.updateFloatingBar(product: product, animated: true)
+        view.updateFloatingStepper(product: product, animated: true)
     }
     
     func didTapRemoveButton() {
-        if product.inCartCount > 0 {
-            if product.inCartCount == 1 {
-                product.inCartCount = 0
+        if product.quantityInCart > 0 {
+            product.quantityInCart -= 1
+            if product.quantityInCart == .zero {
                 product.isInCart = false
             }
-            else {
-                product.inCartCount -= 1
-            }
-            view.updateFloatingBar(product: product, animated: true)
+            view.updateFloatingStepper(product: product, animated: true)
             interactor.removeProductFromCart(product: product)
         }
     }

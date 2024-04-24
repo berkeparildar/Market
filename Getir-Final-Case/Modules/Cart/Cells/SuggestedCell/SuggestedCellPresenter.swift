@@ -33,7 +33,7 @@ extension SuggestedCellPresenter: SuggestedCellPresenterProtocol {
     
     func didTapAddButton() {
         product.isInCart = true
-        product.inCartCount += 1
+        product.quantityInCart += 1
         interactor.tappedAddButton(product: product)
     }
     

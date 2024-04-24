@@ -1,12 +1,13 @@
 //
-//  Product.swift
+//  Products.swift
 //
 //
-//  Created by Berke Parıldar on 21.04.2024.
+//  Created by Berke Parıldar on 24.04.2024.
 //
 
 import Foundation
 
+// The model representing the response
 public struct ProductAPIResponse: Decodable {
     var id: String?
     var name: String?
@@ -14,12 +15,7 @@ public struct ProductAPIResponse: Decodable {
     var products: [ProductAPI]?
 }
 
-public struct SuggestedProductAPIResponse: Decodable {
-    var id: String?
-    var name: String?
-    var products: [ProductAPI]?
-}
-
+// The model representing the product's in the response
 public struct ProductAPI: Decodable {
     public var id: String?
     public var name: String?
@@ -32,3 +28,4 @@ public struct ProductAPI: Decodable {
     public var priceText: String?
     public var imageData: Data?
 }
+
