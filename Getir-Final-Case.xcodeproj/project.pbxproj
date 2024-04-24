@@ -38,7 +38,6 @@
 		624134152BCC13A7002AD5C7 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624134142BCC13A7002AD5C7 /* DataManager.swift */; };
 		6248B6252BC5F2ED003E695B /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6248B6242BC5F2ED003E695B /* LoadingView.swift */; };
 		6248B6272BC5F4DD003E695B /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6248B6262BC5F4DD003E695B /* Collection.swift */; };
-		6271F0772BCF2196005CA19A /* ProductDetailEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271F0762BCF2196005CA19A /* ProductDetailEntity.swift */; };
 		6271F0812BCF5F54005CA19A /* Cart.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6271F07F2BCF5F54005CA19A /* Cart.xcdatamodeld */; };
 		6271F0842BCFE3BA005CA19A /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6271F0832BCFE3BA005CA19A /* Kingfisher */; };
 		6271F0862BD0269C005CA19A /* ProductCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271F0852BD0269C005CA19A /* ProductCellBuilder.swift */; };
@@ -49,22 +48,12 @@
 		6271F0912BD08D4E005CA19A /* CartCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271F0902BD08D4E005CA19A /* CartCellView.swift */; };
 		6271F0932BD09303005CA19A /* CartCellInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271F0922BD09303005CA19A /* CartCellInteractor.swift */; };
 		6271F0952BD093FA005CA19A /* CartCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271F0942BD093FA005CA19A /* CartCellPresenter.swift */; };
-		6271F0972BD09578005CA19A /* TableCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271F0962BD09578005CA19A /* TableCellBuilder.swift */; };
+		6271F0972BD09578005CA19A /* CartCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6271F0962BD09578005CA19A /* CartCellBuilder.swift */; };
 		6277706A2BD8657500A5ED61 /* ProductsAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 627770692BD8657500A5ED61 /* ProductsAPI */; };
 		628181782BCC51BC002DC3DE /* ProductCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628181772BCC51BC002DC3DE /* ProductCellPresenter.swift */; };
 		6281817A2BCC5346002DC3DE /* ProductCellInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628181792BCC5346002DC3DE /* ProductCellInteractor.swift */; };
 		6281817C2BCC5A30002DC3DE /* ProductCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6281817B2BCC5A30002DC3DE /* ProductCellView.swift */; };
-		628181B42BCC9FFB002DC3DE /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181A82BCC9FFB002DC3DE /* OpenSans-Light.ttf */; };
-		628181B52BCC9FFB002DC3DE /* OpenSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181A92BCC9FFB002DC3DE /* OpenSans-Medium.ttf */; };
-		628181B62BCC9FFB002DC3DE /* OpenSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181AA2BCC9FFB002DC3DE /* OpenSans-MediumItalic.ttf */; };
-		628181B72BCC9FFB002DC3DE /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181AB2BCC9FFB002DC3DE /* OpenSans-Regular.ttf */; };
-		628181B82BCC9FFB002DC3DE /* OpenSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181AC2BCC9FFB002DC3DE /* OpenSans-ExtraBold.ttf */; };
 		628181B92BCC9FFB002DC3DE /* OpenSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181AD2BCC9FFB002DC3DE /* OpenSans-SemiBold.ttf */; };
-		628181BA2BCC9FFB002DC3DE /* OpenSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181AE2BCC9FFB002DC3DE /* OpenSans-BoldItalic.ttf */; };
-		628181BB2BCC9FFB002DC3DE /* OpenSans-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181AF2BCC9FFB002DC3DE /* OpenSans-LightItalic.ttf */; };
-		628181BC2BCC9FFB002DC3DE /* OpenSans-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181B02BCC9FFB002DC3DE /* OpenSans-SemiBoldItalic.ttf */; };
-		628181BD2BCC9FFB002DC3DE /* OpenSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181B12BCC9FFB002DC3DE /* OpenSans-Italic.ttf */; };
-		628181BE2BCC9FFB002DC3DE /* OpenSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181B22BCC9FFB002DC3DE /* OpenSans-ExtraBoldItalic.ttf */; };
 		628181BF2BCC9FFB002DC3DE /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181B32BCC9FFB002DC3DE /* OpenSans-Bold.ttf */; };
 		62AA580D2BCD80DE0022DD59 /* CustomNavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AA580C2BCD80DE0022DD59 /* CustomNavigationBarView.swift */; };
 		62AA580F2BCD811A0022DD59 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AA580E2BCD811A0022DD59 /* CustomNavigationController.swift */; };
@@ -130,7 +119,6 @@
 		624134142BCC13A7002AD5C7 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		6248B6242BC5F2ED003E695B /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		6248B6262BC5F4DD003E695B /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
-		6271F0762BCF2196005CA19A /* ProductDetailEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailEntity.swift; sourceTree = "<group>"; };
 		6271F0802BCF5F54005CA19A /* Cart.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Cart.xcdatamodel; sourceTree = "<group>"; };
 		6271F0852BD0269C005CA19A /* ProductCellBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCellBuilder.swift; sourceTree = "<group>"; };
 		6271F0872BD051CE005CA19A /* CartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewController.swift; sourceTree = "<group>"; };
@@ -140,27 +128,17 @@
 		6271F0902BD08D4E005CA19A /* CartCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCellView.swift; sourceTree = "<group>"; };
 		6271F0922BD09303005CA19A /* CartCellInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCellInteractor.swift; sourceTree = "<group>"; };
 		6271F0942BD093FA005CA19A /* CartCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCellPresenter.swift; sourceTree = "<group>"; };
-		6271F0962BD09578005CA19A /* TableCellBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCellBuilder.swift; sourceTree = "<group>"; };
+		6271F0962BD09578005CA19A /* CartCellBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCellBuilder.swift; sourceTree = "<group>"; };
 		627770682BD8648400A5ED61 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ProductsAPI/Package.swift; sourceTree = "<group>"; };
 		628181772BCC51BC002DC3DE /* ProductCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCellPresenter.swift; sourceTree = "<group>"; };
 		628181792BCC5346002DC3DE /* ProductCellInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCellInteractor.swift; sourceTree = "<group>"; };
 		6281817B2BCC5A30002DC3DE /* ProductCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCellView.swift; sourceTree = "<group>"; };
-		628181A82BCC9FFB002DC3DE /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
-		628181A92BCC9FFB002DC3DE /* OpenSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Medium.ttf"; sourceTree = "<group>"; };
-		628181AA2BCC9FFB002DC3DE /* OpenSans-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-MediumItalic.ttf"; sourceTree = "<group>"; };
-		628181AB2BCC9FFB002DC3DE /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
-		628181AC2BCC9FFB002DC3DE /* OpenSans-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-ExtraBold.ttf"; sourceTree = "<group>"; };
 		628181AD2BCC9FFB002DC3DE /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-SemiBold.ttf"; sourceTree = "<group>"; };
-		628181AE2BCC9FFB002DC3DE /* OpenSans-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-BoldItalic.ttf"; sourceTree = "<group>"; };
-		628181AF2BCC9FFB002DC3DE /* OpenSans-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-LightItalic.ttf"; sourceTree = "<group>"; };
-		628181B02BCC9FFB002DC3DE /* OpenSans-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
-		628181B12BCC9FFB002DC3DE /* OpenSans-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Italic.ttf"; sourceTree = "<group>"; };
-		628181B22BCC9FFB002DC3DE /* OpenSans-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		628181B32BCC9FFB002DC3DE /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		62AA580C2BCD80DE0022DD59 /* CustomNavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBarView.swift; sourceTree = "<group>"; };
 		62AA580E2BCD811A0022DD59 /* CustomNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
 		62AA58102BCDD7FF0022DD59 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		62BD93232BC47E78007E122C /* Getir-Final-Case.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Getir-Final-Case.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		62BD93232BC47E78007E122C /* Getir.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Getir.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		62BD93262BC47E78007E122C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		62BD93282BC47E78007E122C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		62BD932F2BC47E79007E122C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -298,7 +276,7 @@
 				6271F0902BD08D4E005CA19A /* CartCellView.swift */,
 				6271F0922BD09303005CA19A /* CartCellInteractor.swift */,
 				6271F0942BD093FA005CA19A /* CartCellPresenter.swift */,
-				6271F0962BD09578005CA19A /* TableCellBuilder.swift */,
+				6271F0962BD09578005CA19A /* CartCellBuilder.swift */,
 			);
 			path = CartCell;
 			sourceTree = "<group>";
@@ -307,17 +285,7 @@
 			isa = PBXGroup;
 			children = (
 				628181B32BCC9FFB002DC3DE /* OpenSans-Bold.ttf */,
-				628181AE2BCC9FFB002DC3DE /* OpenSans-BoldItalic.ttf */,
-				628181AC2BCC9FFB002DC3DE /* OpenSans-ExtraBold.ttf */,
-				628181B22BCC9FFB002DC3DE /* OpenSans-ExtraBoldItalic.ttf */,
-				628181B12BCC9FFB002DC3DE /* OpenSans-Italic.ttf */,
-				628181A82BCC9FFB002DC3DE /* OpenSans-Light.ttf */,
-				628181AF2BCC9FFB002DC3DE /* OpenSans-LightItalic.ttf */,
-				628181A92BCC9FFB002DC3DE /* OpenSans-Medium.ttf */,
-				628181AA2BCC9FFB002DC3DE /* OpenSans-MediumItalic.ttf */,
-				628181AB2BCC9FFB002DC3DE /* OpenSans-Regular.ttf */,
 				628181AD2BCC9FFB002DC3DE /* OpenSans-SemiBold.ttf */,
-				628181B02BCC9FFB002DC3DE /* OpenSans-SemiBoldItalic.ttf */,
 			);
 			path = Font;
 			sourceTree = "<group>";
@@ -344,7 +312,7 @@
 		62BD93242BC47E78007E122C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				62BD93232BC47E78007E122C /* Getir-Final-Case.app */,
+				62BD93232BC47E78007E122C /* Getir.app */,
 				62BD93392BC47E79007E122C /* Getir-Final-CaseTests.xctest */,
 			);
 			name = Products;
@@ -441,7 +409,6 @@
 				62EF7FD22BCB5B93008DF702 /* ProductDetailInteractor.swift */,
 				62EF7FD42BCB5BA4008DF702 /* ProductDetailPresenter.swift */,
 				62EF7FD62BCB5BC5008DF702 /* ProductDetailRouter.swift */,
-				6271F0762BCF2196005CA19A /* ProductDetailEntity.swift */,
 			);
 			path = ProductDetail;
 			sourceTree = "<group>";
@@ -510,7 +477,7 @@
 				627770692BD8657500A5ED61 /* ProductsAPI */,
 			);
 			productName = "Getir-Final-Case";
-			productReference = 62BD93232BC47E78007E122C /* Getir-Final-Case.app */;
+			productReference = 62BD93232BC47E78007E122C /* Getir.app */;
 			productType = "com.apple.product-type.application";
 		};
 		62BD93382BC47E79007E122C /* Getir-Final-CaseTests */ = {
@@ -578,20 +545,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				628181BC2BCC9FFB002DC3DE /* OpenSans-SemiBoldItalic.ttf in Resources */,
-				628181BE2BCC9FFB002DC3DE /* OpenSans-ExtraBoldItalic.ttf in Resources */,
 				628181B92BCC9FFB002DC3DE /* OpenSans-SemiBold.ttf in Resources */,
 				62BD93302BC47E79007E122C /* Assets.xcassets in Resources */,
-				628181BD2BCC9FFB002DC3DE /* OpenSans-Italic.ttf in Resources */,
-				628181B42BCC9FFB002DC3DE /* OpenSans-Light.ttf in Resources */,
-				628181BA2BCC9FFB002DC3DE /* OpenSans-BoldItalic.ttf in Resources */,
 				62AA58112BCDD7FF0022DD59 /* Main.storyboard in Resources */,
 				628181BF2BCC9FFB002DC3DE /* OpenSans-Bold.ttf in Resources */,
-				628181BB2BCC9FFB002DC3DE /* OpenSans-LightItalic.ttf in Resources */,
-				628181B82BCC9FFB002DC3DE /* OpenSans-ExtraBold.ttf in Resources */,
-				628181B72BCC9FFB002DC3DE /* OpenSans-Regular.ttf in Resources */,
-				628181B52BCC9FFB002DC3DE /* OpenSans-Medium.ttf in Resources */,
-				628181B62BCC9FFB002DC3DE /* OpenSans-MediumItalic.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -648,12 +605,11 @@
 				62BD93292BC47E78007E122C /* SceneDelegate.swift in Sources */,
 				62BD93632BC48192007E122C /* SplashViewController.swift in Sources */,
 				62EF7FD52BCB5BA4008DF702 /* ProductDetailPresenter.swift in Sources */,
-				6271F0772BCF2196005CA19A /* ProductDetailEntity.swift in Sources */,
 				6271F0882BD051CE005CA19A /* CartViewController.swift in Sources */,
 				6271F0912BD08D4E005CA19A /* CartCellView.swift in Sources */,
 				6217B59C2BD5C6CF001FB16E /* ShowAlert.swift in Sources */,
 				6217B5A62BD69ED8001FB16E /* SuggestedCellBuilder.swift in Sources */,
-				6271F0972BD09578005CA19A /* TableCellBuilder.swift in Sources */,
+				6271F0972BD09578005CA19A /* CartCellBuilder.swift in Sources */,
 				628181782BCC51BC002DC3DE /* ProductCellPresenter.swift in Sources */,
 				62EF7FD32BCB5B93008DF702 /* ProductDetailInteractor.swift in Sources */,
 				6271F0952BD093FA005CA19A /* CartCellPresenter.swift in Sources */,
@@ -750,6 +706,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -806,6 +763,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
@@ -834,7 +792,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bprldr.Getir-Final-Case";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Getir;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -867,7 +825,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bprldr.Getir-Final-Case";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Getir;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

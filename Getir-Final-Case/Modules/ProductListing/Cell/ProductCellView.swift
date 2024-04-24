@@ -19,6 +19,7 @@ final class ProductCellView: UICollectionViewCell {
     
     // This cell's identifier
     static let identifier: String = "productCell"
+    
     /* Constraint values representing the floating stepper's current status. */
     private var addSectionHeightAnchor: NSLayoutConstraint!
     private var addSectionShadowHeightAnchor: NSLayoutConstraint!

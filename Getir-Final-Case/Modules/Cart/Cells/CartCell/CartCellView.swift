@@ -16,6 +16,7 @@ protocol CartCellViewProtocol: AnyObject {
 
 class CartCellView: UICollectionViewCell {
     
+    // This cell's identifier
     static let identifier = "cartCell"
     
     var presenter: CartCellPresenter!
@@ -30,6 +31,7 @@ class CartCellView: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - VIEWS
     lazy var baseView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -134,6 +136,7 @@ class CartCellView: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    //MARK: -
     
     @objc func addButtonTapped() {
         presenter.didTapAddButton()
@@ -147,7 +150,7 @@ class CartCellView: UICollectionViewCell {
 
 extension CartCellView: CartCellViewProtocol {
  
-    
+    /* Add subviews to view. */
     func setupViews() {
         baseView.addSubview(productImage)
         textSection.addSubview(nameLabel)
@@ -162,6 +165,7 @@ extension CartCellView: CartCellViewProtocol {
         addSubview(seperator)
     }
     
+    /* Set the constraints according to design */
     func setupConstraints() {
         NSLayoutConstraint.activate([           
             
@@ -228,6 +232,9 @@ extension CartCellView: CartCellViewProtocol {
         ])
     }
     
+    /* Updates the floating stepper's visuals.
+     Sets the remove button's image according to the count of product.
+     */
     func updateStepper() {
         let productCount = presenter.getProductCount()
         let newImage = productCount > 1 ? UIImage(systemName: "minus") : UIImage(systemName: "trash")
@@ -238,6 +245,7 @@ extension CartCellView: CartCellViewProtocol {
         }
     }
     
+    /* Configure the cell views according to the Product data*/
     func configureWithPresenter() {
         let product = presenter.getProduct()
         nameLabel.text = product.productName

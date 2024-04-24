@@ -16,6 +16,7 @@ protocol SuggestedCellViewProtocol: AnyObject {
 
 final class SuggestedCellView: UICollectionViewCell {
     
+    // This cell's identifier
     static let identifier: String = "suggestedCell"
     var presenter: SuggestedCellPresenter!
     
@@ -29,6 +30,7 @@ final class SuggestedCellView: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - VIEWS
     lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
@@ -98,7 +100,7 @@ final class SuggestedCellView: UICollectionViewCell {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-
+    //MARK: -
     
     @objc func addButtonTapped() {
         presenter.didTapAddButton()
@@ -108,6 +110,7 @@ final class SuggestedCellView: UICollectionViewCell {
 
 extension SuggestedCellView: SuggestedCellViewProtocol {
     
+    /* Add subviews to view. */
     func setupViews() {
         addSection.addSubview(addButton)
         addSectionShadow.addSubview(addSection)
@@ -118,8 +121,8 @@ extension SuggestedCellView: SuggestedCellViewProtocol {
         addSubview(addSectionShadow)
     }
     
+    /* Set the constraints according to design */
     func setupConstraints() {
-
         NSLayoutConstraint.activate([
             productImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
             productImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
@@ -158,6 +161,7 @@ extension SuggestedCellView: SuggestedCellViewProtocol {
         ])
     }
     
+    /* Configure the cell views according to the Product data*/
     func configure(product: Product) {
         nameLabel.text = product.productName
         attributeLabel.text = product.productDescription
@@ -165,6 +169,7 @@ extension SuggestedCellView: SuggestedCellViewProtocol {
         productImage.kf.setImage(with: product.imageURL)
     }
     
+    /* Hit test for add button*/
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let pointForTargetView = addButton.convert(point, from: self)
         if addButton.bounds.contains(pointForTargetView) {

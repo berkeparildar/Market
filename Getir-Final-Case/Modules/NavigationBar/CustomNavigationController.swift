@@ -11,7 +11,7 @@ protocol RightNavigationButtonDelegate: AnyObject {
     func didTapRightButton()
 }
 
-class CustomNavigationController: UINavigationController {
+final class CustomNavigationController: UINavigationController {
     
     var customNavigationBarView: CustomNavigationBarView?
     
@@ -29,6 +29,7 @@ class CustomNavigationController: UINavigationController {
         super.viewDidLoad()
         setupCustomNavigationBar()
     }
+    
     
     private func setupCustomNavigationBar() {
         customNavigationBarView = CustomNavigationBarView()
@@ -82,6 +83,7 @@ class CustomNavigationController: UINavigationController {
         setCartButtonVisibility()
     }
     
+    // Sets the back button's visibility, if at home page do not show
     func setBackButtonVisibility() {
         if visibleViewController is ProductListingViewController {
             customNavigationBarView?.hideBackButton()
@@ -90,6 +92,7 @@ class CustomNavigationController: UINavigationController {
         }
     }
     
+    // Sets the trash button's visibility, if at cart page show
     func setTrashButtonVisibility() {
         if visibleViewController is CartViewController {
             customNavigationBarView?.addTrashButton()
@@ -99,6 +102,7 @@ class CustomNavigationController: UINavigationController {
         }
     }
 
+    // Sets the cart button's visibility, if there are no products, or at cart, do not show
     func setCartButtonVisibility() {
         let cartIsEmpty = CartService.shared.isCartEmpty()
         let inCartView = visibleViewController is CartViewController
@@ -111,12 +115,15 @@ class CustomNavigationController: UINavigationController {
     
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         if viewController is CartViewController {
+            // Since you can navigate to product detail from cart, instead of creating a new route to cart from product detail,
+            // pop back to cart
             if let cartVC = viewControllers.first(where: { $0 is CartViewController }) {
                 popToViewController(cartVC, animated: true)
                 return
             }
         }
         super.pushViewController(viewController, animated: animated)
+        // hide back button since we use custom
         viewController.navigationItem.hidesBackButton = true
     }
     

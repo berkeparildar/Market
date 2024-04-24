@@ -5,7 +5,7 @@
 //  Created by Berke Parıldar on 9.04.2024.
 //
 
-import UIKit
+import Foundation
 
 /*
  Routing module for the Product Listing page, with the only two available routes being Product Detail and the Cart.

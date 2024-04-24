@@ -31,9 +31,8 @@ extension SuggestedCellPresenter: SuggestedCellPresenterProtocol {
         return self.product
     }
     
+    /* This function tells the interactor module that the add button has been tapped*/
     func didTapAddButton() {
-        product.isInCart = true
-        product.quantityInCart += 1
         interactor.tappedAddButton(product: product)
     }
     

@@ -19,6 +19,7 @@ protocol CartViewControllerProtocol: AnyObject {
     func deleteCartItem(at indexPath: IndexPath)
 }
 
+/* Delegates for both of the cells */
 protocol SuggestedCellOwnerDelegate: AnyObject {
     func didTapAddButtonFromSuggested(product: Product)
 }
@@ -44,6 +45,7 @@ class CartViewController: UIViewController {
         presenter.viewWillAppear()
     }
     
+    //MARK: - VIEWS
     lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: view.frame, collectionViewLayout: createCollectionViewLayout())
         collectionView.dataSource = self
@@ -118,20 +120,22 @@ class CartViewController: UIViewController {
         layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
         return layout
     }
-    
+    //MARK: -
 }
 
 extension CartViewController: CartViewControllerProtocol {
     
+    /* Sets up the navigation bar as CustomNavigationBar, updates the title, the trash button's visibility,
+     and the price seen in the cart button. */
     func setupNavigationBar() {
         if let customNavController = navigationController as? CustomNavigationController {
             customNavigationBar = customNavController
             customNavigationBar.setTitle(title: "Sepetim")
             customNavigationBar.setButtonVisibility()
-            customNavigationBar.setPriceLabel()
         }
     }
     
+    /* Add subviews to view. */
     func setupViews() {
         view.addSubview(collectionView)
         bottomBlock.addSubview(buyButtonContainer)
@@ -141,6 +145,7 @@ extension CartViewController: CartViewControllerProtocol {
         view.addSubview(bottomBlock)
     }
     
+    /* Set the constraints according to design */
     func setupConstraints() {
         NSLayoutConstraint.activate( [
             bottomBlock.widthAnchor.constraint(equalTo: view.widthAnchor),
@@ -175,12 +180,16 @@ extension CartViewController: CartViewControllerProtocol {
         ])
     }
     
+    /* Reload the collection view's data, is called by presenter when the data it presents updates */
     func reloadData() {
         DispatchQueue.main.async {
             self.collectionView.reloadData()
         }
     }
     
+    /* These three functions are primarily used to add a product to cart, the first
+     section of the collection view, from the suggested products, the second
+     section of the collection view. and vice versa */
     func insertCartItem(at indexPath: IndexPath) {
         collectionView.insertItems(at: [indexPath])
     }
@@ -193,6 +202,8 @@ extension CartViewController: CartViewControllerProtocol {
         collectionView.deleteItems(at: [indexPath])
     }
     
+    /* Function used for setting up the total price in the complete order button
+     Won't be animated during viewWillAppear */
     func updateTotalPrice(price: Double, isAnimated: Bool) {
         if isAnimated {
             UIView.animate(withDuration: 0.3) {
@@ -205,6 +216,8 @@ extension CartViewController: CartViewControllerProtocol {
         }
     }
     
+    /* Function called after emptying cart, both for trash button and complete
+     order*/
     func goBackToListing() {
         customNavigationBar.popToRootViewController(animated: true)
     }
@@ -224,6 +237,12 @@ extension CartViewController: UICollectionViewDataSource {
         2
     }
     
+    /* Cell configuration for the CollectionView. Two sections use different cells, CartCell and SuggestedCell.
+     I wanted to follow the VIPER architecture in cell's as well, after having a very crowded cell classes.
+     Both of the cells have their own respective builder class and method, and also wants a class that conforms to
+     their respective delegates as it's cell owner, in this case being this class. I wanted to keep the access to
+     Cart Service restricted to page modules, so both of the cells call their own delegate functions when add or 
+     remove buttons are tapped. */
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
             let cellView = collectionView.dequeueReusableCell(withReuseIdentifier: CartCellView.identifier, for: indexPath) as! CartCellView
@@ -250,6 +269,8 @@ extension CartViewController: UICollectionViewDelegate {
     
 }
 
+/* Function that are called following the add button from the SuggestedCell. Notice that the suggested cell
+ does not have a remove button, since it comes to the cart automatically when added. */
 extension CartViewController: SuggestedCellOwnerDelegate {
     
     func didTapAddButtonFromSuggested(product: Product) {
@@ -258,6 +279,7 @@ extension CartViewController: SuggestedCellOwnerDelegate {
     
 }
 
+/* Functions that are called following the add or remove buttons from the TableCell. */
 extension CartViewController: CartCellOwnerDelegate {
     
     func didTapAddButtonFromCart(product: Product) {
@@ -270,6 +292,12 @@ extension CartViewController: CartCellOwnerDelegate {
     
 }
 
+/* CustomNavigationBar has a RightNavigationButtonDelegate, and calles it's didTapRightButton method when the
+button currently locating at the right of the navigation bar is tapped. For this view's case, it is the trash button.
+ showConfirmation method of ConfirmationShowable is called, and as its closure: presenter's didTapTrashButton is called,
+which is responsible for emptying the cart. Then the navbar pops back to root view, which is product listing.
+The same operation is following the buy button, only showing the showSuccessMessage of SuccessShowable
+ */
 extension CartViewController: RightNavigationButtonDelegate, ConfirmationShowable, SuccessShowable {
     
     func didTapRightButton() {

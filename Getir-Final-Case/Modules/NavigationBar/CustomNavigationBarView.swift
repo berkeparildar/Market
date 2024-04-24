@@ -9,14 +9,17 @@ import UIKit
 
 class CustomNavigationBarView: UINavigationBar {
     
+    /* Constraints for the product button's animation when price updates*/
     var imageBackgroundWidthAnchor: NSLayoutConstraint!
     var imageBackgroundTrailingAnchor: NSLayoutConstraint!
     
+    /* Constraints for the product button's animation of appearing or disappearing*/
     var buttonShowingTrailingAnchor: NSLayoutConstraint!
     var buttonHidingTrailingAnchor: NSLayoutConstraint!
     
     var controller: UINavigationController?
             
+    //MARK: - Views
     lazy var navigationTitle: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "OpenSans-Bold", size: 14)
@@ -33,7 +36,7 @@ class CustomNavigationBarView: UINavigationBar {
         button.backgroundColor = .getirLightGray
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
-        button.addTarget(self, action: #selector(cartButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -85,7 +88,7 @@ class CustomNavigationBarView: UINavigationBar {
     
     lazy var trashButton: UIButton = {
         var button = UIButton(type: .system)
-        button.addTarget(self, action: #selector(cartButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
         button.isHidden = true
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isHidden = true
@@ -185,7 +188,8 @@ class CustomNavigationBarView: UINavigationBar {
         self.priceLabel.text = String(format: "₺%.2f", updatedPrice)
     }
     
-    @objc private func cartButtonTapped() {
+    @objc private func rightButtonTapped() {
+        // Lets the controller know that button's been tapped, which it will call the views that conform to RightNavigationButtonDelegate
         if let controller = controller as? CustomNavigationController {
             controller.rightButtonTapped()
         }
@@ -195,6 +199,7 @@ class CustomNavigationBarView: UINavigationBar {
         controller?.popViewController(animated: true)
     }
     
+    // Functions to control back button's visibility
     func addBackButton() {
         self.backButton.isHidden = false
     }
@@ -203,6 +208,7 @@ class CustomNavigationBarView: UINavigationBar {
         self.backButton.isHidden = true
     }
     
+    // Functions to control trash button's visibility
     func addTrashButton() {
         cartButton.isHidden = true
         trashButton.isHidden = false
@@ -213,6 +219,7 @@ class CustomNavigationBarView: UINavigationBar {
         cartButton.isHidden = false
     }
     
+    // This method is called when cart has no product, cart disappearing animation
     func hideCartButton() {
         buttonShowingTrailingAnchor.isActive = false
         buttonHidingTrailingAnchor.isActive = true
@@ -223,6 +230,7 @@ class CustomNavigationBarView: UINavigationBar {
         }
     }
     
+    // This method is called when a product's been added to the cart, cart appearing animation
     func showCartButton() {
         if cartButton.isHidden {
             cartButton.isHidden = false
@@ -234,6 +242,7 @@ class CustomNavigationBarView: UINavigationBar {
         }
     }
     
+    // Functions to control cart button's visibility with anchors
     func cartButtonIsHidden() {
         cartButton.isHidden = true
         buttonShowingTrailingAnchor.isActive = false
@@ -246,6 +255,7 @@ class CustomNavigationBarView: UINavigationBar {
         buttonShowingTrailingAnchor.isActive = true
     }
     
+    // Functions for handling the cart button animation when a product's been added to cart, also updates the price label
     func cartButtonAnimation(updatedPrice: Double) {
         imageBackgroundWidthAnchor.isActive = false
         imageBackgroundTrailingAnchor.isActive = true

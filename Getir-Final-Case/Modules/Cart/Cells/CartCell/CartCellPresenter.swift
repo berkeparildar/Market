@@ -35,6 +35,8 @@ extension CartCellPresenter: CartCellPresenterProtocol {
         return product.quantityInCart
     }
     
+    /* These functions tell the interactor module that the add or remove buttons have been tapped. The
+     stepper is updated each time, and the product's data that the presenter holds is updated*/
     func didTapAddButton() {
         product.quantityInCart += 1
         view.updateStepper()

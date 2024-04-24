@@ -51,22 +51,28 @@ extension CartPresenter: CartPresenterProtocol {
         view.updateTotalPrice(price: calculateTotalPrice(), isAnimated: false)
     }
     
+    // Returns the product in the cart with the given index, used assigning product to collection view cells.
     func getProductInCart(_ index: Int) -> Product {
         return productsInCart[safe: index]!
     }
     
+    // Returns the suggested product with the given index, used assigning product to collection view cells.
     func getSuggestedProduct(_ index: Int) -> Product {
         return suggestedProducts[safe: index]!
     }
     
+    // Returns the number of products in cart, used for collectionView's cell count
     func getProductInCartCount() -> Int {
         return productsInCart.count
     }
     
+    // Returns the number of suggested products, used for collectionView's cell count
     func getSuggestedProductCount() -> Int {
         return suggestedProducts.count
     }
     
+    /* Function for handling the tap from the collection view, call's router's navigate function to Product Detail
+     page, with the product tapped. Gets the product from either one of it's array according to the section of cell*/
     func didSelectItemAt(indexpath: IndexPath) {
         if indexpath.section == 0 {
             router.navigate(.detail(product: getProductInCart(indexpath.item)))
@@ -76,6 +82,8 @@ extension CartPresenter: CartPresenterProtocol {
         }
     }
     
+    /* Function for handling the tap on the trash button, tells interactor to clear the cart using
+     Cart Service */
     func didTapTrashButton() {
         interactor.clearCart()
     }
@@ -88,6 +96,11 @@ extension CartPresenter: CartPresenterProtocol {
         return totalPrice
     }
     
+    /* The add and remove functions that are called when the user taps on one of the buttons on the cart cell. This
+     function updates the quantityInCart and isInCart attributes of the products, and tells interactor to update the
+     cart using CartService. If product's count is 0, it is removed from the array,
+     if it was the last product in the cart, the cart is cleaned again via interactor and
+     view is popped back to root view controller.*/
     func addButtonTappedFromCart(product: Product) {
         let match = self.productsInCart.firstIndex { product == $0 }
         self.productsInCart[match!].quantityInCart += 1
@@ -116,6 +129,12 @@ extension CartPresenter: CartPresenterProtocol {
         }
     }
     
+    /* The add functions that are called when the user taps on the add button on the suggested cell. This
+     function updates the quantityInCart and isInCart attributes of the product, and tells interactor to update the
+     cart using CartService. The suggested products that are added via this operation is
+     added to the cart array, and removed from the suggested products array. Notice that he suggestedProducts array is used
+     for add-remove operations, and suggestedProductsFetched is left untouched. This is for later checking if the products was
+     in suggested array at first. */
     func addButtonTappedFromSuggested(product: Product) {
         if let matchIndex = self.productsInCart.firstIndex(where: { $0 == product }) {
             self.productsInCart[matchIndex].quantityInCart += 1

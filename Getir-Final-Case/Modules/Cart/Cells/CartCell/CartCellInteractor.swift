@@ -17,6 +17,9 @@ final class CartCellInteractor {
 }
 
 extension CartCellInteractor: CartCellInteractorProtocol {
+    
+    /* These functions tell their delegate, in this case the CartViewController that the buttons have been
+    tapped */
     func tappedAddButton(product: Product) {
         cellOwner?.didTapAddButtonFromCart(product: product)
     }

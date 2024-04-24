@@ -7,6 +7,8 @@
 
 import Foundation
 
+// Builder class for the CartCell, the product data is directly passed to the presenter of the cell.
+// The configure method of the cell is also being called here, not in presenter.
 final class CartCellBuilder {
     static func createModule(cellView: CartCellView, product: Product, cellOwner: CartCellOwnerDelegate) {
         let interactor = CartCellInteractor()

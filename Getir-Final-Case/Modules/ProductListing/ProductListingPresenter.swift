@@ -81,6 +81,7 @@ extension ProductListingPresenter: ProductListingPresenterProtocol {
             router.navigate(.detail(product: products[indexPath.item]))
         }
     }
+    
     /* Function for handling the tap on the cart button, navigates to the Cart View, passes the suggested products
      it currently holds, so that Cart won't need to fetch it. */
     func didTapCartButton() {

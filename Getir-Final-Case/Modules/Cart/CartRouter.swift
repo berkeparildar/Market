@@ -7,6 +7,11 @@
 
 import Foundation
 
+/*
+ Routing module for the Cart page, with the only available route being Product Detail.
+ Passes the Product to the Product Detail.
+ */
+
 enum CartRoutes {
     case detail(product: Product)
 }

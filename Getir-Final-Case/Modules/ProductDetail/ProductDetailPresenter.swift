@@ -45,10 +45,14 @@ extension ProductDetailPresenter: ProductDetailPresenterProtocol {
         view.configureViewWithCartCount()
     }
     
+    /*Returns the current amount of that product in cart, used in configureing the add to cart button or steppers.*/
     func getProductQuantity() -> Int {
         return product.quantityInCart
     }
     
+    /* The add and remove functions that are called when the user taps on one of the buttons in the bottom. This
+     function updates the quantityInCart and isInCart attributes of the product, and tells interactor to update the
+     cart using CartService. Tell's view to update accordingly */
     func didTapAddToCartButton() {
         product.isInCart = true
         product.quantityInCart += 1
@@ -65,6 +69,7 @@ extension ProductDetailPresenter: ProductDetailPresenterProtocol {
         view.configureViewWithCartCount()
     }
     
+    /* Function for handling the tap on the cart button, navigates to the Cart View */
     func didTapCartButton() {
         router.navigate(.cart)
     }
