@@ -4,7 +4,7 @@ This is a brief explanation of the important modules of Getir Lite application. 
 
 ## Screenshots
 
-<img src="media/1.png" alt="Image 1" width="33%" /><img src="media/2.png" alt="Image 2" width="33%" /><img src="media/3.png" alt="Image 3" width="33%" />
+<img src="Media/1.png" alt="Image 1" width="33%" /><img src="Media/2.png" alt="Image 2" width="33%" /><img src="Media/3.png" alt="Image 3" width="33%" />
 
 
 ## Architecture
