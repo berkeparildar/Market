@@ -9,9 +9,10 @@ import Foundation
 import Moya
 
 
- enum NetworkService {
-    case getProducts
-    case getSuggestedProducts
+enum NetworkService {
+    case getCategories
+    case getProducts(categoryName: String)
+    case getProductsWithID(categoryID: Int)
 }
 
 enum NetworkError: Error {
@@ -20,23 +21,22 @@ enum NetworkError: Error {
 
 extension NetworkService: TargetType {
     var baseURL: URL {
-        URL(string: "https://65c38b5339055e7482c12050.mockapi.io/api")!
+        URL(string: "http://localhost:5274/api")!
     }
     
     var path: String {
         switch self {
-        case .getProducts:
-            return "/products"
-        case .getSuggestedProducts:
-            return "/suggestedProducts"
+        case .getCategories:
+            return "/categories"
+        case .getProducts(let categoryName):
+            return "/products/\(categoryName)"
+        case .getProductsWithID(let id):
+            return "/products/id\(id)"
         }
     }
     
     var method: Moya.Method {
-        switch self {
-        case .getProducts, .getSuggestedProducts:
-            return .get
-        }
+        .get
     }
     
     var task: Task {
