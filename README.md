@@ -2,6 +2,8 @@
 
 Market is an iOS application designed to transform your phone into a convenient marketplace. The app allows users to browse and purchase products easily through a user-friendly interface featuring categorized product listings, a dynamic cart system, and personalized product suggestions.
 
+**ASP.NET Core Server Repository:** [https://github.com/berkeparildar/Market-Server]
+
 ## Screenshots
 <img src="Media/1.png" alt="Image 1" width="33%" /><img src="Media/2.png" alt="Image 2" width="33%" /><img src="Media/3.png" alt="Image 3" width="33%" />
 
