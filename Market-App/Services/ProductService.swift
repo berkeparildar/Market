@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import ProductsAPI
 final class ProductService {
     private let networkManager = NetworkManager()
     static let shared = ProductService()
