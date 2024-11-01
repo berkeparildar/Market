@@ -34,9 +34,10 @@ extension ProductListingInteractor: ProductListingInteractorProtocol {
     }
     
     func fetchProducts() {
+        /*
         ProductService.shared.getProducts { categories in
             self.output?.getProductsOutput(categories: categories)
-        }
+        }*/
     }
     
     func updateCartStatusOfProducts(categories: [Category]) {
