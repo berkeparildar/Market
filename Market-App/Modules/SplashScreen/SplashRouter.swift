@@ -37,8 +37,13 @@ extension SplashRouter: SplashRouterProtocol {
         switch route {
         case .productListing:
             guard let window = viewController?.view.window else { return }
+            /*
             let productListingVC = ProductListingRouter.createModule()
             let navigationController = CustomNavigationController(rootViewController: productListingVC)
+            window.rootViewController = navigationController
+             */
+            let signInVC = AuthenticationRouter.createModule()
+            let navigationController = UINavigationController(rootViewController: signInVC)
             window.rootViewController = navigationController
         }
     }

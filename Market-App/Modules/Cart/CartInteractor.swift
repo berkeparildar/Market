@@ -31,12 +31,13 @@ extension CartInteractor: CartInteractorProtocol {
     func fetchProductsInCart() {
         let products = CartService.shared.getProductsInCart()
         if let popularCategoryID = mostPopularCategory(in: products) {
+            /*
             ProductService.shared.getProductsFromCategory(id: popularCategoryID) { suggestedProducts in
                 let filteredProducts = suggestedProducts.filter { suggestedProduct in
                     !products.contains(where: { $0.id == suggestedProduct.id })
                 }
                 self.output?.fetchSuggestedProductsOutput(result: filteredProducts)
-            }
+            }*/
         }
         self.output?.fetchProductsInCartOutput(result: products)
     }

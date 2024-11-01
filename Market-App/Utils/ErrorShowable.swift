@@ -7,12 +7,12 @@
 
 import UIKit
 
-protocol ShowAlert {
-    func showAlert(title: String, message: String)
+protocol ErrorShowable {
+    func showError(title: String, message: String)
 }
 
-extension ShowAlert where Self: UIViewController {
-    func showAlert(title: String, message: String) {
+extension ErrorShowable where Self: UIViewController {
+    func showError(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let ok = UIAlertAction(title: "Ok", style: .default)
         alert.addAction(ok)
