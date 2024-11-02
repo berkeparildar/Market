@@ -18,6 +18,16 @@ final class UserService {
         firebaseService = FirebaseService()
     }
     
+    private func saveUserTokenToKeyChain(token: String) {
+        let keychain = Keychain(service: "com.bprldr.Market-App")
+        do {
+            try keychain.set(token, key: "userToken")
+            print("Token saved successfully.")
+        } catch let error {
+            print("Error saving token to Keychain: \(error)")
+        }
+    }
+    
     func signInUser(email: String, password: String,
                     completion: @escaping (Bool) -> Void) {
         firebaseService.signInUser(email: email, password: password) { [weak self] result in
@@ -40,13 +50,25 @@ final class UserService {
         }
     }
     
-    private func saveUserTokenToKeyChain(token: String) {
-        let keychain = Keychain(service: "com.bprldr.Market-App")
-        do {
-            try keychain.set(token, key: "userToken")
-            print("Token saved successfully.")
-        } catch let error {
-            print("Error saving token to Keychain: \(error)")
+    func signUpUser(email: String, password: String,
+                    completion: @escaping (Bool) -> Void) {
+        firebaseService.createUser(email: email, password: password) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let authDataResult):
+                authDataResult.user.getIDToken { token, error in
+                    if let error {
+                        print("Error getting ID token: \(error)")
+                    } else if let token {
+                        self.saveUserTokenToKeyChain(token: token)
+                        completion(true)
+                        return
+                    }
+                }
+            case .failure(let error):
+                print("Error signing in user: \(error)")
+                completion(false)
+            }
         }
     }
 }

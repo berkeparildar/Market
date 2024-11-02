@@ -12,6 +12,7 @@ protocol AuthenticationViewControllerProtocol: AnyObject {
     func showLoadingIndicator()
     func hideLoadingIndicator()
     func showErrorMessage(title: String, message: String)
+    func showSuccessMessage(completion: @escaping () -> Void)
 }
 
 final class AuthenticationViewController: UIViewController {
@@ -58,7 +59,10 @@ final class AuthenticationViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "E-Mail"
         textField.backgroundColor = .marketLightGray
+        textField.textContentType = .emailAddress
+        textField.autocapitalizationType = .none
         textField.borderStyle = .roundedRect
+        textField.autocorrectionType = .no
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -67,10 +71,26 @@ final class AuthenticationViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "Password"
         textField.textContentType = .password
+        textField.isSecureTextEntry = true
         textField.backgroundColor = .marketLightGray
+        textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
         textField.borderStyle = .roundedRect
+        textField.rightView = signInPasswordToggleButton
+        textField.rightViewMode = .always
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
+    }()
+    
+    private lazy var signInPasswordToggleButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(systemName: "eye.slash"), for: .normal)
+        button.setImage(UIImage(systemName: "eye"), for: .selected)
+        button.addTarget(self, action: #selector(toggleSignInPasswordVisibility),
+                               for: .touchUpInside)
+        button.tintColor = .marketGreen
+        button.setPreferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 12), forImageIn: .normal)
+        return button
     }()
     
     private lazy var forgotPasswordButton: UIButton = {
@@ -129,6 +149,9 @@ final class AuthenticationViewController: UIViewController {
     
     private lazy var signUpEmailTextField: UITextField = {
         let textField = UITextField()
+        textField.textContentType = .emailAddress
+        textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
         textField.placeholder = "E-Mail"
         textField.backgroundColor = .marketLightGray
         textField.borderStyle = .roundedRect
@@ -140,10 +163,27 @@ final class AuthenticationViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "Password"
         textField.textContentType = .password
+        textField.isSecureTextEntry = true
+        textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
+        textField.textContentType = .password
         textField.backgroundColor = .marketLightGray
         textField.borderStyle = .roundedRect
+        textField.rightView = signUpPasswordToggleButton
+        textField.rightViewMode = .always
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
+    }()
+    
+    private lazy var signUpPasswordToggleButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(systemName: "eye.slash"), for: .normal)
+        button.setImage(UIImage(systemName: "eye"), for: .selected)
+        button.tintColor = .marketGreen
+        button.setPreferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 12), forImageIn: .normal)
+        button.addTarget(self, action: #selector(toggleSignUpPasswordVisibility),
+                               for: .touchUpInside)
+        return button
     }()
     
     private lazy var signUpButton: UIButton = {
@@ -237,6 +277,16 @@ final class AuthenticationViewController: UIViewController {
         let emailString = self.signUpEmailTextField.text ?? ""
         let passwordString = self.signUpPasswordTextField.text ?? ""
         presenter.didTapSignUp(email: emailString, password: passwordString)
+    }
+    
+    @objc func toggleSignInPasswordVisibility() {
+        signInPasswordTextField.isSecureTextEntry.toggle()
+        signInPasswordToggleButton.isSelected.toggle()
+    }
+    
+    @objc func toggleSignUpPasswordVisibility() {
+        signUpPasswordTextField.isSecureTextEntry.toggle()
+        signUpPasswordToggleButton.isSelected.toggle()
     }
     
     @objc func forgotPasswordButtonTapped() {
@@ -403,9 +453,13 @@ final class AuthenticationViewController: UIViewController {
 }
 
 extension AuthenticationViewController:
-    AuthenticationViewControllerProtocol, LoadingShowable, ErrorShowable {
+    AuthenticationViewControllerProtocol, LoadingShowable, ErrorShowable, SuccessShowable {
     func showErrorMessage(title: String, message: String) {
         showError(title: title, message: message)
+    }
+    
+    func showSuccessMessage(completion confirmAction: @escaping () -> Void) {
+        showSuccess(message: "Sign Up successful!", confirm: confirmAction)
     }
     
     func showLoadingIndicator() {

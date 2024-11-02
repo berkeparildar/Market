@@ -28,6 +28,9 @@ extension AuthenticationInteractor: AuthenticationInteractorProtocol {
     }
     
     func signUp(email: String, password: String) {
-        
+        UserService.shared.signUpUser(email: email, password: password) { [weak self] status in
+            guard let self = self else { return }
+            output?.signUpResult(status: status)
+        }
     }
 }

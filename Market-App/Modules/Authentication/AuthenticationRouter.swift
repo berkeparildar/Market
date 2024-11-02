@@ -32,6 +32,6 @@ final class AuthenticationRouter {
 
 extension AuthenticationRouter: AuthenticationRouterProtocol {
     func navigate(to route: SignInRoutes) {
-        
+        print("Navigating to home.")
     }
 }
