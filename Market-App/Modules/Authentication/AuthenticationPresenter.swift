@@ -49,7 +49,7 @@ extension AuthenticationPresenter: AuthenticationPresenterProtocol {
         let emailIsValid = isValidEmail(email)
         if emailIsValid {
             view.showLoadingIndicator()
-            interactor.signIn(email: email, password: password)
+            interactor.signUp(email: email, password: password)
         }
         else {
             view.showErrorMessage(title: "Error", message: "Please enter a valid e-mail address")
@@ -59,10 +59,26 @@ extension AuthenticationPresenter: AuthenticationPresenterProtocol {
 
 extension AuthenticationPresenter: AuthenticationInteractorOutputProtocol {
     func signUpResult(status: Bool) {
-        
+        if status {
+            view.hideLoadingIndicator()
+            print("Sign up success.")
+            view.showSuccessMessage { [weak self] in
+                guard let self = self else { return }
+                router.navigate(to: .home)
+            }
+        }
+        else {
+            view.showErrorMessage(title: "Error", message: "Error while signing up.")
+        }
     }
     
     func signInResult(status: Bool) {
-        
+        if status {
+            view.hideLoadingIndicator()
+            print("Sign in success.")
+        }
+        else {
+            view.showErrorMessage(title: "Error", message: "Error while signing in.")
+        }
     }
 }

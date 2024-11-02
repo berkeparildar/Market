@@ -21,10 +21,16 @@ final class AuthenticationInteractor {
 
 extension AuthenticationInteractor: AuthenticationInteractorProtocol {
     func signIn(email: String, password: String) {
-        
+        UserService.shared.signInUser(email: email, password: password) { [weak self] status in
+            guard let self = self else { return }
+            output?.signInResult(status: status)
+        }
     }
     
     func signUp(email: String, password: String) {
-        
+        UserService.shared.signUpUser(email: email, password: password) { [weak self] status in
+            guard let self = self else { return }
+            output?.signUpResult(status: status)
+        }
     }
 }

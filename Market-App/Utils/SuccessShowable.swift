@@ -10,8 +10,8 @@ import UIKit
 protocol SuccessShowable where Self: UIViewController {}
 
 extension SuccessShowable {
-    func showSuccessMessage(price: String, confirm: @escaping () -> Void) {
-        SuccessDialogue.shared.showDialog(price: price, confirm: confirm)
+    func showSuccess(message: String, confirm: @escaping () -> Void) {
+        SuccessDialogue.shared.showDialog(message: message, confirm: confirm)
     }
 }
 
@@ -82,8 +82,8 @@ class SuccessDialogue {
         confirmAction?()
     }
     
-    func showDialog(price: String, confirm: @escaping () -> Void) {
-        messageLabel.text = "Your order of \(price) was processed. Thanks! 🙏"
+    func showDialog(message: String, confirm: @escaping () -> Void) {
+        messageLabel.text = message
         confirmAction = confirm
         
         if let window = UIApplication.shared.windows.first(where: \.isKeyWindow) {

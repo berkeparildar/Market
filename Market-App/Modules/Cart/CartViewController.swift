@@ -271,7 +271,7 @@ extension CartViewController: RightNavigationButtonDelegate, ConfirmationShowabl
     }
     
     @objc func didTapBuyButton() {
-        showSuccessMessage(price: String(format: "$%.2f", self.presenter.calculateTotalPrice())) {
+        showSuccess(message: String(format: "$%.2f", self.presenter.calculateTotalPrice())) {
             self.presenter.didTapTrashButton()
             if let customNavBar = self.navigationController as? CustomNavigationController {
                 customNavBar.popToRootViewController(animated: true)
