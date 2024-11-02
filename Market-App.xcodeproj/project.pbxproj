@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -40,6 +40,8 @@
 		6281817C2BCC5A30002DC3DE /* ProductCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6281817B2BCC5A30002DC3DE /* ProductCellView.swift */; };
 		628181B92BCC9FFB002DC3DE /* OpenSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181AD2BCC9FFB002DC3DE /* OpenSans-SemiBold.ttf */; };
 		628181BF2BCC9FFB002DC3DE /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181B32BCC9FFB002DC3DE /* OpenSans-Bold.ttf */; };
+		62A1EF5B2CD59E1600642FAA /* MarketFirebaseService in Frameworks */ = {isa = PBXBuildFile; productRef = 62A1EF5A2CD59E1600642FAA /* MarketFirebaseService */; };
+		62A1EF5D2CD59E2700642FAA /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A1EF5C2CD59E2400642FAA /* UserService.swift */; };
 		62A5985C2CD2C55300BA4879 /* AuthenticationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A5985B2CD2C54A00BA4879 /* AuthenticationRouter.swift */; };
 		62A5985F2CD2C57600BA4879 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A5985E2CD2C57600BA4879 /* AuthenticationViewController.swift */; };
 		62A598632CD2C59700BA4879 /* AuthenticationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A598622CD2C59000BA4879 /* AuthenticationPresenter.swift */; };
@@ -59,6 +61,8 @@
 		62BD936A2BC482F6007E122C /* SplashRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD93692BC482F6007E122C /* SplashRouter.swift */; };
 		62BD936C2BC494FE007E122C /* ProductListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD936B2BC494FE007E122C /* ProductListingViewController.swift */; };
 		62BD936E2BC49641007E122C /* ProductListingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BD936D2BC49641007E122C /* ProductListingPresenter.swift */; };
+		62C5E63F2CD5A31C00CF4AC3 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 62C5E63E2CD5A31C00CF4AC3 /* KeychainAccess */; };
+		62C5E6412CD5A69300CF4AC3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 62C5E6402CD5A69300CF4AC3 /* GoogleService-Info.plist */; };
 		62D767042BC72D360070A83F /* SectionDecorations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D767032BC72D360070A83F /* SectionDecorations.swift */; };
 		62EF7FD12BCB5B5F008DF702 /* ProductDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EF7FD02BCB5B5F008DF702 /* ProductDetailViewController.swift */; };
 		62EF7FD32BCB5B93008DF702 /* ProductDetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EF7FD22BCB5B93008DF702 /* ProductDetailInteractor.swift */; };
@@ -101,6 +105,7 @@
 		6281817B2BCC5A30002DC3DE /* ProductCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCellView.swift; sourceTree = "<group>"; };
 		628181AD2BCC9FFB002DC3DE /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		628181B32BCC9FFB002DC3DE /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
+		62A1EF5C2CD59E2400642FAA /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		62A5985B2CD2C54A00BA4879 /* AuthenticationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationRouter.swift; sourceTree = "<group>"; };
 		62A5985E2CD2C57600BA4879 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		62A598622CD2C59000BA4879 /* AuthenticationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPresenter.swift; sourceTree = "<group>"; };
@@ -120,6 +125,7 @@
 		62BD93692BC482F6007E122C /* SplashRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashRouter.swift; sourceTree = "<group>"; };
 		62BD936B2BC494FE007E122C /* ProductListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingViewController.swift; sourceTree = "<group>"; };
 		62BD936D2BC49641007E122C /* ProductListingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingPresenter.swift; sourceTree = "<group>"; };
+		62C5E6402CD5A69300CF4AC3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		62D767032BC72D360070A83F /* SectionDecorations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionDecorations.swift; sourceTree = "<group>"; };
 		62EF7FD02BCB5B5F008DF702 /* ProductDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailViewController.swift; sourceTree = "<group>"; };
 		62EF7FD22BCB5B93008DF702 /* ProductDetailInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailInteractor.swift; sourceTree = "<group>"; };
@@ -133,8 +139,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62C5E63F2CD5A31C00CF4AC3 /* KeychainAccess in Frameworks */,
 				62A5986D2CD2D12B00BA4879 /* Kingfisher in Frameworks */,
 				62A598682CD2C6EA00BA4879 /* SnapKit in Frameworks */,
+				62A1EF5B2CD59E1600642FAA /* MarketFirebaseService in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,6 +162,7 @@
 		6217B5962BD58644001FB16E /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				62A1EF5C2CD59E2400642FAA /* UserService.swift */,
 				62F990032BD31D0D00E76608 /* ProductService.swift */,
 				6217B5992BD597B3001FB16E /* CartService.swift */,
 			);
@@ -279,6 +288,7 @@
 				62BD93342BC47E79007E122C /* Info.plist */,
 				62BD93262BC47E78007E122C /* AppDelegate.swift */,
 				62BD93282BC47E78007E122C /* SceneDelegate.swift */,
+				62C5E6402CD5A69300CF4AC3 /* GoogleService-Info.plist */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -392,6 +402,8 @@
 			packageProductDependencies = (
 				62A598672CD2C6EA00BA4879 /* SnapKit */,
 				62A5986C2CD2D12B00BA4879 /* Kingfisher */,
+				62A1EF5A2CD59E1600642FAA /* MarketFirebaseService */,
+				62C5E63E2CD5A31C00CF4AC3 /* KeychainAccess */,
 			);
 			productName = "Getir-Final-Case";
 			productReference = 62BD93232BC47E78007E122C /* Market.app */;
@@ -424,6 +436,8 @@
 			packageReferences = (
 				62A598662CD2C6EA00BA4879 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				62A5986B2CD2D12B00BA4879 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				62A1EF592CD59E1600642FAA /* XCLocalSwiftPackageReference "MarketFirebaseService" */,
+				62C5E63D2CD5A31C00CF4AC3 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			productRefGroup = 62BD93242BC47E78007E122C /* Products */;
 			projectDirPath = "";
@@ -441,6 +455,7 @@
 			files = (
 				628181B92BCC9FFB002DC3DE /* OpenSans-SemiBold.ttf in Resources */,
 				62BD93302BC47E79007E122C /* Assets.xcassets in Resources */,
+				62C5E6412CD5A69300CF4AC3 /* GoogleService-Info.plist in Resources */,
 				62AA58112BCDD7FF0022DD59 /* Main.storyboard in Resources */,
 				628181BF2BCC9FFB002DC3DE /* OpenSans-Bold.ttf in Resources */,
 			);
@@ -485,6 +500,7 @@
 				62D767042BC72D360070A83F /* SectionDecorations.swift in Sources */,
 				6217B5AA2BD7F09D001FB16E /* SuccessDialogue.swift in Sources */,
 				62BD93272BC47E78007E122C /* AppDelegate.swift in Sources */,
+				62A1EF5D2CD59E2700642FAA /* UserService.swift in Sources */,
 				6271F08C2BD051EB005CA19A /* CartInteractor.swift in Sources */,
 				6217B59A2BD597B3001FB16E /* CartService.swift in Sources */,
 				62BD936E2BC49641007E122C /* ProductListingPresenter.swift in Sources */,
@@ -721,6 +737,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		62A1EF592CD59E1600642FAA /* XCLocalSwiftPackageReference "MarketFirebaseService" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = MarketFirebaseService;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		62A598662CD2C6EA00BA4879 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -738,9 +761,21 @@
 				minimumVersion = 8.1.0;
 			};
 		};
+		62C5E63D2CD5A31C00CF4AC3 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		62A1EF5A2CD59E1600642FAA /* MarketFirebaseService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MarketFirebaseService;
+		};
 		62A598672CD2C6EA00BA4879 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 62A598662CD2C6EA00BA4879 /* XCRemoteSwiftPackageReference "SnapKit" */;
@@ -750,6 +785,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 62A5986B2CD2D12B00BA4879 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		62C5E63E2CD5A31C00CF4AC3 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 62C5E63D2CD5A31C00CF4AC3 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
 		};
 /* End XCSwiftPackageProductDependency section */
 

@@ -63,6 +63,12 @@ extension AuthenticationPresenter: AuthenticationInteractorOutputProtocol {
     }
     
     func signInResult(status: Bool) {
-        
+        if status {
+            view.hideLoadingIndicator()
+            print("Sign in success.")
+        }
+        else {
+            view.showErrorMessage(title: "Error", message: "Error while signing in.")
+        }
     }
 }
