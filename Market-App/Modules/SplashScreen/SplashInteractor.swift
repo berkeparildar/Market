@@ -10,6 +10,7 @@ import Network
 
 protocol SplashInteractorProtocol: AnyObject {
     func checkInternetConnection()
+    func checkSavedLogIn() -> String?
 }
 
 protocol SplashInteractorOutputProtocol: AnyObject {
@@ -21,6 +22,10 @@ final class SplashInteractor {
 }
 
 extension SplashInteractor: SplashInteractorProtocol {
+    func checkSavedLogIn() -> String? {
+        return UserService.shared.getUserTokenFromKeychain()
+    }
+    
     func checkInternetConnection() {
         let networkMonitor = NWPathMonitor()
         var internetStatus = true

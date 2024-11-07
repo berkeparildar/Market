@@ -47,6 +47,7 @@
 		628181B92BCC9FFB002DC3DE /* OpenSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181AD2BCC9FFB002DC3DE /* OpenSans-SemiBold.ttf */; };
 		628181BF2BCC9FFB002DC3DE /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 628181B32BCC9FFB002DC3DE /* OpenSans-Bold.ttf */; };
 		62A1EF5D2CD59E2700642FAA /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A1EF5C2CD59E2400642FAA /* UserService.swift */; };
+		62A21B5A2CDD480000D21D5C /* HomeTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A21B592CDD480000D21D5C /* HomeTabBarController.swift */; };
 		62A5985C2CD2C55300BA4879 /* AuthenticationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A5985B2CD2C54A00BA4879 /* AuthenticationRouter.swift */; };
 		62A5985F2CD2C57600BA4879 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A5985E2CD2C57600BA4879 /* AuthenticationViewController.swift */; };
 		62A598632CD2C59700BA4879 /* AuthenticationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A598622CD2C59000BA4879 /* AuthenticationPresenter.swift */; };
@@ -116,6 +117,7 @@
 		628181AD2BCC9FFB002DC3DE /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		628181B32BCC9FFB002DC3DE /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		62A1EF5C2CD59E2400642FAA /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		62A21B592CDD480000D21D5C /* HomeTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabBarController.swift; sourceTree = "<group>"; };
 		62A5985B2CD2C54A00BA4879 /* AuthenticationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationRouter.swift; sourceTree = "<group>"; };
 		62A5985E2CD2C57600BA4879 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		62A598622CD2C59000BA4879 /* AuthenticationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPresenter.swift; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 				624CEB7C2CDC300500DA3434 /* HomeInteractor.swift */,
 				624CEB7A2CDC2FFD00DA3434 /* HomeRouter.swift */,
 				624CEB782CDC2FF900DA3434 /* HomeViewController.swift */,
+				62A21B592CDD480000D21D5C /* HomeTabBarController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -519,6 +522,7 @@
 				62BD93682BC4827C007E122C /* SplashPresenter.swift in Sources */,
 				62BD93652BC481CD007E122C /* SplashInteractor.swift in Sources */,
 				622999E52BC5B9FB004941FF /* ProductListingInteractor.swift in Sources */,
+				62A21B5A2CDD480000D21D5C /* HomeTabBarController.swift in Sources */,
 				624CEB7D2CDC300900DA3434 /* HomeInteractor.swift in Sources */,
 				6217B5A42BD69E9D001FB16E /* SuggestedCellInteractor.swift in Sources */,
 				625F4A862C14BAF70094D0AF /* ProductGroupCell.swift in Sources */,

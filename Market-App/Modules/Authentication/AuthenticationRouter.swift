@@ -5,12 +5,12 @@
 //  Created by Berke Parıldar on 30.10.2024.
 //
 
-enum SignInRoutes {
+enum AuthenticationRoutes {
     case home
 }
 
 protocol AuthenticationRouterProtocol {
-    func navigate(to route: SignInRoutes)
+    func navigate(to route: AuthenticationRoutes)
 }
 
 final class AuthenticationRouter {
@@ -31,7 +31,7 @@ final class AuthenticationRouter {
 }
 
 extension AuthenticationRouter: AuthenticationRouterProtocol {
-    func navigate(to route: SignInRoutes) {
+    func navigate(to route: AuthenticationRoutes) {
         print("Navigating to home.")
     }
 }

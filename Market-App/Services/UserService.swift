@@ -28,6 +28,17 @@ final class UserService {
         }
     }
     
+    func getUserTokenFromKeychain() -> String? {
+        let keychain = Keychain(service: "com.bprldr.Market-App")
+        do {
+            let token = try keychain.get("userToken")
+            return token
+        } catch let error {
+            print("Error getting token from Keychain: \(error)")
+        }
+        return nil
+    }
+    
     func signInUser(email: String, password: String,
                     completion: @escaping (Bool) -> Void) {
         firebaseService.signInUser(email: email, password: password) { [weak self] result in

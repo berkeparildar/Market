@@ -29,15 +29,23 @@ final class SplashPresenter: SplashPresenterProtocol {
 }
 
 extension SplashPresenter: SplashInteractorOutputProtocol {
+    
     func internetConnection(status: Bool) {
         if status {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0) { [weak self] in
                 guard let self else { return }
-                self.router.navigate(.productListing)
+                let userToken = interactor.checkSavedLogIn()
+                if let userToken = userToken {
+                    router.navigate(.home)
+                }
+                else {
+                    router.navigate(.authentication)
+                }
             }
         }
         else {
             view.noInternetConnection()
         }
     }
+    
 }
