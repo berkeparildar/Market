@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import KeychainAccess
+
 
 protocol SplashPresenterProtocol: AnyObject {
     func viewDidAppear()
@@ -18,6 +20,11 @@ final class SplashPresenter: SplashPresenterProtocol {
     let interactor: SplashInteractorProtocol!
     
     init(view: SplashViewControllerProtocol!, router: SplashRouterProtocol!, interactor: SplashInteractorProtocol!) {
+        /*let keychain = Keychain(service: "com.bprldr.Market-App")
+        do {
+            try keychain.removeAll()
+        } catch {
+        }*/
         self.view = view
         self.router = router
         self.interactor = interactor
@@ -30,17 +37,19 @@ final class SplashPresenter: SplashPresenterProtocol {
 
 extension SplashPresenter: SplashInteractorOutputProtocol {
     
-    func internetConnection(status: Bool) {
+    func savedLogInOutput(status: Bool) {
         if status {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0) { [weak self] in
+            router.navigate(.home)
+        } else {
+            router.navigate(.authentication)
+        }
+    }
+    
+    func internetConnectionOutput(status: Bool) {
+        if status {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
                 guard let self else { return }
-                let userToken = interactor.checkSavedLogIn()
-                if let userToken = userToken {
-                    router.navigate(.home)
-                }
-                else {
-                    router.navigate(.authentication)
-                }
+                interactor.checkSavedLogIn()
             }
         }
         else {

@@ -8,7 +8,9 @@
 import UIKit
 
 protocol HomeViewProtocol: AnyObject {
-    
+    func showLoadingIndicator()
+    func hideLoadingIndicator()
+    func setAddressTitle(title: String)
 }
 
 class HomeViewController: UIViewController {
@@ -95,14 +97,21 @@ class HomeViewController: UIViewController {
         button.contentHorizontalAlignment = .center
         button.layer.cornerRadius = 20
         button.backgroundColor = .marketLightOrange
+        button.addTarget(self, action: #selector(addressButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter.setCurrentAddress()
         setupViews()
         setupConstraints()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.updateCurrentAddress()
     }
     
     private func setupViews() {
@@ -133,6 +142,14 @@ class HomeViewController: UIViewController {
         setupFoodLabelConstraints()
     }
     
+    @objc private func marketButtonTapped() {
+        
+    }
+    
+    @objc private func addressButtonTapped() {
+        presenter.didTapAddressButton()
+    }
+    
     private func setupTopViewConstraints() {
         topBarView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -147,7 +164,7 @@ class HomeViewController: UIViewController {
             make.centerX.equalTo(topBarView.snp.centerX)
             make.centerY.equalTo(topBarView.snp.centerY)
             make.height.equalTo(40)
-            make.width.equalTo(200)
+            make.width.equalTo(160)
         }
     }
     
@@ -204,6 +221,16 @@ class HomeViewController: UIViewController {
     }
 }
 
-extension HomeViewController: HomeViewProtocol {
+extension HomeViewController: HomeViewProtocol, LoadingShowable {
+    func setAddressTitle(title: String) {
+        selectAddressButton.setTitle(title, for: .normal)
+    }
     
+    func showLoadingIndicator() {
+        showLoading()
+    }
+    
+    func hideLoadingIndicator() {
+        hideLoading()
+    }
 }

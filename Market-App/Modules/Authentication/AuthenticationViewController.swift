@@ -453,13 +453,13 @@ final class AuthenticationViewController: UIViewController {
 }
 
 extension AuthenticationViewController:
-    AuthenticationViewControllerProtocol, LoadingShowable, ErrorShowable, SuccessShowable {
+    AuthenticationViewControllerProtocol, LoadingShowable, ErrorShowable, PromptShowable {
     func showErrorMessage(title: String, message: String) {
         showError(title: title, message: message)
     }
     
     func showSuccessMessage(completion confirmAction: @escaping () -> Void) {
-        showSuccess(message: "Sign Up successful!", confirm: confirmAction)
+        showPrompt(message: "Sign Up successful!", confirm: confirmAction)
     }
     
     func showLoadingIndicator() {

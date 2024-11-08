@@ -6,7 +6,7 @@
 //
 
 enum HomeRoutes {
-        
+    case selectAddress
 }
 
 protocol HomeRouterProtocol {
@@ -31,7 +31,12 @@ final class HomeRouter {
 }
 
 extension HomeRouter: HomeRouterProtocol {
+    
     func navigate(to route: HomeRoutes) {
-        
+        switch route {
+        case .selectAddress:
+            let addressSelectVC = AddressSelectionRouter.createModule()
+            viewController?.navigationController?.pushViewController(addressSelectVC, animated: true)
+        }
     }
 }

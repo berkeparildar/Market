@@ -260,7 +260,7 @@ extension CartViewController: CartCellOwnerDelegate {
     }
 }
 
-extension CartViewController: RightNavigationButtonDelegate, ConfirmationShowable, SuccessShowable {
+extension CartViewController: RightNavigationButtonDelegate, ConfirmationShowable, PromptShowable {
     func didTapRightButton() {
         showConfitmation {
             self.presenter.didTapTrashButton()
@@ -271,7 +271,7 @@ extension CartViewController: RightNavigationButtonDelegate, ConfirmationShowabl
     }
     
     @objc func didTapBuyButton() {
-        showSuccess(message: String(format: "$%.2f", self.presenter.calculateTotalPrice())) {
+        showPrompt(message: String(format: "$%.2f", self.presenter.calculateTotalPrice())) {
             self.presenter.didTapTrashButton()
             if let customNavBar = self.navigationController as? CustomNavigationController {
                 customNavBar.popToRootViewController(animated: true)

@@ -7,16 +7,16 @@
 
 import UIKit
 
-protocol SuccessShowable where Self: UIViewController {}
+protocol PromptShowable where Self: UIViewController {}
 
-extension SuccessShowable {
-    func showSuccess(message: String, confirm: @escaping () -> Void) {
-        SuccessDialogue.shared.showDialog(message: message, confirm: confirm)
+extension PromptShowable {
+    func showPrompt(message: String, confirm: @escaping () -> Void) {
+        PromptDialogue.shared.showDialog(message: message, confirm: confirm)
     }
 }
 
-class SuccessDialogue {
-    static let shared = SuccessDialogue()
+class PromptDialogue {
+    static let shared = PromptDialogue()
     private var backgroundView: UIView!
     private var dialogView: UIView!
     private var confirmAction: (() -> Void)?
@@ -39,7 +39,7 @@ class SuccessDialogue {
         dialogView.layer.masksToBounds = true
         
         messageLabel = UILabel()
-        messageLabel.font = .systemFont(ofSize: 12)
+        messageLabel.font = .systemFont(ofSize: 16)
         messageLabel.numberOfLines = 0
         messageLabel.textColor = .marketBlack
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -47,9 +47,9 @@ class SuccessDialogue {
         let confirmButton = UIButton(type: .system)
         confirmButton.setTitle("Ok", for: .normal)
         confirmButton.setTitleColor(.white, for: .normal)
-        confirmButton.titleLabel?.font = .boldSystemFont(ofSize: 14)
+        confirmButton.titleLabel?.font = .boldSystemFont(ofSize: 16)
         confirmButton.layer.cornerRadius = 8
-        confirmButton.backgroundColor = .marketGreen
+        confirmButton.backgroundColor = .marketOrange
         confirmButton.addTarget(self, action: #selector(handleConfirm), for: .touchUpInside)
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -69,7 +69,7 @@ class SuccessDialogue {
             messageLabel.topAnchor.constraint(equalTo: dialogView.topAnchor, constant: 20),
             messageLabel.centerXAnchor.constraint(equalTo: dialogView.centerXAnchor),
         
-            confirmButton.heightAnchor.constraint(equalToConstant: 52),
+            confirmButton.heightAnchor.constraint(equalToConstant: 48),
             confirmButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 20),
             confirmButton.bottomAnchor.constraint(equalTo: dialogView.bottomAnchor, constant: -10),
             confirmButton.leadingAnchor.constraint(equalTo: dialogView.leadingAnchor, constant: 10),
