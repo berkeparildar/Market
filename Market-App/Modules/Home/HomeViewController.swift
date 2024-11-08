@@ -10,19 +10,12 @@ import UIKit
 protocol HomeViewProtocol: AnyObject {
     func showLoadingIndicator()
     func hideLoadingIndicator()
-    func setAddressTitle(title: String)
+    func setAddress(address: Address)
 }
 
 class HomeViewController: UIViewController {
-
-    var presenter: HomePresenterProtocol!
     
-    private lazy var topBarView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .marketOrange
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    var presenter: HomePresenterProtocol!
     
     private lazy var backgroundView: UIView = {
         let view = UIView()
@@ -87,14 +80,6 @@ class HomeViewController: UIViewController {
     
     private lazy var selectAddressButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "pin.fill"), for: .normal)
-        button.tintColor = .marketOrange
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
-        button.setTitle("Select Address", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .regular)
-        button.setTitleColor(.black, for: .normal)
-        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        button.contentHorizontalAlignment = .center
         button.layer.cornerRadius = 20
         button.backgroundColor = .marketLightOrange
         button.addTarget(self, action: #selector(addressButtonTapped), for: .touchUpInside)
@@ -102,14 +87,53 @@ class HomeViewController: UIViewController {
         return button
     }()
     
+    private lazy var addressButtonPinImage: UIImageView = {
+        let imageView = UIImageView()
+        let image = UIImage(systemName: "pin.fill")
+        imageView.image = image
+        imageView.tintColor = .marketYellow
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private lazy var addressButtonArrowImage: UIImageView = {
+        let imageView = UIImageView()
+        let image = UIImage(systemName: "arrowtriangle.down.fill")
+        imageView.image = image
+        imageView.tintColor = .marketYellow
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private lazy var logoImage: UIImageView = {
+        let imageView = UIImageView()
+        let image = UIImage(named: "logo")
+        imageView.image = image
+        imageView.tintColor = .marketYellow
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private lazy var addressButtonLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Select Address"
+        label.font = .systemFont(ofSize: 14, weight: .regular)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.setCurrentAddress()
         setupViews()
         setupConstraints()
+        navigationItem.titleView = selectAddressButton
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
         super.viewWillAppear(animated)
         presenter.updateCurrentAddress()
     }
@@ -117,9 +141,12 @@ class HomeViewController: UIViewController {
     private func setupViews() {
         
         view.addSubview(backgroundView)
-        view.addSubview(topBarView)
-        topBarView.addSubview(selectAddressButton)
         view.addSubview(foregroundView)
+        view.addSubview(logoImage)
+        
+        selectAddressButton.addSubview(addressButtonPinImage)
+        selectAddressButton.addSubview(addressButtonArrowImage)
+        selectAddressButton.addSubview(addressButtonLabel)
         
         foregroundView.addSubview(marketSectionButton)
         foregroundView.addSubview(foodSectionButton)
@@ -129,9 +156,8 @@ class HomeViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        setupTopViewConstraints()
         setupAddressButtonConstraints()
-
+        
         setupBackgroundViewConstraints()
         setupForegroundViewConstraints()
         
@@ -140,6 +166,11 @@ class HomeViewController: UIViewController {
         
         setupMarketLabelConstraints()
         setupFoodLabelConstraints()
+        
+        setupAddressButtonPinConstraints()
+        setupAddressButtonArrowConstraints()
+        setupAddressButtonLabelConstraints()
+        setupLogoImageConstraints()
     }
     
     @objc private func marketButtonTapped() {
@@ -150,21 +181,9 @@ class HomeViewController: UIViewController {
         presenter.didTapAddressButton()
     }
     
-    private func setupTopViewConstraints() {
-        topBarView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.height.equalTo(60)
-        }
-    }
-    
     private func setupAddressButtonConstraints() {
         selectAddressButton.snp.makeConstraints { make in
-            make.centerX.equalTo(topBarView.snp.centerX)
-            make.centerY.equalTo(topBarView.snp.centerY)
             make.height.equalTo(40)
-            make.width.equalTo(160)
         }
     }
     
@@ -179,30 +198,31 @@ class HomeViewController: UIViewController {
     
     private func setupForegroundViewConstraints() {
         foregroundView.snp.makeConstraints { make in
-            make.top.equalTo(topBarView.snp.bottom)
+            make.top.equalTo(marketSectionButton.snp.top).offset(-20)
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
-            make.bottom.equalToSuperview().offset(20)
+            make.bottom.equalToSuperview().offset(16)
         }
     }
     
-    private func setupFoodButtonConstraints() {
-        foodSectionButton.snp.makeConstraints { make in
-            make.top.equalTo(marketSectionButton.snp.bottom).offset(20)
-            make.leading.equalTo(foregroundView.snp.leading).offset(20)
-            make.trailing.equalTo(foregroundView.snp.trailing).offset(-20)
-            make.height.equalTo(foodSectionButton.snp.width).multipliedBy(0.56)
-        }
-    }
-
     private func setupMarketButtonConstraints() {
         marketSectionButton.snp.makeConstraints { make in
-            make.top.equalTo(foregroundView.snp.top).offset(20)
+            make.bottom.equalTo(foodSectionButton.snp.top).offset(-20)
             make.leading.equalTo(foregroundView.snp.leading).offset(20)
             make.trailing.equalTo(foregroundView.snp.trailing).offset(-20)
             make.height.equalTo(marketSectionButton.snp.width).multipliedBy(0.56)
         }
     }
+    
+    private func setupFoodButtonConstraints() {
+        foodSectionButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            make.leading.equalTo(foregroundView.snp.leading).offset(20)
+            make.trailing.equalTo(foregroundView.snp.trailing).offset(-20)
+            make.height.equalTo(foodSectionButton.snp.width).multipliedBy(0.56)
+        }
+    }
+    
     
     private func setupMarketLabelConstraints() {
         marketLabel.snp.makeConstraints { make in
@@ -219,11 +239,46 @@ class HomeViewController: UIViewController {
             make.trailing.equalTo(foodSectionButton.snp.trailing).offset(-20)
         }
     }
+    
+    private func setupAddressButtonPinConstraints() {
+        addressButtonPinImage.snp.makeConstraints { make in
+            make.leading.equalTo(selectAddressButton.snp.leading).offset(20)
+            make.centerY.equalTo(selectAddressButton.snp.centerY)
+            make.height.equalTo(20)
+            make.width.equalTo(20)
+        }
+    }
+    
+    private func setupAddressButtonArrowConstraints() {
+        addressButtonArrowImage.snp.makeConstraints { make in
+            make.trailing.equalTo(selectAddressButton.snp.trailing).offset(-20)
+            make.centerY.equalTo(selectAddressButton.snp.centerY)
+            make.height.equalTo(14)
+            make.width.equalTo(14)
+        }
+    }
+    
+    private func setupAddressButtonLabelConstraints() {
+        addressButtonLabel.snp.makeConstraints { make in
+            make.leading.equalTo(addressButtonPinImage.snp.trailing).offset(4)
+            make.trailing.equalTo(addressButtonArrowImage.snp.leading).offset(-4)
+            make.centerY.equalTo(selectAddressButton.snp.centerY)
+        }
+    }
+    
+    private func setupLogoImageConstraints() {
+        logoImage.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
+            make.bottom.equalTo(foregroundView.snp.top).offset(-20)
+            make.width.equalTo(logoImage.snp.height).multipliedBy(1)
+            make.centerX.equalToSuperview()
+        }
+    }
 }
 
 extension HomeViewController: HomeViewProtocol, LoadingShowable {
-    func setAddressTitle(title: String) {
-        selectAddressButton.setTitle(title, for: .normal)
+    func setAddress(address: Address) {
+        addressButtonLabel.text = "\(address.title) (\(address.addressText))"
     }
     
     func showLoadingIndicator() {

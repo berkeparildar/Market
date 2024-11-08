@@ -60,7 +60,7 @@ extension HomePresenter: HomeInteractorOutput {
     
     func getCurrentAddressOutput(address: Address?) {
         currentAddress = address
-        view.setAddressTitle(title: currentAddress!.title)
+        view.setAddress(address: currentAddress!)
         view.hideLoadingIndicator()
     }
 }
