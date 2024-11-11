@@ -9,9 +9,10 @@ protocol AccountPagePresenterProtocol {
     func getAccountSettingsCount() -> Int
     func getAccountSettings(at index: Int) -> AccountPageSettings
     func didSelectSetting(at index: Int)
+    func signOut()
 }
 
-final class AccountPagePresenter: AccountPagePresenterProtocol {
+final class AccountPagePresenter {
     
     private var accountSettings: [AccountPageSettings] = [
         AccountPageSettings(name: "User Information", symbolName: "person.fill",
@@ -35,6 +36,10 @@ final class AccountPagePresenter: AccountPagePresenterProtocol {
         self.router = router
     }
     
+   
+}
+
+extension AccountPagePresenter: AccountPagePresenterProtocol {
     func getAccountSettingsCount() -> Int {
         return accountSettings.count
     }
@@ -47,9 +52,17 @@ final class AccountPagePresenter: AccountPagePresenterProtocol {
         let setting = accountSettings[index]
         router.navigate(to: setting.route)
     }
+    
+    func signOut() {
+        interactor.signOut()
+    }
 }
 
 extension AccountPagePresenter: AccountPageInteractorOutputProtocol {
-    
+    func signOutSuccess(error: (any Error)?) {
+        if let error = error {
+            view.showErrorInfoPopUp(message: error.localizedDescription)
+        }
+        router.navigateToLogIn()
+    }
 }
-

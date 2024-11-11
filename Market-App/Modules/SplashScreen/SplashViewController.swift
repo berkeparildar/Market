@@ -12,7 +12,7 @@ protocol SplashViewControllerProtocol: AnyObject {
     func setupViews()
 }
 
-class SplashViewController: UIViewController, ErrorShowable {
+class SplashViewController: UIViewController, InfoPopUpShowable {
     
     var presenter: SplashPresenterProtocol?
     
@@ -58,6 +58,6 @@ extension SplashViewController: SplashViewControllerProtocol {
     }
     
     func noInternetConnection() {
-        showError(title: "İnternet bağlantısı yok", message: "Bağlantıyı sağlayıp tekrar deneyin")
+        showInfoPopUp(message: "Please check your internet connection and try again.") {}
     }
 }

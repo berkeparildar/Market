@@ -102,7 +102,7 @@ extension PasswordChangeViewController: UITableViewDelegate, UITableViewDataSour
 }
 
 
-extension PasswordChangeViewController: PasswordChangeViewControllerProtocol, PromptShowable {
+extension PasswordChangeViewController: PasswordChangeViewControllerProtocol, InfoPopUpShowable {
     func navigateToLogin() {
         guard let window = self.view.window else { return }
         let signInVC = AuthenticationRouter.createModule()
@@ -111,6 +111,6 @@ extension PasswordChangeViewController: PasswordChangeViewControllerProtocol, Pr
     }
     
     func showMessage(message: String, action: @escaping () -> Void) {
-        showPrompt(message: message, confirm: action)
+        showInfoPopUp(message: message, confirm: action)
     }
 }

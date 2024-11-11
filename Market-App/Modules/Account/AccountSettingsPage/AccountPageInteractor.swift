@@ -6,11 +6,11 @@
 //
 
 protocol AccountPageInteractorProtocol {
-    
+    func signOut()
 }
 
 protocol AccountPageInteractorOutputProtocol {
-    
+    func signOutSuccess(error: Error?)
 }
 
 final class AccountPageInteractor {
@@ -18,5 +18,10 @@ final class AccountPageInteractor {
 }
 
 extension AccountPageInteractor: AccountPageInteractorProtocol {
-    
+    func signOut() {
+        UserService.shared.signOutUser { [weak self] error in
+            guard let self = self else { return }
+            output?.signOutSuccess(error: error)
+        }
+    }
 }

@@ -281,9 +281,9 @@ extension AddressAddViewController: AddressAddViewControllerProtocol {
     }
 }
 
-extension AddressAddViewController: PromptShowable {
+extension AddressAddViewController: InfoPopUpShowable {
     func showErrorMessage(message: String) {
-        showPrompt(message: message) {}
+        showInfoPopUp(message: message) {}
     }
 }
 

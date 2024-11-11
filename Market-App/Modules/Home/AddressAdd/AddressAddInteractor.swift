@@ -22,7 +22,7 @@ extension AddressAddInteractor: AddressAddInteractorProtocol {
                        longitude: Double) {
         let address = Address(title: adressName, addressText: addressText, latitude: latitude,
                               longitude: longitude)
-        UserService.shared.addNewAddress(address: address) { [weak self] error in
+        UserService.shared.addAddress(address: address) { [weak self] error in
             guard let self = self else { return }
             if let error = error {
                 output?.addnewAddressOutput(error: error)

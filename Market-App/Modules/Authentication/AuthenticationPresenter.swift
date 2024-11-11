@@ -37,7 +37,7 @@ extension AuthenticationPresenter: AuthenticationPresenterProtocol {
     func didTapSignIn(email: String, password: String) {
         let emailIsValid = isValidEmail(email)
         if emailIsValid {
-            view.showLoadingIndicator()
+            //view.showLoadingIndicator()
             interactor.signIn(email: email, password: password)
         }
         else {
@@ -48,7 +48,7 @@ extension AuthenticationPresenter: AuthenticationPresenterProtocol {
     func didTapSignUp(email: String, password: String) {
         let emailIsValid = isValidEmail(email)
         if emailIsValid {
-            view.showLoadingIndicator()
+            //view.showLoadingIndicator()
             interactor.signUp(email: email, password: password)
         }
         else {
@@ -77,9 +77,9 @@ extension AuthenticationPresenter: AuthenticationInteractorOutputProtocol {
             view.showErrorMessage(message: error.localizedDescription)
         }
         else {
-            view.hideLoadingIndicator()
-            router.navigate(to: .home)
+            //view.hideLoadingIndicator()
             print("Sign in success.")
+            router.navigate(to: .home)
         }
     }
 }

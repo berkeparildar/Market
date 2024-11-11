@@ -9,13 +9,24 @@ import Foundation
 
 protocol EmailChangePresenterProtocol: AnyObject {
     func getCurrentEmail()
-    func updateEmail(newEmail: String)
+    func updateEmail()
     func getEmailVerifiedStatus()
+    func getEmailChangeEntityCount() -> Int
+    func getEmailChangeEntity(at index: Int) -> EmailChangeEntity
 }
 
 final class EmailChangePresenter {
     let view: EmailChangeViewControllerProtocol
     let interactor: EmailChangeInteractorProtocol
+    
+    var emailChangeEntities: [EmailChangeEntity] = [
+        EmailChangeEntity(label: "Current e-mail",
+                          emailLabel: "",
+                          isForOldEmail: true),
+        EmailChangeEntity(label: "New e-mail",
+                          emailPlaceholder: "Enter new e-mail",
+                          isForOldEmail: false)
+        ]
     
     init(view: EmailChangeViewControllerProtocol, interactor: EmailChangeInteractorProtocol) {
         self.view = view
@@ -30,11 +41,20 @@ final class EmailChangePresenter {
 }
 
 extension EmailChangePresenter: EmailChangePresenterProtocol {
+    func getEmailChangeEntityCount() -> Int {
+        return emailChangeEntities.count
+    }
+    
+    func getEmailChangeEntity(at index: Int) -> EmailChangeEntity {
+        return emailChangeEntities[index]
+    }
+    
     func getEmailVerifiedStatus() {
         interactor.getEmailVerifiedStatus()
     }
     
-    func updateEmail(newEmail: String) {
+    func updateEmail() {
+        guard let newEmail = emailChangeEntities[1].newEmail else { return }
         if isValidEmail(newEmail) {
             interactor.updateEmail(email: newEmail)
         }
@@ -76,6 +96,7 @@ extension EmailChangePresenter: EmailChangeInteractorOutputProtocol {
     }
     
     func getEmailOutput(result: String) {
-        view.setCurrentEmail(email: result)
+        emailChangeEntities[0].currentEmail = result
+        view.reloadTableView()
     }
 }

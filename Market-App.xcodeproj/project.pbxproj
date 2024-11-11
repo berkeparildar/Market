@@ -10,13 +10,12 @@
 		62030FFB2CD6CA6D00B0F39B /* MarketFirebaseService in Frameworks */ = {isa = PBXBuildFile; productRef = 62030FFA2CD6CA6D00B0F39B /* MarketFirebaseService */; };
 		6217B5952BD58617001FB16E /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6217B5942BD58617001FB16E /* CoreDataStack.swift */; };
 		6217B59A2BD597B3001FB16E /* CartService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6217B5992BD597B3001FB16E /* CartService.swift */; };
-		6217B59C2BD5C6CF001FB16E /* ErrorShowable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6217B59B2BD5C6CF001FB16E /* ErrorShowable.swift */; };
 		6217B5A02BD69E19001FB16E /* SuggestedCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6217B59F2BD69E19001FB16E /* SuggestedCellView.swift */; };
 		6217B5A22BD69E66001FB16E /* SuggestedCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6217B5A12BD69E66001FB16E /* SuggestedCellPresenter.swift */; };
 		6217B5A42BD69E9D001FB16E /* SuggestedCellInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6217B5A32BD69E9D001FB16E /* SuggestedCellInteractor.swift */; };
 		6217B5A62BD69ED8001FB16E /* SuggestedCellBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6217B5A52BD69ED8001FB16E /* SuggestedCellBuilder.swift */; };
 		6217B5A82BD6D63C001FB16E /* ConfirmationDialogue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6217B5A72BD6D63C001FB16E /* ConfirmationDialogue.swift */; };
-		6217B5AA2BD7F09D001FB16E /* PromptShowable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6217B5A92BD7F09D001FB16E /* PromptShowable.swift */; };
+		6217B5AA2BD7F09D001FB16E /* InfoPopUpShowable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6217B5A92BD7F09D001FB16E /* InfoPopUpShowable.swift */; };
 		622999E32BC5B92B004941FF /* ProductListingEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622999E22BC5B92B004941FF /* ProductListingEntity.swift */; };
 		622999E52BC5B9FB004941FF /* ProductListingInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622999E42BC5B9FB004941FF /* ProductListingInteractor.swift */; };
 		622999E72BC5BA22004941FF /* ProductListingRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622999E62BC5BA22004941FF /* ProductListingRouter.swift */; };
@@ -28,7 +27,6 @@
 		624CEB7B2CDC300000DA3434 /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624CEB7A2CDC2FFD00DA3434 /* HomeRouter.swift */; };
 		624CEB7D2CDC300900DA3434 /* HomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624CEB7C2CDC300500DA3434 /* HomeInteractor.swift */; };
 		624CEB7F2CDC300F00DA3434 /* HomePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624CEB7E2CDC300C00DA3434 /* HomePresenter.swift */; };
-		624CEB812CDC302300DA3434 /* HomeEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624CEB802CDC302100DA3434 /* HomeEntity.swift */; };
 		625F4A862C14BAF70094D0AF /* ProductGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 625F4A852C14BAF70094D0AF /* ProductGroupCell.swift */; };
 		625F4A882C14C19A0094D0AF /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 625F4A872C14C19A0094D0AF /* CategoryCell.swift */; };
 		6271F0812BCF5F54005CA19A /* Cart.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6271F07F2BCF5F54005CA19A /* Cart.xcdatamodeld */; };
@@ -65,6 +63,12 @@
 		6299571A2CE16D3500ADA9C4 /* PasswordChangeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629957192CE16D3000ADA9C4 /* PasswordChangeBuilder.swift */; };
 		6299571E2CE173CF00ADA9C4 /* PasswordChangeEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6299571D2CE173C700ADA9C4 /* PasswordChangeEntity.swift */; };
 		629957202CE1742900ADA9C4 /* PasswordChangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6299571F2CE1742500ADA9C4 /* PasswordChangeCell.swift */; };
+		629957242CE1933F00ADA9C4 /* AddressEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629957232CE1933B00ADA9C4 /* AddressEntity.swift */; };
+		629957272CE19C2500ADA9C4 /* EmailChangeEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629957262CE19C1E00ADA9C4 /* EmailChangeEntity.swift */; };
+		629957292CE19C9800ADA9C4 /* EmailChangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629957282CE19C9400ADA9C4 /* EmailChangeCell.swift */; };
+		6299572D2CE1A34B00ADA9C4 /* UserInformationEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6299572C2CE1A34600ADA9C4 /* UserInformationEntity.swift */; };
+		6299572F2CE1A3DC00ADA9C4 /* UserInformationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6299572E2CE1A3D700ADA9C4 /* UserInformationCell.swift */; };
+		629957332CE251DF00ADA9C4 /* DecisionPopUpShowable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629957322CE251D700ADA9C4 /* DecisionPopUpShowable.swift */; };
 		62A1EF5D2CD59E2700642FAA /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A1EF5C2CD59E2400642FAA /* UserService.swift */; };
 		62A21B5A2CDD480000D21D5C /* HomeTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A21B592CDD480000D21D5C /* HomeTabBarController.swift */; };
 		62A21B622CDD9D0600D21D5C /* AddressSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A21B612CDD9D0600D21D5C /* AddressSelectionViewController.swift */; };
@@ -108,13 +112,12 @@
 /* Begin PBXFileReference section */
 		6217B5942BD58617001FB16E /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		6217B5992BD597B3001FB16E /* CartService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartService.swift; sourceTree = "<group>"; };
-		6217B59B2BD5C6CF001FB16E /* ErrorShowable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorShowable.swift; sourceTree = "<group>"; };
 		6217B59F2BD69E19001FB16E /* SuggestedCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedCellView.swift; sourceTree = "<group>"; };
 		6217B5A12BD69E66001FB16E /* SuggestedCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedCellPresenter.swift; sourceTree = "<group>"; };
 		6217B5A32BD69E9D001FB16E /* SuggestedCellInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedCellInteractor.swift; sourceTree = "<group>"; };
 		6217B5A52BD69ED8001FB16E /* SuggestedCellBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedCellBuilder.swift; sourceTree = "<group>"; };
 		6217B5A72BD6D63C001FB16E /* ConfirmationDialogue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationDialogue.swift; sourceTree = "<group>"; };
-		6217B5A92BD7F09D001FB16E /* PromptShowable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptShowable.swift; sourceTree = "<group>"; };
+		6217B5A92BD7F09D001FB16E /* InfoPopUpShowable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPopUpShowable.swift; sourceTree = "<group>"; };
 		622999E22BC5B92B004941FF /* ProductListingEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingEntity.swift; sourceTree = "<group>"; };
 		622999E42BC5B9FB004941FF /* ProductListingInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingInteractor.swift; sourceTree = "<group>"; };
 		622999E62BC5BA22004941FF /* ProductListingRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListingRouter.swift; sourceTree = "<group>"; };
@@ -126,7 +129,6 @@
 		624CEB7A2CDC2FFD00DA3434 /* HomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRouter.swift; sourceTree = "<group>"; };
 		624CEB7C2CDC300500DA3434 /* HomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeInteractor.swift; sourceTree = "<group>"; };
 		624CEB7E2CDC300C00DA3434 /* HomePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePresenter.swift; sourceTree = "<group>"; };
-		624CEB802CDC302100DA3434 /* HomeEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeEntity.swift; sourceTree = "<group>"; };
 		625F4A852C14BAF70094D0AF /* ProductGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductGroupCell.swift; sourceTree = "<group>"; };
 		625F4A872C14C19A0094D0AF /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		6271F0802BCF5F54005CA19A /* Cart.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Cart.xcdatamodel; sourceTree = "<group>"; };
@@ -163,6 +165,12 @@
 		629957192CE16D3000ADA9C4 /* PasswordChangeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordChangeBuilder.swift; sourceTree = "<group>"; };
 		6299571D2CE173C700ADA9C4 /* PasswordChangeEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordChangeEntity.swift; sourceTree = "<group>"; };
 		6299571F2CE1742500ADA9C4 /* PasswordChangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordChangeCell.swift; sourceTree = "<group>"; };
+		629957232CE1933B00ADA9C4 /* AddressEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressEntity.swift; sourceTree = "<group>"; };
+		629957262CE19C1E00ADA9C4 /* EmailChangeEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailChangeEntity.swift; sourceTree = "<group>"; };
+		629957282CE19C9400ADA9C4 /* EmailChangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailChangeCell.swift; sourceTree = "<group>"; };
+		6299572C2CE1A34600ADA9C4 /* UserInformationEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInformationEntity.swift; sourceTree = "<group>"; };
+		6299572E2CE1A3D700ADA9C4 /* UserInformationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInformationCell.swift; sourceTree = "<group>"; };
+		629957322CE251D700ADA9C4 /* DecisionPopUpShowable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecisionPopUpShowable.swift; sourceTree = "<group>"; };
 		62A1EF5C2CD59E2400642FAA /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		62A21B592CDD480000D21D5C /* HomeTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabBarController.swift; sourceTree = "<group>"; };
 		62A21B612CDD9D0600D21D5C /* AddressSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSelectionViewController.swift; sourceTree = "<group>"; };
@@ -273,7 +281,6 @@
 			children = (
 				62A21B6B2CDE111400D21D5C /* AddressAdd */,
 				62A21B602CDD9CE000D21D5C /* AddressSelection */,
-				624CEB802CDC302100DA3434 /* HomeEntity.swift */,
 				624CEB7E2CDC300C00DA3434 /* HomePresenter.swift */,
 				624CEB7C2CDC300500DA3434 /* HomeInteractor.swift */,
 				624CEB7A2CDC2FFD00DA3434 /* HomeRouter.swift */,
@@ -316,14 +323,10 @@
 		629956F02CDEFB0200ADA9C4 /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				629957252CE1984B00ADA9C4 /* AccountSettingsPage */,
 				629957122CE0446F00ADA9C4 /* PasswordChange */,
 				629957072CDFC6D000ADA9C4 /* EmailChange */,
 				629956FE2CDF03D700ADA9C4 /* UserInformation */,
-				629956FA2CDEFCA000ADA9C4 /* AccountPageEntity.swift */,
-				629956F62CDEFB4A00ADA9C4 /* AccountPagePresenter.swift */,
-				629956F32CDEFB3C00ADA9C4 /* AccountPageInteractor.swift */,
-				629956F12CDEFB3200ADA9C4 /* AccountPageRouter.swift */,
-				629956F82CDEFB5900ADA9C4 /* AccountPageViewController.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -331,6 +334,8 @@
 		629956FE2CDF03D700ADA9C4 /* UserInformation */ = {
 			isa = PBXGroup;
 			children = (
+				6299572E2CE1A3D700ADA9C4 /* UserInformationCell.swift */,
+				6299572C2CE1A34600ADA9C4 /* UserInformationEntity.swift */,
 				629957052CDF041000ADA9C4 /* UserInformationBuilder.swift */,
 				629957032CDF03F900ADA9C4 /* UserInformationInteractor.swift */,
 				629957012CDF03F200ADA9C4 /* UserInformationPresenter.swift */,
@@ -342,6 +347,8 @@
 		629957072CDFC6D000ADA9C4 /* EmailChange */ = {
 			isa = PBXGroup;
 			children = (
+				629957282CE19C9400ADA9C4 /* EmailChangeCell.swift */,
+				629957262CE19C1E00ADA9C4 /* EmailChangeEntity.swift */,
 				629957102CDFC7BC00ADA9C4 /* EmailChangeBuilder.swift */,
 				6299570C2CDFC6F900ADA9C4 /* EmailChangeInteractor.swift */,
 				629957082CDFC6D900ADA9C4 /* EmailChangePresenter.swift */,
@@ -363,9 +370,22 @@
 			path = PasswordChange;
 			sourceTree = "<group>";
 		};
+		629957252CE1984B00ADA9C4 /* AccountSettingsPage */ = {
+			isa = PBXGroup;
+			children = (
+				629956FA2CDEFCA000ADA9C4 /* AccountPageEntity.swift */,
+				629956F62CDEFB4A00ADA9C4 /* AccountPagePresenter.swift */,
+				629956F32CDEFB3C00ADA9C4 /* AccountPageInteractor.swift */,
+				629956F12CDEFB3200ADA9C4 /* AccountPageRouter.swift */,
+				629956F82CDEFB5900ADA9C4 /* AccountPageViewController.swift */,
+			);
+			path = AccountSettingsPage;
+			sourceTree = "<group>";
+		};
 		62A21B602CDD9CE000D21D5C /* AddressSelection */ = {
 			isa = PBXGroup;
 			children = (
+				629957232CE1933B00ADA9C4 /* AddressEntity.swift */,
 				62A21B692CDDA1F700D21D5C /* AddressCell.swift */,
 				62A21B672CDD9D4000D21D5C /* AddressSelectionRouter.swift */,
 				62A21B652CDD9D2700D21D5C /* AddressSelectionInteractor.swift */,
@@ -532,10 +552,10 @@
 			isa = PBXGroup;
 			children = (
 				6248B6242BC5F2ED003E695B /* LoadingView.swift */,
+				629957322CE251D700ADA9C4 /* DecisionPopUpShowable.swift */,
 				62D767032BC72D360070A83F /* SectionDecorations.swift */,
 				6217B5A72BD6D63C001FB16E /* ConfirmationDialogue.swift */,
-				6217B59B2BD5C6CF001FB16E /* ErrorShowable.swift */,
-				6217B5A92BD7F09D001FB16E /* PromptShowable.swift */,
+				6217B5A92BD7F09D001FB16E /* InfoPopUpShowable.swift */,
 				623093E92BD9061C00C8E408 /* CollectionViewLayouts.swift */,
 			);
 			path = Utils;
@@ -627,7 +647,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				62A5985F2CD2C57600BA4879 /* AuthenticationViewController.swift in Sources */,
-				624CEB812CDC302300DA3434 /* HomeEntity.swift in Sources */,
 				62A21B682CDD9D4400D21D5C /* AddressSelectionRouter.swift in Sources */,
 				62A21B622CDD9D0600D21D5C /* AddressSelectionViewController.swift in Sources */,
 				629957002CDF03E900ADA9C4 /* UserInformationViewController.swift in Sources */,
@@ -640,6 +659,8 @@
 				629957062CDF041700ADA9C4 /* UserInformationBuilder.swift in Sources */,
 				6299570D2CDFC6FF00ADA9C4 /* EmailChangeInteractor.swift in Sources */,
 				6248B6272BC5F4DD003E695B /* Collection.swift in Sources */,
+				6299572F2CE1A3DC00ADA9C4 /* UserInformationCell.swift in Sources */,
+				629957272CE19C2500ADA9C4 /* EmailChangeEntity.swift in Sources */,
 				622999E32BC5B92B004941FF /* ProductListingEntity.swift in Sources */,
 				623093EA2BD9061C00C8E408 /* CollectionViewLayouts.swift in Sources */,
 				62A5985C2CD2C55300BA4879 /* AuthenticationRouter.swift in Sources */,
@@ -661,6 +682,7 @@
 				629956F92CDEFB5900ADA9C4 /* AccountPageViewController.swift in Sources */,
 				629957022CDF03F600ADA9C4 /* UserInformationPresenter.swift in Sources */,
 				62A21B6F2CDE12BB00D21D5C /* AddressAddPresenter.swift in Sources */,
+				629957332CE251DF00ADA9C4 /* DecisionPopUpShowable.swift in Sources */,
 				6271F0932BD09303005CA19A /* CartCellInteractor.swift in Sources */,
 				6217B5A02BD69E19001FB16E /* SuggestedCellView.swift in Sources */,
 				629956F72CDEFB4D00ADA9C4 /* AccountPagePresenter.swift in Sources */,
@@ -675,7 +697,7 @@
 				6217B5A42BD69E9D001FB16E /* SuggestedCellInteractor.swift in Sources */,
 				625F4A862C14BAF70094D0AF /* ProductGroupCell.swift in Sources */,
 				62D767042BC72D360070A83F /* SectionDecorations.swift in Sources */,
-				6217B5AA2BD7F09D001FB16E /* PromptShowable.swift in Sources */,
+				6217B5AA2BD7F09D001FB16E /* InfoPopUpShowable.swift in Sources */,
 				62BD93272BC47E78007E122C /* AppDelegate.swift in Sources */,
 				624CEB7F2CDC300F00DA3434 /* HomePresenter.swift in Sources */,
 				629957042CDF040700ADA9C4 /* UserInformationInteractor.swift in Sources */,
@@ -686,6 +708,7 @@
 				6271F08C2BD051EB005CA19A /* CartInteractor.swift in Sources */,
 				6217B59A2BD597B3001FB16E /* CartService.swift in Sources */,
 				62BD936E2BC49641007E122C /* ProductListingPresenter.swift in Sources */,
+				629957292CE19C9800ADA9C4 /* EmailChangeCell.swift in Sources */,
 				6271F0862BD0269C005CA19A /* ProductCellBuilder.swift in Sources */,
 				629956F42CDEFB4000ADA9C4 /* AccountPageInteractor.swift in Sources */,
 				62A21B732CDE12CE00D21D5C /* AddressAddInteractor.swift in Sources */,
@@ -695,6 +718,7 @@
 				6217B5952BD58617001FB16E /* CoreDataStack.swift in Sources */,
 				629957202CE1742900ADA9C4 /* PasswordChangeCell.swift in Sources */,
 				62BD93292BC47E78007E122C /* SceneDelegate.swift in Sources */,
+				6299572D2CE1A34B00ADA9C4 /* UserInformationEntity.swift in Sources */,
 				624CEB792CDC2FF900DA3434 /* HomeViewController.swift in Sources */,
 				62BD93632BC48192007E122C /* SplashViewController.swift in Sources */,
 				62A21B6A2CDDA1FB00D21D5C /* AddressCell.swift in Sources */,
@@ -703,7 +727,7 @@
 				62A598632CD2C59700BA4879 /* AuthenticationPresenter.swift in Sources */,
 				6271F0882BD051CE005CA19A /* CartViewController.swift in Sources */,
 				6271F0912BD08D4E005CA19A /* CartCellView.swift in Sources */,
-				6217B59C2BD5C6CF001FB16E /* ErrorShowable.swift in Sources */,
+				629957242CE1933F00ADA9C4 /* AddressEntity.swift in Sources */,
 				62A598652CD2C5A200BA4879 /* AuthenticationEntity.swift in Sources */,
 				6217B5A62BD69ED8001FB16E /* SuggestedCellBuilder.swift in Sources */,
 				6271F0972BD09578005CA19A /* CartCellBuilder.swift in Sources */,

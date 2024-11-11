@@ -11,6 +11,8 @@ class PasswordChangeCell: UITableViewCell, UITextFieldDelegate {
     
     private var entry: PasswordChangeEntity?
     
+    static let identifier = "PasswordChangeCell"
+    
     private lazy var passwordLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14, weight: .semibold)

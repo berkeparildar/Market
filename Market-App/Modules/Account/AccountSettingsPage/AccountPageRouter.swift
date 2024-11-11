@@ -16,6 +16,7 @@ enum AccountRoutes {
 
 protocol AccountPageRouterProtocol {
     func navigate(to route: AccountRoutes)
+    func navigateToLogIn()
 }
 
 final class AccountPageRouter {
@@ -37,6 +38,13 @@ final class AccountPageRouter {
 }
 
 extension AccountPageRouter: AccountPageRouterProtocol {
+    func navigateToLogIn() {
+        guard let window = viewController?.view.window else { return }
+        let signInVC = AuthenticationRouter.createModule()
+        let navigationController = UINavigationController(rootViewController: signInVC)
+        window.rootViewController = navigationController
+    }
+    
     func navigate(to route: AccountRoutes) {
         switch route {
         case .userInformation:
@@ -54,17 +62,8 @@ extension AccountPageRouter: AccountPageRouterProtocol {
             viewController?.navigationController?.pushViewController(emailChangeVC, animated: true)
             break
         case .signOut:
-            UserService.shared.signOutUser { [weak self] error in
-                guard let self = self else { return }
-                guard let window = viewController?.view.window else { return }
-                if let error = error {
-                    debugPrint(error)
-                    return
-                }
-                let signInVC = AuthenticationRouter.createModule()
-                let navigationController = UINavigationController(rootViewController: signInVC)
-                window.rootViewController = navigationController
-            }
+            viewController?.showSignOutDecisionPopUp()
+            break
         }
     }
 }

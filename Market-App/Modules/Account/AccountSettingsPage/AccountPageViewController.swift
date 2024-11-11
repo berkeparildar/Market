@@ -8,7 +8,8 @@
 import UIKit
 
 protocol AccountPageViewControllerProtocol {
-    
+    func showSignOutDecisionPopUp()
+    func showErrorInfoPopUp(message: String)
 }
 
 class AccountPageViewController: UIViewController {
@@ -48,8 +49,19 @@ class AccountPageViewController: UIViewController {
         
 }
 
-extension AccountPageViewController: AccountPageViewControllerProtocol {
+extension AccountPageViewController: AccountPageViewControllerProtocol,
+                                        DecisionPopUpShowable,
+                                        InfoPopUpShowable {
+    func showErrorInfoPopUp(message: String) {
+        showInfoPopUp(message: message) {}
+    }
     
+    func showSignOutDecisionPopUp() {
+        showDecisionPopUp(message: "Are you sure you want to sign out?") { [weak self] in
+            guard let self = self else { return }
+            presenter.signOut()
+        } cancel: {}
+    }
 }
 
 extension AccountPageViewController: UITableViewDelegate, UITableViewDataSource {
@@ -61,7 +73,7 @@ extension AccountPageViewController: UITableViewDelegate, UITableViewDataSource 
         let cell = UITableViewCell()
         let accountSettings = presenter.getAccountSettings(at: indexPath.row)
         cell.textLabel?.text = accountSettings.name
-        cell.textLabel?.font = .systemFont(ofSize: 18)
+        cell.textLabel?.font = .systemFont(ofSize: 14)
         cell.imageView?.image = UIImage(systemName: accountSettings.symbolName)
         cell.imageView?.preferredSymbolConfiguration = UIImage.SymbolConfiguration(
             pointSize: 20, weight: .medium)

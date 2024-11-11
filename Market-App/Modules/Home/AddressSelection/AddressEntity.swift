@@ -1,8 +1,8 @@
 //
-//  HomeEntity.swift
+//  AddressEntity.swift
 //  Market-App
 //
-//  Created by Berke Parıldar on 7.11.2024.
+//  Created by Berke Parıldar on 11.11.2024.
 //
 
 struct Address {

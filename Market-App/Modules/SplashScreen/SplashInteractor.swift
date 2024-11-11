@@ -15,7 +15,7 @@ protocol SplashInteractorProtocol: AnyObject {
 
 protocol SplashInteractorOutputProtocol: AnyObject {
     func internetConnectionOutput(status: Bool)
-    func savedLogInOutput(status: Bool)
+    func savedLogInOutput(error: Error?)
 }
 
 final class SplashInteractor {
@@ -24,9 +24,9 @@ final class SplashInteractor {
 
 extension SplashInteractor: SplashInteractorProtocol {
     func checkSavedLogIn() {
-        UserService.shared.checkSignInInfo { [weak self] result in
+        UserService.shared.checkSignInInfo { [weak self] error in
             guard let self = self else { return }
-            output?.savedLogInOutput(status: result)
+            output?.savedLogInOutput(error: error)
         }
     }
     

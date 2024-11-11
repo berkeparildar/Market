@@ -68,14 +68,7 @@ public class FirebaseService {
             completion(userError)
             return
         }
-        
-        db.collection("users").document(user.uid).getDocument { document, error in
-            if let error = error {
-                print("Error getting user document: \(error)")
-                completion(error)
-            }
-            completion(nil)
-        }
+        completion(nil)
     }
     
     private func addUserToFirestore(email: String,
@@ -111,6 +104,20 @@ public class FirebaseService {
             if let document = document, document.exists {
                 var userData = document.data()!
                 userData["verifiedEmail"] = Auth.auth().currentUser?.isEmailVerified
+                if var addresses = userData["addresses"] as? [[String: Any]] {
+                    for i in 0..<addresses.count {
+                        var address = addresses[i]
+                        
+                        if let geoPoint = address["geoPoint"] as? GeoPoint {
+                            address["latitude"] = geoPoint.latitude
+                            address["longitude"] = geoPoint.longitude
+                        }
+                        
+                        addresses[i] = address
+                    }
+                    
+                    userData["addresses"] = addresses
+                }
                 completion(.success(userData ?? [:]))
             } else {
                 completion(.failure(NSError(domain: "FirebaseService", code: 404, userInfo: [NSLocalizedDescriptionKey: "User not found"])))
@@ -126,9 +133,18 @@ public class FirebaseService {
             return
         }
         
+        var geoAddresses = addressData.map { address in
+            return [
+                "title": address["title"] as? String ?? "",
+                "addressText": address["addressText"] as? String ?? "",
+                "geoPoint": GeoPoint(latitude: address["latitude"] as? Double ?? 0,
+                                        longitude: address["longitude"] as? Double ?? 0)
+            ]
+        }
+        
         let userRef = db.collection("users").document(user.uid)
         
-        userRef.updateData(["addresses": addressData]) { error in
+        userRef.updateData(["addresses": geoAddresses]) { error in
             if let error = error {
                 print("Error updating user data: \(error.localizedDescription)")
                 completion(error)

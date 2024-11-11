@@ -137,9 +137,9 @@ extension AddressSelectionViewController: UITableViewDataSource, UITableViewDele
     
 }
 
-extension AddressSelectionViewController: PromptShowable {
+extension AddressSelectionViewController: InfoPopUpShowable {
     func showErrorMessage(message: String) {
-        showPrompt(message: message) {}
+        showInfoPopUp(message: message) {}
     }
 }
 

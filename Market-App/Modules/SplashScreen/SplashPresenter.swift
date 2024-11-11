@@ -36,12 +36,11 @@ final class SplashPresenter: SplashPresenterProtocol {
 }
 
 extension SplashPresenter: SplashInteractorOutputProtocol {
-    
-    func savedLogInOutput(status: Bool) {
-        if status {
-            router.navigate(.home)
-        } else {
+    func savedLogInOutput(error: (any Error)?) {
+        if let error = error {
             router.navigate(.authentication)
+        } else {
+            router.navigate(.home)
         }
     }
     
