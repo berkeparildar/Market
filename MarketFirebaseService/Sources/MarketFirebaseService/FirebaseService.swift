@@ -20,8 +20,16 @@ public class FirebaseService {
     
     private let db = Firestore.firestore()
     
+    private let userError = NSError(domain: "", code: -1,
+                                    userInfo: [NSLocalizedDescriptionKey: "No user logged in"])
+    
     public func createUser(email: String, password: String,
                            completion: @escaping (Result<AuthDataResult, Error>) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            completion(.failure(userError))
+            return
+        }
+        
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
                 completion(.failure(error))
@@ -29,11 +37,12 @@ public class FirebaseService {
             }
             
             if let authResult = authResult {
-                self.addUserToFirestore(uid: authResult.user.uid, email: email) { firestoreError in
+                self.addUserToFirestore(email: email) { firestoreError in
                     if let firestoreError = firestoreError {
                         completion(.failure(firestoreError))
                         return
                     }
+                    Auth.auth().currentUser!.sendEmailVerification { _ in }
                     completion(.success(authResult))
                 }
             }
@@ -54,8 +63,13 @@ public class FirebaseService {
         }
     }
     
-    public func checkUserExists(uid: String, completion: @escaping (Error?) -> Void) {
-        db.collection("users").document(uid).getDocument { document, error in
+    public func checkUserExists(completion: @escaping (Error?) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            completion(userError)
+            return
+        }
+        
+        db.collection("users").document(user.uid).getDocument { document, error in
             if let error = error {
                 print("Error getting user document: \(error)")
                 completion(error)
@@ -64,28 +78,39 @@ public class FirebaseService {
         }
     }
     
-    private func addUserToFirestore(uid: String, email: String,
+    private func addUserToFirestore(email: String,
                                     completion: @escaping (Error?) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            completion(userError)
+            return
+        }
+        
         let userData: [String: Any] = [
-            "uid": uid,
+            "uid": user.uid,
             "email": email,
             "createdAt": FieldValue.serverTimestamp()
         ]
         
-        db.collection("users").document(uid).setData(userData) { error in
+        db.collection("users").document(user.uid).setData(userData) { error in
             completion(error)
         }
     }
     
-    public func fetchUserData(uid: String, completion: @escaping (Result<[String: Any], Error>) -> Void) {
-        db.collection("users").document(uid).getDocument { document, error in
+    public func fetchUserData(completion: @escaping (Result<[String: Any], Error>) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            completion(.failure(userError))
+            return
+        }
+        
+        db.collection("users").document(user.uid).getDocument { document, error in
             if let error = error {
                 completion(.failure(error))
                 return
             }
             
             if let document = document, document.exists {
-                let userData = document.data()
+                var userData = document.data()!
+                userData["verifiedEmail"] = Auth.auth().currentUser?.isEmailVerified
                 completion(.success(userData ?? [:]))
             } else {
                 completion(.failure(NSError(domain: "FirebaseService", code: 404, userInfo: [NSLocalizedDescriptionKey: "User not found"])))
@@ -93,9 +118,15 @@ public class FirebaseService {
         }
     }
     
-    public func updateUserAddress(uid: String, addressData: [[String: Any?]],
+    public func updateUserAddress(addressData: [[String: Any?]],
                                   completion: @escaping (Error?) -> Void) {
-        let userRef = db.collection("users").document(uid)
+        
+        guard let user = Auth.auth().currentUser else {
+            completion(userError)
+            return
+        }
+        
+        let userRef = db.collection("users").document(user.uid)
         
         userRef.updateData(["addresses": addressData]) { error in
             if let error = error {
@@ -107,4 +138,109 @@ public class FirebaseService {
             }
         }
     }
+    
+    public func updateUserData(userData: [String: Any?], completion: @escaping (Error?) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            completion(userError)
+            return
+        }
+        
+        let userRef = db.collection("users").document(user.uid)
+        
+        let filteredUserData = userData.compactMapValues { $0 }
+        
+        userRef.updateData(filteredUserData) { error in
+            if let error = error {
+                print("Error updating user data: \(error.localizedDescription)")
+                completion(error)
+            } else {
+                print("User data updated successfully")
+                completion(nil)
+            }
+        }
+    }
+    
+    public func changeUserEmail(newEmail: String, completion: @escaping (Error?) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            completion(userError)
+            return
+        }
+        
+        user.reload { error in
+            if let error = error {
+                debugPrint("Error reloading user: \(error.localizedDescription)")
+                completion(error)
+                return
+            }
+            
+            if !user.isEmailVerified {
+                let verificationError = NSError(
+                    domain: "",
+                    code: -1,
+                    userInfo: [
+                        NSLocalizedDescriptionKey:
+                            "Please verify your current email before changing to a new one."])
+                completion(verificationError)
+                return
+            }
+            
+            user.sendEmailVerification(beforeUpdatingEmail: newEmail) { error in
+                if let error = error {
+                    debugPrint("Error updating email: \(error.localizedDescription)")
+                    completion(error)
+                    return
+                }
+                else {
+                    debugPrint("Verification email sent to \(newEmail)")
+                    self.updateUserData(userData: ["email": newEmail]) { error in
+                        if let error = error {
+                            completion(error)
+                            return
+                        }
+                        else {
+                            completion(nil)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    public func changeUserPassword(currentEmail: String,
+                                   currentPassword: String,
+                                   newPassword: String,
+                                   completion: @escaping (Error?) -> Void) {
+        
+        let user = Auth.auth().currentUser
+        let credential = EmailAuthProvider.credential(withEmail: currentEmail,
+                                                      password: currentPassword)
+        
+        user?.reauthenticate(with: credential) { result, error in
+            if let error = error {
+                print("Re-authentication failed: \(error.localizedDescription)")
+                completion(error)
+            } else {
+                user?.updatePassword(to: newPassword) { error in
+                    if let error = error {
+                        print("Password update failed: \(error.localizedDescription)")
+                        completion(error)
+                        return
+                    } else {
+                        print("Password successfully updated")
+                        completion(nil)
+                    }
+                }
+            }
+        }
+    }
+    
+    public func signOutUser(completion: @escaping (Error?) -> Void) {
+        do {
+            try Auth.auth().signOut()
+            completion(nil)
+        } catch {
+            completion(error)
+        }
+    }
 }
+

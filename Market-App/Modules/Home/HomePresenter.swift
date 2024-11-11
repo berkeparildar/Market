@@ -56,6 +56,9 @@ extension HomePresenter: HomeInteractorOutput {
         if result {
             interactor.getCurrentAddress()
         }
+        else {
+            view.hideLoadingIndicator()
+        }
     }
     
     func getCurrentAddressOutput(address: Address?) {

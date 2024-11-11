@@ -24,7 +24,9 @@ extension HomeInteractor: HomeInteractorProtocol {
     func getCurrentAddress() {
         let savedAddressIndex = UserService.shared.getSavedAddressIndex()
         let currentUser = UserService.shared.getCurrentUser()!
-        output?.getCurrentAddressOutput(address: currentUser.addresses[savedAddressIndex])
+        if !currentUser.addresses.isEmpty {
+            output?.getCurrentAddressOutput(address: currentUser.addresses[savedAddressIndex])
+        }
     }
     
     func checkSavedLocation() {

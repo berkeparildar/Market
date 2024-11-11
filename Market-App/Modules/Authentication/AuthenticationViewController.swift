@@ -11,7 +11,7 @@ import SnapKit
 protocol AuthenticationViewControllerProtocol: AnyObject {
     func showLoadingIndicator()
     func hideLoadingIndicator()
-    func showErrorMessage(title: String, message: String)
+    func showErrorMessage(message: String)
     func showSuccessMessage(completion: @escaping () -> Void)
 }
 
@@ -454,8 +454,8 @@ final class AuthenticationViewController: UIViewController {
 
 extension AuthenticationViewController:
     AuthenticationViewControllerProtocol, LoadingShowable, ErrorShowable, PromptShowable {
-    func showErrorMessage(title: String, message: String) {
-        showError(title: title, message: message)
+    func showErrorMessage(message: String) {
+        showPrompt(message: message, confirm: {})
     }
     
     func showSuccessMessage(completion confirmAction: @escaping () -> Void) {
