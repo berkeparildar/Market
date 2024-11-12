@@ -37,29 +37,32 @@ extension AuthenticationPresenter: AuthenticationPresenterProtocol {
     func didTapSignIn(email: String, password: String) {
         let emailIsValid = isValidEmail(email)
         if emailIsValid {
-            view.showLoadingIndicator()
+            //view.showLoadingIndicator()
             interactor.signIn(email: email, password: password)
         }
         else {
-            view.showErrorMessage(title: "Error", message: "Please enter a valid e-mail address")
+            view.showErrorMessage(message: "Please enter a valid e-mail address")
         }
     }
     
     func didTapSignUp(email: String, password: String) {
         let emailIsValid = isValidEmail(email)
         if emailIsValid {
-            view.showLoadingIndicator()
+            //view.showLoadingIndicator()
             interactor.signUp(email: email, password: password)
         }
         else {
-            view.showErrorMessage(title: "Error", message: "Please enter a valid e-mail address")
+            view.showErrorMessage(message: "Please enter a valid e-mail address")
         }
     }
 }
 
 extension AuthenticationPresenter: AuthenticationInteractorOutputProtocol {
-    func signUpResult(status: Bool) {
-        if status {
+    func signUpResult(error: Error?) {
+        if let error = error {
+            view.showErrorMessage(message: error.localizedDescription)
+        }
+        else {
             view.hideLoadingIndicator()
             print("Sign up success.")
             view.showSuccessMessage { [weak self] in
@@ -67,18 +70,16 @@ extension AuthenticationPresenter: AuthenticationInteractorOutputProtocol {
                 router.navigate(to: .home)
             }
         }
-        else {
-            view.showErrorMessage(title: "Error", message: "Error while signing up.")
-        }
     }
     
-    func signInResult(status: Bool) {
-        if status {
-            view.hideLoadingIndicator()
-            print("Sign in success.")
+    func signInResult(error: Error?) {
+        if let error = error {
+            view.showErrorMessage(message: error.localizedDescription)
         }
         else {
-            view.showErrorMessage(title: "Error", message: "Error while signing in.")
+            //view.hideLoadingIndicator()
+            print("Sign in success.")
+            router.navigate(to: .home)
         }
     }
 }

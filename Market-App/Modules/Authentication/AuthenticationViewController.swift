@@ -11,7 +11,7 @@ import SnapKit
 protocol AuthenticationViewControllerProtocol: AnyObject {
     func showLoadingIndicator()
     func hideLoadingIndicator()
-    func showErrorMessage(title: String, message: String)
+    func showErrorMessage(message: String)
     func showSuccessMessage(completion: @escaping () -> Void)
 }
 
@@ -21,14 +21,14 @@ final class AuthenticationViewController: UIViewController {
     
     private lazy var coloredBackground: UIView = {
         let view = UIView()
-        view.backgroundColor = .marketGreen
+        view.backgroundColor = .marketOrange
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private lazy var marketLabel: UILabel = {
         let label = UILabel()
-        label.text = "Market"
+        label.text = "Deliverity"
         label.font = .systemFont(ofSize: 48, weight: .regular)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -76,28 +76,37 @@ final class AuthenticationViewController: UIViewController {
         textField.autocapitalizationType = .none
         textField.autocorrectionType = .no
         textField.borderStyle = .roundedRect
-        textField.rightView = signInPasswordToggleButton
+        textField.rightView = createPasswordTogglePaddingView()
         textField.rightViewMode = .always
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
-    
+
     private lazy var signInPasswordToggleButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(systemName: "eye.slash"), for: .normal)
         button.setImage(UIImage(systemName: "eye"), for: .selected)
-        button.addTarget(self, action: #selector(toggleSignInPasswordVisibility),
-                               for: .touchUpInside)
-        button.tintColor = .marketGreen
-        button.setPreferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 12), forImageIn: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.addTarget(self, action: #selector(toggleSignInPasswordVisibility), for: .touchUpInside)
+        button.tintColor = .marketOrange
+        button.setPreferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 18), forImageIn: .normal)
         return button
     }()
+
+    private func createPasswordTogglePaddingView() -> UIView {
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        
+        signInPasswordToggleButton.frame = CGRect(x: 10, y: 10, width: 20, height: 20)
+        paddingView.addSubview(signInPasswordToggleButton)
+        
+        return paddingView
+    }
     
     private lazy var forgotPasswordButton: UIButton = {
         let button = UIButton()
         button.setTitle("Forgot your password?", for: .normal)
         button.backgroundColor = .clear
-        button.setTitleColor(.marketGreen, for: .normal)
+        button.setTitleColor(.marketOrange, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .light)
         button.addTarget(self, action: #selector(forgotPasswordButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -107,7 +116,7 @@ final class AuthenticationViewController: UIViewController {
     private lazy var signInButton: UIButton = {
         let button = UIButton()
         button.setTitle("Sign In", for: .normal)
-        button.backgroundColor = .marketGreen
+        button.backgroundColor = .marketOrange
         button.addTarget(self, action: #selector(signInButtonTapped), for: .touchUpInside)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
         button.layer.cornerRadius = 20
@@ -128,7 +137,7 @@ final class AuthenticationViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Sign Up", for: .normal)
         button.backgroundColor = .clear
-        button.setTitleColor(.marketGreen, for: .normal)
+        button.setTitleColor(.marketOrange, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.addTarget(self, action: #selector(signUpFormButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -179,7 +188,7 @@ final class AuthenticationViewController: UIViewController {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(systemName: "eye.slash"), for: .normal)
         button.setImage(UIImage(systemName: "eye"), for: .selected)
-        button.tintColor = .marketGreen
+        button.tintColor = .marketOrange
         button.setPreferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 12), forImageIn: .normal)
         button.addTarget(self, action: #selector(toggleSignUpPasswordVisibility),
                                for: .touchUpInside)
@@ -189,7 +198,7 @@ final class AuthenticationViewController: UIViewController {
     private lazy var signUpButton: UIButton = {
         let button = UIButton()
         button.setTitle("Sign Up", for: .normal)
-        button.backgroundColor = .marketGreen
+        button.backgroundColor = .marketOrange
         button.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
         button.layer.cornerRadius = 20
@@ -210,7 +219,7 @@ final class AuthenticationViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Sign In", for: .normal)
         button.backgroundColor = .clear
-        button.setTitleColor(.marketGreen, for: .normal)
+        button.setTitleColor(.marketOrange, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.addTarget(self, action: #selector(signInFormButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -453,13 +462,13 @@ final class AuthenticationViewController: UIViewController {
 }
 
 extension AuthenticationViewController:
-    AuthenticationViewControllerProtocol, LoadingShowable, ErrorShowable, SuccessShowable {
-    func showErrorMessage(title: String, message: String) {
-        showError(title: title, message: message)
+    AuthenticationViewControllerProtocol, LoadingShowable, InfoPopUpShowable {
+    func showErrorMessage(message: String) {
+        showInfoPopUp(message: message, confirm: {})
     }
     
     func showSuccessMessage(completion confirmAction: @escaping () -> Void) {
-        showSuccess(message: "Sign Up successful!", confirm: confirmAction)
+        showInfoPopUp(message: "Sign Up successful!", confirm: confirmAction)
     }
     
     func showLoadingIndicator() {

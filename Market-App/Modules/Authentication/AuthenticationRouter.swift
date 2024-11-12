@@ -5,12 +5,12 @@
 //  Created by Berke Parıldar on 30.10.2024.
 //
 
-enum SignInRoutes {
+enum AuthenticationRoutes {
     case home
 }
 
 protocol AuthenticationRouterProtocol {
-    func navigate(to route: SignInRoutes)
+    func navigate(to route: AuthenticationRoutes)
 }
 
 final class AuthenticationRouter {
@@ -31,7 +31,9 @@ final class AuthenticationRouter {
 }
 
 extension AuthenticationRouter: AuthenticationRouterProtocol {
-    func navigate(to route: SignInRoutes) {
-        print("Navigating to home.")
+    func navigate(to route: AuthenticationRoutes) {
+        let homeTabBarController = MainTabBarController()
+        guard let window = viewController?.view.window else { return }
+        window.rootViewController = homeTabBarController
     }
 }

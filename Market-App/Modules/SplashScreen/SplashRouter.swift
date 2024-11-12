@@ -9,6 +9,8 @@ import UIKit
 
 enum SplashRoutes {
     case productListing
+    case authentication
+    case home
 }
 
 protocol SplashRouterProtocol: AnyObject {
@@ -34,17 +36,19 @@ final class SplashRouter {
 
 extension SplashRouter: SplashRouterProtocol {
     func navigate(_ route: SplashRoutes) {
+        guard let window = viewController?.view.window else { return }
         switch route {
         case .productListing:
-            guard let window = viewController?.view.window else { return }
-            /*
-            let productListingVC = ProductListingRouter.createModule()
-            let navigationController = CustomNavigationController(rootViewController: productListingVC)
-            window.rootViewController = navigationController
-             */
+            break
+        case .authentication:
             let signInVC = AuthenticationRouter.createModule()
             let navigationController = UINavigationController(rootViewController: signInVC)
             window.rootViewController = navigationController
+            break
+        case .home:
+            let navigationController = MainTabBarController()
+            window.rootViewController = navigationController
+            break
         }
     }
 }
