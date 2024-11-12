@@ -7,12 +7,12 @@
 
 import UIKit
 
-class HomeTabBarController: UITabBarController {
+class MainTabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let homeVC = HomeRouter.createModule()
+        let homeVC = DeliverityRouter.createModule()
         let homeNavigation = UINavigationController(rootViewController: homeVC)
         homeNavigation.navigationBar.tintColor = .marketOrange
         

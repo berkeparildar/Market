@@ -135,10 +135,16 @@ public class FirebaseService {
         
         var geoAddresses = addressData.map { address in
             return [
-                "title": address["title"] as? String ?? "",
                 "addressText": address["addressText"] as? String ?? "",
                 "geoPoint": GeoPoint(latitude: address["latitude"] as? Double ?? 0,
-                                        longitude: address["longitude"] as? Double ?? 0)
+                                        longitude: address["longitude"] as? Double ?? 0),
+                "floor": address["floor"] as? String ?? "",
+                "apartmentNo": address["apartmentNo"] as? String ?? "",
+                "description": address["description"] as? String ?? "",
+                "title": address["title"] as? String ?? "",
+                "contactName": address["contactName"] as? String ?? "",
+                "contactSurname": address["contactSurname"] as? String ?? "",
+                "contactPhone": address["contactPhone"] as? String ?? "",
             ]
         }
         

@@ -8,59 +8,58 @@
 import UIKit
 import MapKit
 
-protocol AddressAddViewControllerProtocol: AnyObject {
+protocol AddressCreateViewControllerProtocol: AnyObject {
     func updateAddressTable()
     func updateSelectedAddress(with address: String)
     func centerMap(on coordinate: CLLocationCoordinate2D)
     func showErrorMessage(message: String)
 }
 
-class AddressAddViewController: UIViewController, MKMapViewDelegate {
+class AddressCreateViewController: UIViewController, MKMapViewDelegate {
     
-    var presenter: AddressAddPresenterProtocol!
+    var presenter: AddressCreatePresenterProtocol!
     
     private lazy var addressTextField: UITextField = {
         let textField = UITextField()
-        textField.borderStyle = .none
-        textField.layer.borderColor = UIColor.marketOrange.cgColor
-        textField.layer.borderWidth = 1
-        textField.layer.cornerRadius = 16
-        textField.placeholder = "Enter your address."
         textField.delegate = self
         textField.addTarget(self, action: #selector(addressTextFieldDidChange), for: .editingChanged)
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: textField.frame.height))
-        textField.leftView = paddingView
-        textField.leftViewMode = .always
-        textField.rightView = paddingView
-        textField.rightViewMode = .always
-        return textField
-    }()
-    
-    private lazy var addressNameTextField: UITextField = {
-        let textField = UITextField()
         textField.borderStyle = .none
-        textField.placeholder = "Enter name (e.g., Home, Work)"
-        textField.delegate = self
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: textField.frame.height))
-        textField.leftView = paddingView
-        textField.layer.borderColor = UIColor.marketOrange.cgColor
-        textField.layer.borderWidth = 1
-        textField.layer.cornerRadius = 16
+        textField.layer.borderColor = UIColor.lightGray.cgColor
+        textField.backgroundColor = .marketLightGray
+        textField.layer.borderWidth = 0.2
+        textField.layer.cornerRadius = 20
+        
+        textField.font = UIFont.systemFont(ofSize: 14)
+        textField.attributedPlaceholder = NSAttributedString(
+            string: "Search district, street, etc.",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]
+        )
+    
+        let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: textField.frame.height))
+        
+        let searchImage = UIImageView(
+            frame: CGRect(x: 10, y: (leftPaddingView.frame.height - 20) / 2, width: 20, height: 20))
+        searchImage.image = UIImage(systemName: "magnifyingglass")
+        searchImage.preferredSymbolConfiguration = .init(pointSize: 14)
+        searchImage.tintColor = .marketOrange
+        searchImage.contentMode = .scaleAspectFit
+        
+        leftPaddingView.addSubview(searchImage)
+        textField.leftView = leftPaddingView
         textField.leftViewMode = .always
-        textField.rightView = paddingView
-        textField.rightViewMode = .always
+        
+        textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
+
     
     private lazy var saveButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("  Save Address  ", for: .normal)
+        button.setTitle("  Use this location  ", for: .normal)
         button.backgroundColor = .marketOrange
         button.tintColor = .white
         button.layer.cornerRadius = 16
-        button.addTarget(self, action: #selector(saveAddress), for: .touchUpInside)
+        button.addTarget(self, action: #selector(continueWithAddress), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -107,12 +106,15 @@ class AddressAddViewController: UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tabBarController?.tabBar.isHidden = true
+        view.backgroundColor = .white
+        title = "Add News Address"
         mapView.delegate = self
         setupViews()
         setupConstraints()
         presenter.setupMap()
     }
+    
+ 
     
     private func setupViews() {
         view.addSubview(addressTextField)
@@ -121,7 +123,6 @@ class AddressAddViewController: UIViewController, MKMapViewDelegate {
         mapView.addSubview(addressTextView)
         addressTextView.addSubview(selectedAddressLabel)
         view.addSubview(suggestionsTableView)
-        view.addSubview(addressNameTextField)
         view.addSubview(saveButton)
     }
     
@@ -132,16 +133,15 @@ class AddressAddViewController: UIViewController, MKMapViewDelegate {
         setupSelectedAddressLabelConstraints()
         setupSuggestionsTableViewConstraints()
         setupAddressTextViewConstraints()
-        setupAddressNameTextFieldConstraints()
         setupSaveButtonConstraints()
     }
     
     private func setupAddressTextFieldConstraints() {
         addressTextField.snp.makeConstraints { make in
-            make.top.equalTo(addressNameTextField.snp.bottom).offset(16)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(16)
             make.leading.equalTo(view.snp.leading).offset(16)
             make.trailing.equalTo(view.snp.trailing).offset(-16)
-            make.height.equalTo(48)
+            make.height.equalTo(40)
         }
     }
     
@@ -150,7 +150,7 @@ class AddressAddViewController: UIViewController, MKMapViewDelegate {
             make.top.equalTo(addressTextField.snp.bottom).offset(16)
             make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading).offset(16)
             make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing).offset(-16)
-            make.bottom.equalTo(view.snp.bottom).offset(-64)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-128)
         }
     }
     
@@ -183,19 +183,10 @@ class AddressAddViewController: UIViewController, MKMapViewDelegate {
             make.top.equalTo(addressTextField.snp.bottom)
             make.leading.equalTo(addressTextField)
             make.trailing.equalTo(addressTextField)
-            make.height.equalTo(160)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
     }
-    
-    private func setupAddressNameTextFieldConstraints() {
-        addressNameTextField.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(16)
-            make.leading.equalTo(view.snp.leading).offset(16)
-            make.trailing.equalTo(view.snp.trailing).offset(-16)
-            make.height.equalTo(48)
-        }
-    }
-    
+
     private func setupSaveButtonConstraints() {
         saveButton.snp.makeConstraints { make in
             make.top.equalTo(mapView.snp.bottom).offset(24)
@@ -213,13 +204,8 @@ class AddressAddViewController: UIViewController, MKMapViewDelegate {
         presenter.performAddressSearch(query: address)
     }
     
-    @objc private func saveAddress() {
-        guard let addressName = addressNameTextField.text, !addressName.isEmpty else {
-            showErrorMessage(message: "Please enter an address name.")
-            return
-        }
-        print("Saving address with name: \(addressName)")
-        presenter.saveAddress(addressName: addressName)
+    @objc private func continueWithAddress() {
+        presenter.saveAddress()
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
@@ -238,7 +224,7 @@ class AddressAddViewController: UIViewController, MKMapViewDelegate {
     }
 }
 
-extension AddressAddViewController: UITableViewDataSource {
+extension AddressCreateViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print(presenter.getAddressCount())
         return presenter.getAddressCount()
@@ -251,7 +237,7 @@ extension AddressAddViewController: UITableViewDataSource {
     }
 }
 
-extension AddressAddViewController: UITableViewDelegate {
+extension AddressCreateViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedAddress = presenter.getAddress(at: indexPath.row)
         addressTextField.text = selectedAddress
@@ -260,7 +246,7 @@ extension AddressAddViewController: UITableViewDelegate {
     }
 }
 
-extension AddressAddViewController: AddressAddViewControllerProtocol {
+extension AddressCreateViewController: AddressCreateViewControllerProtocol {
     func updateAddressTable() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -281,13 +267,13 @@ extension AddressAddViewController: AddressAddViewControllerProtocol {
     }
 }
 
-extension AddressAddViewController: InfoPopUpShowable {
+extension AddressCreateViewController: InfoPopUpShowable {
     func showErrorMessage(message: String) {
         showInfoPopUp(message: message) {}
     }
 }
 
-extension AddressAddViewController: UITextFieldDelegate {
+extension AddressCreateViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true

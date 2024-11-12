@@ -32,7 +32,7 @@ final class AuthenticationRouter {
 
 extension AuthenticationRouter: AuthenticationRouterProtocol {
     func navigate(to route: AuthenticationRoutes) {
-        let homeTabBarController = HomeTabBarController()
+        let homeTabBarController = MainTabBarController()
         guard let window = viewController?.view.window else { return }
         window.rootViewController = homeTabBarController
     }

@@ -5,21 +5,21 @@
 //  Created by Berke Parıldar on 7.11.2024.
 //
 
-protocol HomeInteractorProtocol {
+protocol DeliverityInteractorProtocol {
     func checkSavedLocation()
     func getCurrentAddress()
 }
 
-protocol HomeInteractorOutput: AnyObject {
+protocol DeliverityInteractorOutputProtocol: AnyObject {
     func checkSavedLocationOutput(result: Bool)
     func getCurrentAddressOutput(address: Address?)
 }
 
-final class HomeInteractor {
-    var output: HomeInteractorOutput?
+final class DeliverityInteractor {
+    var output: DeliverityInteractorOutputProtocol?
 }
 
-extension HomeInteractor: HomeInteractorProtocol {
+extension DeliverityInteractor: DeliverityInteractorProtocol {
     
     func getCurrentAddress() {
         let savedAddressIndex = UserService.shared.getSavedAddressIndex()
@@ -28,6 +28,8 @@ extension HomeInteractor: HomeInteractorProtocol {
             output?.getCurrentAddressOutput(address: currentUser.addresses[savedAddressIndex])
         }
     }
+    
+    
     
     func checkSavedLocation() {
         let currentUser = UserService.shared.getCurrentUser()
@@ -38,6 +40,8 @@ extension HomeInteractor: HomeInteractorProtocol {
         if currentUser.addresses.isEmpty {
             output?.checkSavedLocationOutput(result: false)
         }
-        output?.checkSavedLocationOutput(result: true)
+        else {
+            output?.checkSavedLocationOutput(result: true)
+        }
     }
 }

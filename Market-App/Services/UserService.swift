@@ -47,7 +47,7 @@ final class UserService {
     func signInUser(email: String, password: String, completion: @escaping (Error?) -> Void) {
         firebaseService.signInUser(email: email, password: password) { [weak self] result in
             guard let self = self else { return }
-            
+            UserDefaults.standard.set(-1, forKey: "currentAddressIndex")
             switch result {
             case .success(let authDataResult):
                 self.saveUserIdToKeychain(uid: authDataResult.user.uid)
@@ -138,13 +138,18 @@ final class UserService {
                 
                 if let addresses = userData["addresses"] as? [[String: Any]] {
                     for address in addresses {
-                        let title = address["title"] as? String ?? ""
                         let addressText = address["addressText"] as? String ?? ""
                         let latitude = address["latitude"] as? Double
                         let longitude = address["longitude"] as? Double
+                        let floor = address["floor"] as? String ?? ""
+                        let apartmentNo = address["apartmentNo"] as? String ?? ""
+                        let description = address["description"] as? String ?? ""
+                        let title = address["title"] as? String ?? ""
+                        let contactName = address["contactName"] as? String ?? ""
+                        let contactSurname = address["contactSurname"] as? String ?? ""
+                        let contactPhone = address["contactPhone"] as? String ?? ""
                         if let latitude = latitude, let longitude = longitude {
-                            let userAddress = Address(title: title, addressText: addressText, latitude:
-                                    latitude, longitude: longitude)
+                            let userAddress = Address(addressText: addressText, latitude: latitude, longitude: longitude, floor: floor, apartmentNo: apartmentNo, description: description, title: title, contactName: contactName, contactSurname: contactSurname, contactPhone: contactPhone)
                             currentUser!.addresses.append(userAddress)}
                     }
                 }
@@ -193,10 +198,16 @@ final class UserService {
         currentUser!.addresses.append(address)
         let addressData = currentUser!.addresses.map { address in
             return [
-                "title": address.title,
                 "addressText": address.addressText,
                 "latitude": address.latitude,
-                "longitude": address.longitude
+                "longitude": address.longitude,
+                "floor": address.floor ?? "",
+                "apartmentNo": address.apartmentNo ?? "",
+                "description": address.description ?? "",
+                "title": address.title ?? "",
+                "contactName": address.contactName ?? "",
+                "contactSurname": address.contactSurname ?? "",
+                "contactPhone": address.contactPhone ?? ""
             ]
         }
         firebaseService.updateUserAddress(addressData: addressData) { [weak self] error in
@@ -218,10 +229,16 @@ final class UserService {
         currentUser!.addresses.remove(at: index)
         let addressData = currentUser!.addresses.map { address in
             return [
-                "title": address.title,
                 "addressText": address.addressText,
                 "latitude": address.latitude,
-                "longitude": address.longitude
+                "longitude": address.longitude,
+                "floor": address.floor ?? "",
+                "apartmentNo": address.apartmentNo ?? "",
+                "description": address.description ?? "",
+                "title": address.title ?? "",
+                "contactName": address.contactName ?? "",
+                "contactSurname": address.contactSurname ?? "",
+                "contactPhone": address.contactPhone ?? ""
             ]
         }
         firebaseService.updateUserAddress(addressData: addressData) { [weak self] error in
@@ -235,6 +252,9 @@ final class UserService {
             let currentSelectedIndex = UserDefaults.standard.integer(forKey: "currentAddressIndex")
             if currentSelectedIndex == index {
                 UserDefaults.standard.set(0, forKey: "currentAddressIndex")
+            }
+            if currentUser!.addresses.isEmpty {
+                UserDefaults.standard.set(-1, forKey: "currentAddressIndex")
             }
             return
         }

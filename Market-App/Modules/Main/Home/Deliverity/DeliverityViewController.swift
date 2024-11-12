@@ -7,15 +7,16 @@
 
 import UIKit
 
-protocol HomeViewProtocol: AnyObject {
+protocol DeliverityViewControllerProtocol: AnyObject {
     func showLoadingIndicator()
     func hideLoadingIndicator()
-    func setAddress(address: Address)
+    func setAddress(address: String)
+    func showInfoPopUp(message: String, action: @escaping () -> Void)
 }
 
-class HomeViewController: UIViewController {
+class DeliverityViewController: UIViewController {
     
-    var presenter: HomePresenterProtocol!
+    var presenter: DeliverityPresenterProtocol!
     
     private lazy var backgroundView: UIView = {
         let view = UIView()
@@ -33,7 +34,7 @@ class HomeViewController: UIViewController {
     }()
     
     private lazy var marketSectionButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "market_poster"), for: .normal)
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowOpacity = 0.1
@@ -41,12 +42,14 @@ class HomeViewController: UIViewController {
         button.layer.shadowRadius = 6
         button.layer.cornerRadius = 20
         button.imageView?.layer.cornerRadius = 20
+        button.adjustsImageWhenHighlighted = false
+        button.addTarget(self, action: #selector(marketButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private lazy var foodSectionButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "food_poster"), for: .normal)
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowOpacity = 0.1
@@ -54,6 +57,7 @@ class HomeViewController: UIViewController {
         button.layer.shadowRadius = 6
         button.layer.cornerRadius = 20
         button.imageView?.layer.cornerRadius = 20
+        button.adjustsImageWhenHighlighted = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -138,6 +142,15 @@ class HomeViewController: UIViewController {
         presenter.updateCurrentAddress()
     }
     
+    @objc private func marketButtonTapped() {
+        presenter.didTapMarketButton()
+    }
+    
+    @objc private func addressButtonTapped() {
+        presenter.didTapAddressButton()
+    }
+
+    
     private func setupViews() {
         
         view.addSubview(backgroundView)
@@ -171,14 +184,6 @@ class HomeViewController: UIViewController {
         setupAddressButtonArrowConstraints()
         setupAddressButtonLabelConstraints()
         setupLogoImageConstraints()
-    }
-    
-    @objc private func marketButtonTapped() {
-        
-    }
-    
-    @objc private func addressButtonTapped() {
-        presenter.didTapAddressButton()
     }
     
     private func setupAddressButtonConstraints() {
@@ -276,9 +281,15 @@ class HomeViewController: UIViewController {
     }
 }
 
-extension HomeViewController: HomeViewProtocol, LoadingShowable {
-    func setAddress(address: Address) {
-        addressButtonLabel.text = "\(address.title) (\(address.addressText))"
+extension DeliverityViewController: DeliverityViewControllerProtocol,
+                                        LoadingShowable,
+                                        InfoPopUpShowable {
+    func showInfoPopUp(message: String, action: @escaping () -> Void) {
+        showInfoPopUp(message: message, confirm: action)
+    }
+    
+    func setAddress(address: String) {
+        addressButtonLabel.text = address
     }
     
     func showLoadingIndicator() {

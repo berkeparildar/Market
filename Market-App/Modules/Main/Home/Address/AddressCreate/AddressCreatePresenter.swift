@@ -8,17 +8,17 @@
 import CoreLocation
 import MapKit
 
-protocol AddressAddPresenterProtocol {
+protocol AddressCreatePresenterProtocol {
     func getAddressCount() -> Int
     func getAddress(at index: Int) -> String
     func getAddressTextFromLocation(location: CLLocation)
     func getLocationFromAddressText(address: String)
     func setupMap()
     func performAddressSearch(query: String)
-    func saveAddress(addressName: String)
+    func saveAddress()
 }
 
-final class AddressAddPresenter: NSObject, AddressAddPresenterProtocol, MKLocalSearchCompleterDelegate{
+final class AddressCreatePresenter: NSObject, MKLocalSearchCompleterDelegate{
     
     var completer = MKLocalSearchCompleter()
     
@@ -27,45 +27,32 @@ final class AddressAddPresenter: NSObject, AddressAddPresenterProtocol, MKLocalS
     
     private var addressSuggestions: [MKLocalSearchCompletion] = []
     
-    unowned var view: AddressAddViewControllerProtocol!
-    private let interactor: AddressAddInteractorProtocol
-    private let router: AddressAddRouterProtocol
+    unowned var view: AddressCreateViewControllerProtocol!
+    private let router: AddressCreateRouterProtocol
     
     private var addressText: String?
     private var addressLocation: CLLocation?
     
-    init(view: AddressAddViewControllerProtocol,
-         interactor: AddressAddInteractorProtocol,
-         router: AddressAddRouterProtocol) {
+    init(view: AddressCreateViewControllerProtocol,
+         router: AddressCreateRouterProtocol) {
         self.view = view
-        self.interactor = interactor
         self.router = router
         super.init()
         completer.delegate = self
         completer.resultTypes = .address
     }
-    
-    func setupMap() {
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
-        
-        if let userLocation = locationManager.location?.coordinate {
-            view.centerMap(on: userLocation)
-        }
+
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        addressSuggestions = completer.results
+        view.updateAddressTable()
     }
     
-    func saveAddress(addressName: String) {
-        guard let addressText = addressText else {
-            view.showErrorMessage(message: "Please select an address.")
-            return
-        }
-        guard let addressLocation = addressLocation else {
-            view.showErrorMessage(message: "Please select an address.")
-            return
-        }
-        interactor.addNewAddress(addressText: addressText, adressName: addressName, latitude: addressLocation.coordinate.latitude, longitude: addressLocation.coordinate.longitude)
+    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+        view.updateAddressTable()
     }
-    
+}
+
+extension AddressCreatePresenter: AddressCreatePresenterProtocol {
     func performAddressSearch(query: String) {
         completer.queryFragment = query
     }
@@ -100,22 +87,27 @@ final class AddressAddPresenter: NSObject, AddressAddPresenterProtocol, MKLocalS
         }
     }
     
-    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        addressSuggestions = completer.results
-        view.updateAddressTable()
+    func setupMap() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+        
+        if let userLocation = locationManager.location?.coordinate {
+            view.centerMap(on: userLocation)
+        }
     }
     
-    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
-        view.updateAddressTable()
-    }
-}
-
-extension AddressAddPresenter: AddressAddInteractorOutput {
-    func addnewAddressOutput(error: (any Error)?) {
-        if let error = error {
-            view.showErrorMessage(message: error.localizedDescription)
-        } else {
-            router.navigate(to: .addressList)
+    func saveAddress() {
+        guard let addressText = addressText else {
+            view.showErrorMessage(message: "Please select an address.")
+            return
         }
+        guard let addressLocation = addressLocation else {
+            view.showErrorMessage(message: "Please select an address.")
+            return
+        }
+        let currentAddress = Address(addressText: addressText,
+                                     latitude: addressLocation.coordinate.latitude,
+                                     longitude: addressLocation.coordinate.longitude)
+        router.navigate(to: .addressSave(address: currentAddress))
     }
 }

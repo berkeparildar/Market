@@ -4,6 +4,7 @@
 //
 //  Created by Berke Parıldar on 8.11.2024.
 //
+import Foundation
 
 enum AddressSelectionRoutes {
     case addressAdd
@@ -34,8 +35,8 @@ final class AddressSelectionRouter {
 
 extension AddressSelectionRouter: AddressSelectionRouterProtocol {
     func navigate(to route: AddressSelectionRoutes) {
-        viewController?.navigationController?.pushViewController(AddressAddRouter.createModule(),
-                                                                animated: true)
+        viewController?.navigationController?
+            .pushViewController(AddressCreateRouter.createModule(), animated: true)
     }
     
     func dismissSelf() {

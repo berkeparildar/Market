@@ -46,7 +46,7 @@ extension SplashRouter: SplashRouterProtocol {
             window.rootViewController = navigationController
             break
         case .home:
-            let navigationController = HomeTabBarController()
+            let navigationController = MainTabBarController()
             window.rootViewController = navigationController
             break
         }
