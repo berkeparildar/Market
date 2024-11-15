@@ -39,6 +39,8 @@ extension DeliverityRouter: DeliverityRouterProtocol {
             let addressSelectVC = AddressSelectionRouter.createModule()
             viewController?.navigationController?.pushViewController(addressSelectVC, animated: true)
         case .market:
+            let productListingVC = ProductListingRouter.createModule()
+            viewController?.navigationController?.pushViewController(productListingVC, animated: true)
             break
         }
     }

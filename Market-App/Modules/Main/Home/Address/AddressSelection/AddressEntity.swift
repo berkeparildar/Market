@@ -17,7 +17,6 @@ class Address {
     let contactSurname: String?
     let contactPhone: String?
   
-    
     init(addressText: String,
          latitude: Double,
          longitude: Double,
@@ -39,5 +38,45 @@ class Address {
         self.contactName = contactName
         self.contactSurname = contactSurname
         self.contactPhone = contactPhone
+    }
+
+    static func from(dictionary: [String: Any]) -> Address? {
+        guard
+            let addressText = dictionary["addressText"] as? String,
+            let latitude = dictionary["latitude"] as? Double,
+            let longitude = dictionary["longitude"] as? Double
+        else {
+            return nil
+        }
+        
+        return Address(
+            addressText: addressText,
+            latitude: latitude,
+            longitude: longitude,
+            floor: dictionary["floor"] as? String,
+            apartmentNo: dictionary["apartmentNo"] as? String,
+            description: dictionary["description"] as? String,
+            title: dictionary["title"] as? String,
+            contactName: dictionary["contactName"] as? String,
+            contactSurname: dictionary["contactSurname"] as? String,
+            contactPhone: dictionary["contactPhone"] as? String
+        )
+    }
+}
+
+extension Address {
+    func toDictionary() -> [String: Any] {
+        return [
+            "addressText": addressText,
+            "latitude": latitude,
+            "longitude": longitude,
+            "floor": floor ?? "",
+            "apartmentNo": apartmentNo ?? "",
+            "description": description ?? "",
+            "title": title ?? "",
+            "contactName": contactName ?? "",
+            "contactSurname": contactSurname ?? "",
+            "contactPhone": contactPhone ?? ""
+        ]
     }
 }

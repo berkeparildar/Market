@@ -77,7 +77,7 @@ extension DeliverityPresenter: DeliverityInteractorOutputProtocol {
     
     func getCurrentAddressOutput(address: Address?) {
         currentAddress = address!
-        view.setAddress(address: "\(String(describing: address?.title!)) (\(String(describing: address?.addressText)))")
+        view.setAddress(address: "\(String(describing: address!.title!)) (\(String(describing: address!.addressText)))")
         view.hideLoadingIndicator()
     }
 }

@@ -21,7 +21,11 @@ final class UserInformationInteractor {
 
 extension UserInformationInteractor: UserInformationInteractorProtocol {
     func updateUserInformation(name: String?, phoneNumber: String?) {
-        UserService.shared.updateUserData(name: name, phoneNumber: phoneNumber) {
+        let updatedData: [String: Any?] = [
+            "name": name,
+            "phone": phoneNumber
+        ]
+        UserService.shared.updateUserData(updatedData: updatedData) {
             [weak self] error in
             guard let self = self else { return }
             output?.updateUserInformationOutput(error: error)

@@ -38,7 +38,7 @@ class SectionRedBackground: UICollectionReusableView {
 class SectionGreenBackground: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = .marketLightGreen
+        self.backgroundColor = .marketLightOrange
         self.isUserInteractionEnabled = false
     }
     
