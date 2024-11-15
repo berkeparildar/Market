@@ -10,6 +10,7 @@ protocol ProductListingPresenterProtocol: AnyObject {
     func getCategoryCount() -> Int
     func getCategory(at index: Int) -> Category
     func didChangeCart()
+    func didSelectProduct(product: Product)
 }
 
 final class ProductListingPresenter {
@@ -30,6 +31,10 @@ final class ProductListingPresenter {
 }
 
 extension ProductListingPresenter: ProductListingPresenterProtocol {
+    func didSelectProduct(product: Product) {
+        router.navigate(to: .productDetail(product: product))
+    }
+    
     func didChangeCart() {
         interactor.getCartData()
     }

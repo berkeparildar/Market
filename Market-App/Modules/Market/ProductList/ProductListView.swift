@@ -33,8 +33,6 @@ class ProductListView: UICollectionViewCell {
         return collectionView
     }()
     
-    
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .white
@@ -94,8 +92,8 @@ extension ProductListView: UICollectionViewDataSource {
 extension ProductListView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
-        presenter.didSelectProduct(at: indexPath.item)
-        print(indexPath.item)
+        presenter.getSelectProductDelegate()?
+            .didTapProduct(product: presenter.getProduct(at: indexPath.item))
     }
 }
 
@@ -106,5 +104,4 @@ extension ProductListView: ProductListViewProtocol {
             self.collectionView.reloadData()
         }
     }
-    
 }

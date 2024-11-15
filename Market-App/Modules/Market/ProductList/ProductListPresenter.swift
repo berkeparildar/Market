@@ -10,6 +10,7 @@ protocol ProductListPresenterProtocol {
     func getProduct(at index: Int) -> Product
     func didSelectProduct(at index: Int)
     func getCartButtonDelegate() -> CartButtonDelegate?
+    func getSelectProductDelegate() -> ProductSelectDelegate?
 }
 
 final class ProductListPresenter {
@@ -18,6 +19,7 @@ final class ProductListPresenter {
     private let interactor: ProductListInteractorProtocol
     
     var cartButtonDelegate: CartButtonDelegate?
+    var productSelectDelegate: ProductSelectDelegate?
     
     init(products: [Product]!, view: ProductListViewProtocol, interactor: ProductListInteractorProtocol) {
         self.products = products
@@ -28,12 +30,17 @@ final class ProductListPresenter {
 }
 
 extension ProductListPresenter: ProductListPresenterProtocol {
+    func getSelectProductDelegate() -> (any ProductSelectDelegate)? {
+        return productSelectDelegate
+    }
+    
     func getCartButtonDelegate() -> (any CartButtonDelegate)? {
         return cartButtonDelegate
     }
     
     func didSelectProduct(at index: Int) {
-        //
+        let product = getProduct(at: index)
+        
     }
     
     func getProductCount() -> Int {

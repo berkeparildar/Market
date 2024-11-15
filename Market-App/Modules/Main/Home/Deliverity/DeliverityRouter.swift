@@ -5,6 +5,8 @@
 //  Created by Berke Parıldar on 7.11.2024.
 //
 
+import UIKit
+
 enum DeliverityRoutes {
     case selectAddress
     case market
@@ -40,7 +42,9 @@ extension DeliverityRouter: DeliverityRouterProtocol {
             viewController?.navigationController?.pushViewController(addressSelectVC, animated: true)
         case .market:
             let productListingVC = ProductListingRouter.createModule()
-            viewController?.navigationController?.pushViewController(productListingVC, animated: true)
+            let marketNavControl = UINavigationController(rootViewController: productListingVC)
+            guard let window = UIApplication.shared.windows.first else { return }
+            window.rootViewController = marketNavControl
             break
         }
     }

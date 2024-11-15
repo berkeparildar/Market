@@ -7,6 +7,7 @@
 
 enum ProductListingRoutes {
     case cart
+    case productDetail(product: Product)
 }
 
 protocol ProductListingRouterProtocol {
@@ -33,6 +34,9 @@ final class ProductListingRouter {
 extension ProductListingRouter: ProductListingRouterProtocol {
     func navigate(to route: ProductListingRoutes) {
         switch route {
+        case .productDetail(let product):
+            let productDetailView = ProductDetailRouter.createModule(product: product)
+            viewController?.navigationController?.pushViewController(productDetailView, animated: true)
         case .cart:
             break
         }

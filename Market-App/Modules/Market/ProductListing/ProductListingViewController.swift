@@ -11,6 +11,9 @@ protocol CartButtonDelegate: AnyObject {
     func didChangeCart()
 }
 
+protocol ProductSelectDelegate: AnyObject {
+    func didTapProduct(product: Product)
+}
 
 protocol ProductListingViewProtocol: AnyObject {
     func reloadData()
@@ -23,8 +26,9 @@ protocol ProductListingViewProtocol: AnyObject {
 
 final class ProductListingViewController: UIViewController, LoadingShowable {
     
-    var presenter: ProductListingPresenter!
+    var presenter: ProductListingPresenterProtocol!
     var currentIndex: Int?
+    private var shouldAnimate = true
     
     private lazy var backgroundView: UIView = {
         let view = UIView()
@@ -113,7 +117,22 @@ final class ProductListingViewController: UIViewController, LoadingShowable {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        print("called")
+        reloadData()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        presenter.didChangeCart()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        shouldAnimate = false
+        hideCartButton()
+        print("called")
+    }
+        
     
     private func setupViews() {
         view.addSubview(backgroundView)
@@ -146,7 +165,7 @@ final class ProductListingViewController: UIViewController, LoadingShowable {
         
         
         cartButton.snp.makeConstraints { make in
-            make.centerX.equalTo(cartButtonView.snp.centerX).offset(160)
+            make.centerX.equalTo(cartButtonView.snp.centerX).offset(100)
             make.centerY.equalTo(cartButtonView.snp.centerY)
             make.height.equalTo(32)
         }
@@ -208,11 +227,12 @@ extension ProductListingViewController: ProductListingViewProtocol {
     }
     
     func updateCartButton(price: Double) {
+        let animationDuration = shouldAnimate ? 0.3 : 0
         cartImageBackground.snp.updateConstraints { make in
             make.trailing.equalTo(cartButton.snp.leading).offset(96)
         }
 
-        UIView.animate(withDuration: 0.3, animations: { [weak self] in
+        UIView.animate(withDuration: animationDuration, animations: { [weak self] in
             guard let self = self else { return }
             self.cartImageBackground.superview?.layoutIfNeeded()
         }, completion: { [weak self] _ in
@@ -224,8 +244,12 @@ extension ProductListingViewController: ProductListingViewProtocol {
                 make.trailing.equalTo(self.cartButton.snp.leading).offset(32)
             }
             
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: animationDuration) {
                 self.cartImageBackground.superview?.layoutIfNeeded()
+            }
+            
+            if !shouldAnimate {
+                shouldAnimate = true
             }
         })
     }
@@ -277,6 +301,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
         
         productListView.presenter = productListPresenter
         productListPresenter.cartButtonDelegate = self
+        productListPresenter.productSelectDelegate = self
         productListInteractor.output = productListPresenter
         
         return productListView
@@ -337,5 +362,11 @@ extension ProductListingViewController: UICollectionViewDelegate {
 extension ProductListingViewController: CartButtonDelegate {
     func didChangeCart() {
         presenter.didChangeCart()
+    }
+}
+
+extension ProductListingViewController: ProductSelectDelegate {
+    func didTapProduct(product: Product) {
+        presenter.didSelectProduct(product: product)
     }
 }

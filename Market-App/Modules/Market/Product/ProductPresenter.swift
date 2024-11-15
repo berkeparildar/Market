@@ -33,7 +33,6 @@ extension ProductPresenter: ProductPresenterProtocol {
     
     func didTapIncrementButton() {
         interactor.addProductToCart(product: product)
-
     }
     
     func didTapDecrementButton() {
