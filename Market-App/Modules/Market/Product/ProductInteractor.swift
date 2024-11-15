@@ -13,6 +13,7 @@ protocol ProductInteractorProtocol: AnyObject {
 
 protocol ProductInteractorOutputProtocol: AnyObject {
     func getProductCountInCartOutput(result: Int)
+    func didChangeCartOutput()
 }
 
 final class ProductInteractor {
@@ -29,11 +30,13 @@ extension ProductInteractor: ProductInteractorProtocol {
         MarketCartService.shared.addProductToCart(product: product)
         output?.getProductCountInCartOutput(
             result: MarketCartService.shared.getProductQuantity(product: product))
+        output?.didChangeCartOutput()
     }
     
     func removeProductFromCart(product: Product) {
         MarketCartService.shared.removeProductFromCart(product: product)
         output?.getProductCountInCartOutput(
             result: MarketCartService.shared.getProductQuantity(product: product))
+        output?.didChangeCartOutput()
     }
 }

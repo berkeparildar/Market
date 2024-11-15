@@ -273,19 +273,6 @@ extension ProductView: ProductViewProtocol {
         nameLabel.text = product.name
         priceLabel.text = product.productPriceText
         attributeLabel.text = product.description
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-        // Reset product-related data
-        nameLabel.text = ""
-        priceLabel.text = ""
-        attributeLabel.text = ""
-        
-        // Reset quantity and stepper view
-        quantityLabel.text = "0"
-        hideStepper()
-        setDecrementIcon(systemName: "trash")
+        presenter.getProductCount()
     }
 }

@@ -79,13 +79,14 @@ extension ProductListView: UICollectionViewDataSource {
             withReuseIdentifier: ProductView.identifier, for: indexPath) as! ProductView
         let product = presenter.getProduct(at: indexPath.item)
         let productInteractor = ProductInteractor()
+        print(product)
         let productPresenter = ProductPresenter(interactor: productInteractor,
                                                 view: productView,
                                                 product: product)
         productInteractor.output = productPresenter
         productView.presenter = productPresenter
         productPresenter.cartButtonDelegate = presenter.getCartButtonDelegate()
-        
+        productView.configure(product: product)
         return productView
     }
 }

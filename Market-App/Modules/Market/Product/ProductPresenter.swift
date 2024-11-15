@@ -8,6 +8,7 @@
 protocol ProductPresenterProtocol: AnyObject {
     func didTapIncrementButton()
     func didTapDecrementButton()
+    func getProductCount()
 }
 
 final class ProductPresenter {
@@ -26,18 +27,27 @@ final class ProductPresenter {
 }
 
 extension ProductPresenter: ProductPresenterProtocol {
+    func getProductCount() {
+        interactor.getProductCountInCart(product: product)
+    }
+    
     func didTapIncrementButton() {
         interactor.addProductToCart(product: product)
+
     }
     
     func didTapDecrementButton() {
         interactor.removeProductFromCart(product: product)
+
     }
 }
 
 extension ProductPresenter: ProductInteractorOutputProtocol {
+    func didChangeCartOutput() {
+        cartButtonDelegate?.didChangeCart()
+    }
+    
     func getProductCountInCartOutput(result: Int) {
         view.updateProductQuantity(quantity: result)
-        cartButtonDelegate?.didChangeCart()
     }
 }
