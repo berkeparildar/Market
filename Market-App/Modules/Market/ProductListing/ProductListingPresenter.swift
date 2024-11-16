@@ -12,6 +12,7 @@ protocol ProductListingPresenterProtocol: AnyObject {
     func didChangeCart()
     func didSelectProduct(product: Product)
     func didTapCartButton()
+    func didTapBackButton()
 }
 
 final class ProductListingPresenter {
@@ -32,6 +33,10 @@ final class ProductListingPresenter {
 }
 
 extension ProductListingPresenter: ProductListingPresenterProtocol {
+    func didTapBackButton() {
+        router.navigate(to: .home)
+    }
+    
     func didTapCartButton() {
         router.navigate(to: .cart)
     }
@@ -72,6 +77,7 @@ extension ProductListingPresenter: ProductListingInteractorOutputProtocol {
     func getProductsOutput(result: [Category]) {
         self.categories = result
         view.reloadData()
+        view.hideLoadingView()
     }
 }
 

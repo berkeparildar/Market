@@ -106,6 +106,17 @@ final class ProductListingViewController: UIViewController, LoadingShowable {
         label.isUserInteractionEnabled = false
         return label
     }()
+
+    private lazy var backButton: UIBarButtonItem = {
+        var image = UIImage(systemName: "xmark")
+        image = image?.applyingSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 14,
+                                                                               weight: .bold))
+        let button = UIBarButtonItem(image: image,
+                                     style: .plain,
+                                     target: self,
+                                     action: #selector(backButtonTapped))
+        return button
+    }()
 }
 
 // MARK: - VIEW SETUP
@@ -113,6 +124,7 @@ extension ProductListingViewController {
     private func setupViews() {
         view.addSubview(backgroundView)
         view.addSubview(collectionView)
+        navigationItem.leftBarButtonItem = backButton
     }
     
     private func setupConstraints() {
@@ -147,12 +159,18 @@ extension ProductListingViewController {
     @objc private func cartButtonTapped() {
         presenter.didTapCartButton()
     }
+    
+    @objc func backButtonTapped() {
+        showLoading()
+        presenter.didTapBackButton()
+    }
 }
 
 // MARK: - VIEW CYCLES
 extension ProductListingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        showLoadingView()
         title = "Market"
         view.backgroundColor = .marketYellow
         navigationController?.navigationBar.barTintColor = .marketYellow
@@ -221,7 +239,7 @@ extension ProductListingViewController {
         }
     }
 }
-    
+
 // MARK: - PROTOCOL METHODS
 extension ProductListingViewController: ProductListingViewProtocol {
     func showCartButton() {

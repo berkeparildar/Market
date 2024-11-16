@@ -5,9 +5,12 @@
 //  Created by Berke Parıldar on 13.11.2024.
 //
 
+import UIKit
+
 enum ProductListingRoutes {
     case cart
     case productDetail(product: Product)
+    case home
 }
 
 protocol ProductListingRouterProtocol {
@@ -40,6 +43,10 @@ extension ProductListingRouter: ProductListingRouterProtocol {
         case .cart:
             let cartView = MarketCartRouter.createModule()
             viewController?.navigationController?.pushViewController(cartView, animated: true)
+        case .home:
+            guard let window = UIApplication.shared.windows.first else { return }
+            let homeTabBar = MainTabBarController()
+            window.rootViewController = homeTabBar
         }
     }
 }
