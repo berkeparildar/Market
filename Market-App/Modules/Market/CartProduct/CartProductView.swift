@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 protocol CartProductViewProtocol: AnyObject {
     func updateProductQuantity(quantity: Int)
@@ -16,6 +17,8 @@ class CartProductView: UICollectionViewCell {
     
     static let identifier = "CartCell"
     var presenter: CartProductPresenterProtocol!
+    
+    let processor = ResizingImageProcessor(referenceSize: CGSize(width: 100, height: 100))
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -308,7 +311,22 @@ extension CartProductView: CartProductViewProtocol {
         nameLabel.text = product.product.name
         attributeLabel.text = product.product.description
         priceLabel.text = product.product.productPriceText
-        productImage.kf.setImage(with: URL(string: product.product.imageURL))
+        productImage.kf.setImage(with: URL(string: product.product.imageURL),
+                                  placeholder: UIImage(named: "placeholder"),
+                                  options: [
+                                      .processor(processor),
+                                      .scaleFactor(UIScreen.main.scale),
+                                      .cacheOriginalImage
+                                  ]) { [weak productImage] result in
+                                      switch result {
+                                      case .success(_):
+                                          productImage?.hideSkeleton()
+                                          break
+                                      case .failure(_):
+                                          productImage?.hideSkeleton()
+                                          break
+                                      }
+                                  }
         quantityLabel.text = "\(product.quantity)"
         let imageName = product.quantity > 0 ? "minus" : "trash"
         setDecrementIcon(systemName: imageName)

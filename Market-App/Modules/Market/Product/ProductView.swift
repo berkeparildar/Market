@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 import Kingfisher
 
 protocol ProductViewProtocol: AnyObject {
@@ -17,6 +18,8 @@ final class ProductView: UICollectionViewCell {
     static let identifier: String = "ProductCell"
   
     var presenter: ProductPresenterProtocol!
+    
+    let processor = ResizingImageProcessor(referenceSize: CGSize(width: 100, height: 100))
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -275,7 +278,24 @@ extension ProductView: ProductViewProtocol {
     }
     
     func configure(product: Product) {
-        iconImageView.kf.setImage(with: URL(string: "https://picsum.photos/200"))
+        iconImageView.isSkeletonable = true
+        iconImageView.showSkeleton(usingColor: .systemGray5)
+        iconImageView.kf.setImage(with: URL(string: product.imageURL),
+                                  placeholder: UIImage(named: "placeholder"),
+                                  options: [
+                                      .processor(processor),
+                                      .scaleFactor(UIScreen.main.scale),
+                                      .cacheOriginalImage
+                                  ]) { [weak iconImageView] result in
+                                      switch result {
+                                      case .success(_):
+                                          iconImageView?.hideSkeleton()
+                                          break
+                                      case .failure(_):
+                                          iconImageView?.hideSkeleton()
+                                          break
+                                      }
+                                  }
         nameLabel.text = product.name
         priceLabel.text = product.productPriceText
         attributeLabel.text = product.description

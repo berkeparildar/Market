@@ -108,6 +108,7 @@
 		62C5E63F2CD5A31C00CF4AC3 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 62C5E63E2CD5A31C00CF4AC3 /* KeychainAccess */; };
 		62C5E6412CD5A69300CF4AC3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 62C5E6402CD5A69300CF4AC3 /* GoogleService-Info.plist */; };
 		62D767042BC72D360070A83F /* SectionDecorations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D767032BC72D360070A83F /* SectionDecorations.swift */; };
+		62F183322CE905D500C6FA99 /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = 62F183312CE905D500C6FA99 /* SkeletonView */; };
 		62F990042BD31D0D00E76608 /* ProductService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F990032BD31D0D00E76608 /* ProductService.swift */; };
 /* End PBXBuildFile section */
 
@@ -223,6 +224,7 @@
 				62A5986D2CD2D12B00BA4879 /* Kingfisher in Frameworks */,
 				62A598682CD2C6EA00BA4879 /* SnapKit in Frameworks */,
 				62030FFB2CD6CA6D00B0F39B /* MarketFirebaseService in Frameworks */,
+				62F183322CE905D500C6FA99 /* SkeletonView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -636,6 +638,7 @@
 				62A5986C2CD2D12B00BA4879 /* Kingfisher */,
 				62C5E63E2CD5A31C00CF4AC3 /* KeychainAccess */,
 				62030FFA2CD6CA6D00B0F39B /* MarketFirebaseService */,
+				62F183312CE905D500C6FA99 /* SkeletonView */,
 			);
 			productName = "Getir-Final-Case";
 			productReference = 62BD93232BC47E78007E122C /* Market.app */;
@@ -670,6 +673,7 @@
 				62A5986B2CD2D12B00BA4879 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				62A1EF592CD59E1600642FAA /* XCLocalSwiftPackageReference "MarketFirebaseService" */,
 				62C5E63D2CD5A31C00CF4AC3 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				62F183302CE905D500C6FA99 /* XCRemoteSwiftPackageReference "SkeletonView" */,
 			);
 			productRefGroup = 62BD93242BC47E78007E122C /* Products */;
 			projectDirPath = "";
@@ -1041,6 +1045,14 @@
 				kind = branch;
 			};
 		};
+		62F183302CE905D500C6FA99 /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Juanpe/SkeletonView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.31.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1062,6 +1074,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 62C5E63D2CD5A31C00CF4AC3 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
 			productName = KeychainAccess;
+		};
+		62F183312CE905D500C6FA99 /* SkeletonView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 62F183302CE905D500C6FA99 /* XCRemoteSwiftPackageReference "SkeletonView" */;
+			productName = SkeletonView;
 		};
 /* End XCSwiftPackageProductDependency section */
 

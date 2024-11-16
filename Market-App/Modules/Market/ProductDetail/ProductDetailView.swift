@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 protocol ProductDetailViewProtocol: AnyObject {
     func updateCartButton(price: Double)
@@ -19,6 +20,8 @@ class ProductDetailView: UIViewController {
     
     var presenter: ProductDetailPresenterProtocol!
     
+    let processor = ResizingImageProcessor(referenceSize: CGSize(width: 100, height: 100))
+
     private lazy var backgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -476,7 +479,24 @@ extension ProductDetailView: ProductDetailViewProtocol {
         self.priceLabel.text = product.productPriceText
         self.nameLabel.text = product.name
         self.attributeLabel.text = product.description
-        self.productImage.kf.setImage(with: URL(string: "https://picsum.photos/200"))
+        productImage.isSkeletonable = true
+        productImage.showSkeleton(usingColor: .systemGray5)
+        productImage.kf.setImage(with: URL(string: product.imageURL),
+                                  placeholder: UIImage(named: "placeholder"),
+                                  options: [
+                                      .processor(processor),
+                                      .scaleFactor(UIScreen.main.scale),
+                                      .cacheOriginalImage
+                                  ]) { [weak productImage] result in
+                                      switch result {
+                                      case .success(_):
+                                          productImage?.hideSkeleton()
+                                          break
+                                      case .failure(_):
+                                          productImage?.hideSkeleton()
+                                          break
+                                      }
+                                  }
     }
 }
 

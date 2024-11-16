@@ -6,12 +6,15 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class SuggestedProductView: UICollectionViewCell {
     static let identifier: String = "SuggestedProductCell"
     
     var cartUpdateDelegate: CartUpdateDelegate?
     var product: Product?
+    
+    let processor = ResizingImageProcessor(referenceSize: CGSize(width: 100, height: 100))
       
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -174,7 +177,25 @@ extension SuggestedProductView {
     
     func configure(product: Product) {
         self.product = product
-        iconImageView.kf.setImage(with: URL(string: "https://picsum.photos/200"))
+        iconImageView.isSkeletonable = true
+        iconImageView.showSkeleton(usingColor: .systemGray5)
+        iconImageView.kf.setImage(with: URL(string: product.imageURL),
+                                  placeholder: UIImage(named: "placeholder"),
+                                  options: [
+                                      .processor(processor),
+                                      .scaleFactor(UIScreen.main.scale),
+                                      .cacheOriginalImage
+                                  ]) { [weak iconImageView] result in
+                                      switch result {
+                                      case .success(_):
+                                          iconImageView?.hideSkeleton()
+                                          break
+                                      case .failure(_):
+                                          iconImageView?.hideSkeleton()
+                                          break
+                                      }
+                                  }
+        
         nameLabel.text = product.name
         priceLabel.text = product.productPriceText
         attributeLabel.text = product.description
