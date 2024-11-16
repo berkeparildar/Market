@@ -29,8 +29,6 @@ extension DeliverityInteractor: DeliverityInteractorProtocol {
         }
     }
     
-    
-    
     func checkSavedLocation() {
         let currentUser = UserService.shared.getCurrentUser()
         guard let currentUser = currentUser else {

@@ -11,7 +11,12 @@ import Foundation
 
 final class UserService {
     
-    private let firebaseService: FirebaseService!
+    private let firebaseUserService: FirebaseUserService!
+    private let firebaseAuthService: FirebaseAuthService!
+    
+    private let userError = NSError(domain: "", code: -1,
+                                    userInfo: [NSLocalizedDescriptionKey: "No user logged in"])
+    
     
     private let keychain = Keychain(service: "com.bprldr.Market-App")
     
@@ -20,7 +25,8 @@ final class UserService {
     var currentUser: User?
     
     private init() {
-        firebaseService = FirebaseService()
+        firebaseUserService = FirebaseUserService()
+        firebaseAuthService = FirebaseAuthService()
     }
     
     // MARK: - KEYCHAIN OPERATIONS
@@ -45,19 +51,20 @@ final class UserService {
     
     // MARK: - SIGN IN - SIGN UP - SIGN OUT OPERATIONS
     func signInUser(email: String, password: String, completion: @escaping (Error?) -> Void) {
-        firebaseService.signInUser(email: email, password: password) { [weak self] result in
+        firebaseAuthService.signInUser(email: email,
+                                               password: password) { [weak self] result in
             guard let self = self else { return }
-            UserDefaults.standard.set(-1, forKey: "currentAddressIndex")
             switch result {
             case .success(let authDataResult):
                 self.saveUserIdToKeychain(uid: authDataResult.user.uid)
                 self.fetchUserData { error in
-                    completion(error)
+                    if let error = error {
+                        completion(error)
+                        return
+                    }
+                    completion(nil)
                     return
                 }
-                completion(nil)
-                return
-                
             case .failure(let error):
                 completion(error)
             }
@@ -65,14 +72,15 @@ final class UserService {
     }
     
     func signUpUser(email: String, password: String, completion: @escaping (Error?) -> Void) {
-        firebaseService.createUser(email: email, password: password) { [weak self] result in
+        firebaseAuthService.createUser(email: email,
+                                               password: password) { [weak self] result in
             guard let self = self else { return }
-            
             switch result {
             case .success(let authDataResult):
                 self.saveUserIdToKeychain(uid: authDataResult.user.uid)
                 self.currentUser = User(email: email)
-            
+                UserDefaults.standard.set(-1, forKey: "currentAddressIndex")
+                
             case .failure(let error):
                 completion(error)
             }
@@ -80,16 +88,18 @@ final class UserService {
     }
     
     func checkSignInInfo(completion: @escaping (Error?) -> Void) {
-        firebaseService.checkUserExists() { error in
+        firebaseAuthService.checkUserExists() { error in
             if let error = error {
                 completion(error)
             }
+
             
-            self.fetchUserData { error in
+            self.fetchUserData {  [weak self] error in
+                guard let self = self else { return }
                 if let error {
                     completion(error)
                 }
-                
+                currentUser!.verifiedEmail = firebaseAuthService.checkUserEmailVerified()
                 completion(nil)
                 return
             }
@@ -97,7 +107,7 @@ final class UserService {
     }
     
     func signOutUser(completion: @escaping (Error?) -> Void) {
-        firebaseService.signOutUser() { [weak self] error in
+        firebaseAuthService.signOutUser() { [weak self] error in
             guard let self = self else { return }
             if let error = error {
                 completion(error)
@@ -114,43 +124,30 @@ final class UserService {
             }
         }
     }
-
+    
     //MARK: - USER DATA OPERATIONS
     func fetchUserData(completion: @escaping (Error?) -> Void) {
-        firebaseService.fetchUserData() { [weak self] result in
+        guard let uid = firebaseAuthService.getAuthUser()?.uid else {
+            completion(userError);
+            return
+        }
+        firebaseUserService.fetchUserData(uid: uid) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let userData):
-                let email = userData["email"] as! String
+                let email = userData["email"] as? String ?? ""
                 currentUser = User(email: email)
-                
-                if let name = userData["name"] as? String {
-                    currentUser!.name = name
-                }
-                
-                if let phoneNumber = userData["phone"] as? String {
-                    currentUser!.phoneNumber = phoneNumber
-                }
-                
-                if let verifiedEmail = userData["verifiedEmail"] as? Bool {
-                    currentUser!.verifiedEmail = verifiedEmail
-                }
+                currentUser?.updateProperties(from: userData)
+                currentUser!.verifiedEmail = firebaseAuthService.checkUserEmailVerified()
                 
                 if let addresses = userData["addresses"] as? [[String: Any]] {
-                    for address in addresses {
-                        let addressText = address["addressText"] as? String ?? ""
-                        let latitude = address["latitude"] as? Double
-                        let longitude = address["longitude"] as? Double
-                        let floor = address["floor"] as? String ?? ""
-                        let apartmentNo = address["apartmentNo"] as? String ?? ""
-                        let description = address["description"] as? String ?? ""
-                        let title = address["title"] as? String ?? ""
-                        let contactName = address["contactName"] as? String ?? ""
-                        let contactSurname = address["contactSurname"] as? String ?? ""
-                        let contactPhone = address["contactPhone"] as? String ?? ""
-                        if let latitude = latitude, let longitude = longitude {
-                            let userAddress = Address(addressText: addressText, latitude: latitude, longitude: longitude, floor: floor, apartmentNo: apartmentNo, description: description, title: title, contactName: contactName, contactSurname: contactSurname, contactPhone: contactPhone)
-                            currentUser!.addresses.append(userAddress)}
+                    if addresses.isEmpty {
+                        UserDefaults.standard.set(-1, forKey: "currentAddressIndex")
+                    } else {
+                        UserDefaults.standard.set(0, forKey: "currentAddressIndex")
+                    }
+                    currentUser?.addresses = addresses.compactMap { addressDict in
+                        return Address.from(dictionary: addressDict)
                     }
                 }
                 
@@ -161,29 +158,27 @@ final class UserService {
         }
     }
     
-    func updateUserData(name: String?,
-                        phoneNumber: String?,
+    func updateUserData(updatedData: [String: Any?],
                         completion: @escaping (Error?) -> Void) {
-        
-        let updatedData: [String: Any?] = [
-            "name": name,
-            "phone": phoneNumber
-        ]
+        guard let uid = firebaseAuthService.getAuthUser()?.uid else {
+            completion(userError);
+            return
+        }
         
         let filteredUserData = updatedData.compactMapValues { $0 }
         
-        firebaseService.updateUserData(userData: filteredUserData) { [weak self] error in
-            guard let self = self else { return }
-            if let error = error {
-                completion(error)
+        firebaseUserService.updateUserData(
+            uid: uid,
+            userData: filteredUserData) { [weak self] error in
+                guard let self = self else { return }
+                if let error = error {
+                    completion(error)
+                    return
+                }
+                completion(nil)
+                currentUser!.updateProperties(from: filteredUserData)
                 return
             }
-            
-            completion(nil)
-            currentUser!.name = name ?? ""
-            currentUser!.phoneNumber = phoneNumber ?? ""
-            return
-        }
     }
     
     func getCurrentUser() -> User? {
@@ -195,82 +190,81 @@ final class UserService {
     }
     
     func addAddress(address: Address, completion: @escaping (Error?) -> Void) {
-        currentUser!.addresses.append(address)
-        let addressData = currentUser!.addresses.map { address in
-            return [
-                "addressText": address.addressText,
-                "latitude": address.latitude,
-                "longitude": address.longitude,
-                "floor": address.floor ?? "",
-                "apartmentNo": address.apartmentNo ?? "",
-                "description": address.description ?? "",
-                "title": address.title ?? "",
-                "contactName": address.contactName ?? "",
-                "contactSurname": address.contactSurname ?? "",
-                "contactPhone": address.contactPhone ?? ""
-            ]
-        }
-        firebaseService.updateUserAddress(addressData: addressData) { [weak self] error in
-            guard let self = self else { return }
-            if let error = error {
-                completion(error)
-                currentUser!.addresses.removeLast()
-                return
-            }
-            completion(nil)
-            UserDefaults.standard.set(currentUser!.addresses.count - 1,
-                                      forKey: "currentAddressIndex")
+        guard let uid = firebaseAuthService.getAuthUser()?.uid else {
+            completion(userError);
             return
         }
+        
+        currentUser!.addresses.append(address)
+        let addressData = currentUser!.addresses.map { address in
+            return address.toDictionary()
+        }
+        firebaseUserService.updateUserAddress(
+            uid: uid,
+            addressData: addressData) { [weak self] error in
+                guard let self = self else { return }
+                if let error = error {
+                    completion(error)
+                    currentUser!.addresses.removeLast()
+                    return
+                }
+                completion(nil)
+                UserDefaults.standard.set(currentUser!.addresses.count - 1,
+                                          forKey: "currentAddressIndex")
+                return
+            }
     }
     
     func deleteAddress(at index: Int, completion: @escaping (Error?) -> Void) {
+        guard let uid = firebaseAuthService.getAuthUser()?.uid else {
+            completion(userError);
+            return
+        }
+        
         let address = currentUser!.addresses[index]
         currentUser!.addresses.remove(at: index)
         let addressData = currentUser!.addresses.map { address in
-            return [
-                "addressText": address.addressText,
-                "latitude": address.latitude,
-                "longitude": address.longitude,
-                "floor": address.floor ?? "",
-                "apartmentNo": address.apartmentNo ?? "",
-                "description": address.description ?? "",
-                "title": address.title ?? "",
-                "contactName": address.contactName ?? "",
-                "contactSurname": address.contactSurname ?? "",
-                "contactPhone": address.contactPhone ?? ""
-            ]
+            return address.toDictionary()
         }
-        firebaseService.updateUserAddress(addressData: addressData) { [weak self] error in
-            guard let self = self else { return }
-            if let error = error {
-                completion(error)
-                currentUser!.addresses.insert(address, at: index)
+        firebaseUserService.updateUserAddress(
+            uid: uid,
+            addressData: addressData) { [weak self] error in
+                guard let self = self else { return }
+                if let error = error {
+                    completion(error)
+                    currentUser!.addresses.insert(address, at: index)
+                    return
+                }
+                completion(nil)
+                let currentSelectedIndex = UserDefaults.standard.integer(forKey: "currentAddressIndex")
+                if currentSelectedIndex == index {
+                    UserDefaults.standard.set(0, forKey: "currentAddressIndex")
+                }
+                if currentUser!.addresses.isEmpty {
+                    UserDefaults.standard.set(-1, forKey: "currentAddressIndex")
+                }
                 return
             }
-            completion(nil)
-            let currentSelectedIndex = UserDefaults.standard.integer(forKey: "currentAddressIndex")
-            if currentSelectedIndex == index {
-                UserDefaults.standard.set(0, forKey: "currentAddressIndex")
-            }
-            if currentUser!.addresses.isEmpty {
-                UserDefaults.standard.set(-1, forKey: "currentAddressIndex")
-            }
-            return
-        }
     }
     
     // MARK: - AUTHENTICATION DATA UPDATE OPERATIONS
     func updateUserEmail(newMail: String, completion: @escaping (Error?) -> Void) {
-        firebaseService.changeUserEmail(newEmail: newMail) { [weak self] error in
+        firebaseAuthService.changeUserEmail(newEmail: newMail) { [weak self] error in
             guard let self = self else { return }
             if let error = error {
                 completion(error)
                 return
             } else {
-                currentUser!.email = newMail
-                completion(nil)
-                return
+                updateUserData(updatedData: ["email": newMail]) { [weak self] error in
+                    guard let self = self else { return }
+                    if let error = error {
+                        completion(error)
+                        return
+                    }
+                    currentUser!.email = newMail
+                    completion(nil)
+                    return
+                }
             }
         }
     }
@@ -280,15 +274,15 @@ final class UserService {
                             completion: @escaping (Error?) -> Void) {
         
         let email = currentUser!.email
-        firebaseService.changeUserPassword(currentEmail: email,
-                                           currentPassword: oldPassword,
-                                           newPassword: newPassword) { [weak self] error in
+        firebaseAuthService.changeUserPassword(currentEmail: email,
+                                                       currentPassword: oldPassword,
+                                                       newPassword: newPassword) { [weak self] error in
             guard let self = self else { return }
             if let error = error {
                 completion(error)
                 return
             }
-            firebaseService.signOutUser { signOutError in
+            firebaseAuthService.signOutUser { signOutError in
                 if let signOutError = signOutError {
                     completion(signOutError)
                 }

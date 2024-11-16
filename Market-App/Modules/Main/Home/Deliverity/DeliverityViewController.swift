@@ -137,22 +137,12 @@ class DeliverityViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        tabBarController?.tabBar.isHidden = false
         super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
         presenter.updateCurrentAddress()
     }
     
-    @objc private func marketButtonTapped() {
-        presenter.didTapMarketButton()
-    }
-    
-    @objc private func addressButtonTapped() {
-        presenter.didTapAddressButton()
-    }
-
-    
     private func setupViews() {
-        
         view.addSubview(backgroundView)
         view.addSubview(foregroundView)
         view.addSubview(logoImage)
@@ -278,6 +268,16 @@ class DeliverityViewController: UIViewController {
             make.width.equalTo(logoImage.snp.height).multipliedBy(1)
             make.centerX.equalToSuperview()
         }
+    }
+}
+
+extension DeliverityViewController {
+    @objc private func marketButtonTapped() {
+        presenter.didTapMarketButton()
+    }
+    
+    @objc private func addressButtonTapped() {
+        presenter.didTapAddressButton()
     }
 }
 

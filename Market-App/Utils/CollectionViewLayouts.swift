@@ -19,16 +19,21 @@ struct CollectionViewLayoutStyle {
     var headerSize: NSCollectionLayoutSize
     var backgroundElementKind: String
     var scrollingBehavior: UICollectionLayoutSectionOrthogonalScrollingBehavior
+    
     func createSection() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let group = groupCount != 0 ? NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: groupCount) : NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        let group = groupCount != 0 ? NSCollectionLayoutGroup.horizontal(
+            layoutSize: groupSize, subitem: item, count: groupCount) : NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
         group.interItemSpacing = interItemSpacing
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = interGroupSpacing
         section.contentInsets = sectionInset
 
-        let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: backgroundElementKind)
+        let sectionBackground = NSCollectionLayoutDecorationItem.background(
+            elementKind: backgroundElementKind)
         section.decorationItems = [sectionBackground]
 
         if hasHeader {
@@ -90,8 +95,8 @@ struct CollectionViewLayoutStyle {
         interGroupSpacing: 0,
 
         sectionInset: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0),
-        hasHeader: false,
-        headerSize: NSCollectionLayoutSize(widthDimension: .absolute(16), heightDimension: .absolute(16)),
+        hasHeader: true,
+        headerSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(48)),
         backgroundElementKind: "background-element-kind",
         scrollingBehavior: .none
     ).createSection()
