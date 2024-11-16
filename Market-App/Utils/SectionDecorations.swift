@@ -7,12 +7,6 @@
 
 import UIKit
 
-/*
- These two classes are used by the CollectionViews in the Product Listing and Cart page.
- Section background is used for the background for sections, SectionHeaderSuggestedProduct is used in the Cart Page's
- Suggested Products' header.
- */
-
 class SectionBackground: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -47,31 +41,31 @@ class SectionGreenBackground: UICollectionReusableView {
     }
 }
 
-class SectionHeaderSuggestedProduct: UICollectionReusableView {
+class MarketCartHeaderView: UICollectionReusableView {
     
     var title: UILabel!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = .marketLightGray
+        self.backgroundColor = .marketLightOrange
         self.isUserInteractionEnabled = false
-        configureUILabel()
-    }
-    
-    func configureUILabel() {
         title = UILabel()
-        title.text = "Suggested Products"
         title.font = .boldSystemFont(ofSize: 14)
-        title.textColor = .marketGreen
-        title.backgroundColor = .marketLightGray
-        addSubview(title)
+        title.textColor = .marketOrange
+        title.backgroundColor = .clear
         title.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(title)
         NSLayoutConstraint.activate([
             title.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
             title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 12),
             title.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12),
             title.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -12)
         ])
+    }
+    
+    func configureUILabel(titleText: String, backgroundColor: UIColor) {
+        title.text = titleText
+        self.backgroundColor = backgroundColor
     }
     
     required init?(coder: NSCoder) {

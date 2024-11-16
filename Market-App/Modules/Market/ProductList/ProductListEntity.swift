@@ -8,28 +8,32 @@
 class Category {
     let name: String
     let products: [Product]
+    let id: Int
     
-    init(name: String, products: [Product]) {
+    init(name: String, products: [Product], id: Int) {
         self.name = name
         self.products = products
+        self.id = id
     }
     
     static func from(dictionary: [String: Any]) -> Category? {
         guard
             let name = dictionary["name"] as? String,
-            let products = dictionary["products"] as? [[String: Any]]
+            let products = dictionary["products"] as? [[String: Any]],
+            let id = dictionary["id"] as? Int
         else {
             return nil
         }
         var productArray: [Product] = []
         for product in products {
             guard let product = Product.from(dictionary: product) else {
-                return Category(name: name, products: [])
+                print("Unable to parse product dictionary: \(product)")
+                return Category(name: name, products: [], id: 0)
             }
             productArray.append(product)
         }
         
-        return Category(name: name, products: productArray)
+        return Category(name: name, products: productArray, id: id)
     }
 }
 

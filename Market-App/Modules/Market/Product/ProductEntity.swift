@@ -12,16 +12,28 @@ struct Product {
     let productPrice: Double
     let productPriceText: String
     var imageURL: String
+    let categoryID: Int
     
     static func from(dictionary: [String: Any]) -> Product? {
-        guard
-            let id = dictionary["id"] as? Int,
-            let name = dictionary["name"] as? String,
-            let description = dictionary["description"] as? String,
-            let productPrice = dictionary["price"] as? Double,
-            let productPriceText = dictionary["priceText"] as? String,
-            let image = dictionary["image"] as? String
-        else {
+        guard let id = dictionary["id"] as? Int else {
+            return nil
+        }
+        guard let name = dictionary["name"] as? String else {
+            return nil
+        }
+        guard let description = dictionary["description"] as? String else {
+            return nil
+        }
+        guard let productPrice = dictionary["price"] as? Double else {
+            return nil
+        }
+        guard let productPriceText = dictionary["priceText"] as? String else {
+            return nil
+        }
+        guard let image = dictionary["image"] as? String else {
+            return nil
+        }
+        guard let categoryID = dictionary["categoryID"] as? Int else {
             return nil
         }
         return Product(id: id,
@@ -29,6 +41,7 @@ struct Product {
                        description: description,
                        productPrice: productPrice,
                        productPriceText: productPriceText,
-                       imageURL: image)
+                       imageURL: image,
+                       categoryID: categoryID)
     }
 }

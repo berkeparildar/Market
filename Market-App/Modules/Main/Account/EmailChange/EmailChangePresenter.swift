@@ -71,7 +71,6 @@ extension EmailChangePresenter: EmailChangePresenterProtocol {
 extension EmailChangePresenter: EmailChangeInteractorOutputProtocol {
     func getEmailVerifiedStatusOutput(result: Bool) {
         if !result {
-            print("showing message")
             view.showMessage(
                 message: "Please verify your e-mail before changing it."){ [weak self] in
                     guard let self = self else { return }

@@ -23,7 +23,6 @@ final class MarketCartService {
     }
     
     func removeProductFromCart(product: Product) {
-        print(productsInCart.count)
         if let product = productsInCart.first(where: { $0.product.id == product.id }) {
             if product.quantity > 1 {
                 product.quantity -= 1

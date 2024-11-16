@@ -41,9 +41,13 @@ extension DeliverityRouter: DeliverityRouterProtocol {
             let addressSelectVC = AddressSelectionRouter.createModule()
             viewController?.navigationController?.pushViewController(addressSelectVC, animated: true)
         case .market:
+            guard let window = viewController?.view.window else { return }
             let productListingVC = ProductListingRouter.createModule()
             let marketNavControl = UINavigationController(rootViewController: productListingVC)
-            guard let window = UIApplication.shared.windows.first else { return }
+            marketNavControl.navigationBar.tintColor = .marketYellow
+            marketNavControl.navigationBar.backgroundColor = .marketYellow
+            marketNavControl.navigationBar.barTintColor = .marketYellow
+            marketNavControl.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
             window.rootViewController = marketNavControl
             break
         }

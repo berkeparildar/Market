@@ -25,6 +25,7 @@ final class ProductService {
             case .success(let categories):
                 for category in categories {
                     let fetchedCategory = Category.from(dictionary: category)
+                    print(fetchedCategory?.name)
                     guard let fetchedCategory = fetchedCategory else { return }
                     self.marketCategories.append(fetchedCategory)
                 }
@@ -35,8 +36,16 @@ final class ProductService {
         }
     }
     
+    func getProductOfCategoryID(id: Int) -> [Product] {
+        return marketCategories.first(where: { $0.id == id })?.products ?? []
+    }
+    
     func getProducts() -> [Category] {
         return marketCategories
+    }
+    
+    func getProductsOfSameCategory(product: Product) -> [Product] {
+        return marketCategories.first(where: { $0.id == product.categoryID })?.products ?? []
     }
 }
 

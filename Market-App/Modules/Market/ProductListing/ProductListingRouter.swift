@@ -38,7 +38,8 @@ extension ProductListingRouter: ProductListingRouterProtocol {
             let productDetailView = ProductDetailRouter.createModule(product: product)
             viewController?.navigationController?.pushViewController(productDetailView, animated: true)
         case .cart:
-            break
+            let cartView = MarketCartRouter.createModule()
+            viewController?.navigationController?.pushViewController(cartView, animated: true)
         }
     }
 }

@@ -31,7 +31,6 @@ final class DeliverityPresenter: DeliverityPresenterProtocol {
     }
     
     func didTapMarketButton() {
-        print(hasAddress)
         if hasAddress {
             router.navigate(to: .market)
         }

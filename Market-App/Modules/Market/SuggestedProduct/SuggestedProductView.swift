@@ -1,23 +1,18 @@
 //
-//  ProductView.swift
+//  SuggestedSuggestedProductView.swift
 //  Market-App
 //
-//  Created by Berke Parıldar on 12.11.2024.
+//  Created by Berke Parıldar on 16.11.2024.
 //
 
 import UIKit
-import Kingfisher
 
-protocol ProductViewProtocol: AnyObject {
-    func configure(product: Product)
-    func updateProductQuantity(quantity: Int)
-}
-
-final class ProductView: UICollectionViewCell {
-    static let identifier: String = "ProductCell"
-  
-    var presenter: ProductPresenterProtocol!
+final class SuggestedProductView: UICollectionViewCell {
+    static let identifier: String = "SuggestedProductCell"
     
+    var cartUpdateDelegate: CartUpdateDelegate?
+    var product: Product?
+      
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -90,45 +85,16 @@ final class ProductView: UICollectionViewCell {
         return button
     }()
     
-    lazy var quantityLabel: UILabel = {
-        let label = UILabel()
-        label.font = .boldSystemFont(ofSize: 14)
-        label.backgroundColor = .marketLightGray
-        label.layer.cornerRadius = 12
-        label.layer.masksToBounds = true
-        label.textColor = .marketYellow
-        label.textAlignment = .center
-        label.text = "0"
-        label.isHidden = false
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.isUserInteractionEnabled = false
-        return label
-    }()
-    
-    lazy var decrementButton: UIButton = {
-        let button = UIButton(type: .system)
-        let config = UIImage.SymbolConfiguration(pointSize: 14, weight: .bold, scale: .default)
-        button.setPreferredSymbolConfiguration(config, forImageIn: .normal)
-        button.setImage(UIImage(systemName: "trash"), for: .normal)
-        button.tintColor = .marketYellow
-        button.backgroundColor = .white
-        button.addTarget(self, action: #selector(decrementButtonTapped), for: .touchUpInside)
-        button.isHidden = false
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
 }
 
 // MARK: - VIEW SETUP
-extension ProductView {
+extension SuggestedProductView {
     private func setupViews() {
         addSubview(iconImageView)
         addSubview(nameLabel)
         addSubview(priceLabel)
         addSubview(attributeLabel)
         addSubview(buttonContainerView)
-        buttonContainerView.addSubview(decrementButton)
-        buttonContainerView.addSubview(quantityLabel)
         buttonContainerView.addSubview(incrementButton)
     }
     
@@ -139,35 +105,6 @@ extension ProductView {
         setupAttributeLabelConstraints()
         setupButtonContainerConstraints()
         setupIncrementButtonConstraints()
-        setupQuantityLabelConstraints()
-        setupSubtractButtonConstraints()
-    }
-    
-    private func showStepper() {
-        buttonContainerView.snp.updateConstraints { make in
-            make.height.equalTo(96)
-        }
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            guard let self = self else { return }
-            self.layoutIfNeeded()
-        }
-    }
-    
-    private func hideStepper() {
-        buttonContainerView.snp.updateConstraints { make in
-            make.height.equalTo(32)
-        }
-        UIView.animate(withDuration: 0.3) {
-            self.layoutIfNeeded()
-        }
-    }
-    
-    private func setDecrementIcon(systemName: String) {
-        decrementButton.setImage(UIImage(systemName: systemName), for: .normal)
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            guard let self = self else { return }
-            self.layoutIfNeeded()
-        }
     }
     
     private func setupImageConstraints() {
@@ -215,70 +152,31 @@ extension ProductView {
         }
     }
     
-    private func setupQuantityLabelConstraints() {
-        quantityLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(buttonContainerView.snp.centerX)
-            make.centerY.equalTo(incrementButton.snp.centerY).offset(32)
-            make.width.height.equalTo(24)
-        }
-    }
-    
-    private func setupSubtractButtonConstraints() {
-        decrementButton.snp.makeConstraints { make in
-            make.centerX.equalTo(buttonContainerView.snp.centerX)
-            make.centerY.equalTo(incrementButton.snp.centerY).offset(64)
-            make.width.height.equalTo(32)
-        }
-    }
-    
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let addButtonPoint = incrementButton.convert(point, from: self)
         if incrementButton.bounds.contains(addButtonPoint) {
             return incrementButton
-        }
-        let deleteButtonPoint = decrementButton.convert(point, from: self)
-        if decrementButton.bounds.contains(deleteButtonPoint) {
-            return decrementButton
         }
         return super.hitTest(point, with: event)
     }
 }
 
 // MARK: - BUTTON ACTIONS
-extension ProductView {
+extension SuggestedProductView {
     @objc func incrementButtonTapped() {
-        presenter.didTapIncrementButton()
-    }
-    
-    @objc func decrementButtonTapped () {
-        presenter.didTapDecrementButton()
+        MarketCartService.shared.addProductToCart(product: product!)
+        cartUpdateDelegate?.updateCart()
     }
 }
 
 // MARK: - PROTOCOL METHODS
-extension ProductView: ProductViewProtocol {
-    
-    func updateProductQuantity(quantity: Int) {
-        quantityLabel.text = "\(quantity)"
-        if quantity > 0 {
-            showStepper()
-            if quantity == 1 {
-                setDecrementIcon(systemName: "trash")
-            }
-            else {
-                setDecrementIcon(systemName: "minus")
-            }
-        }
-        else {
-            hideStepper()
-        }
-    }
+extension SuggestedProductView {
     
     func configure(product: Product) {
+        self.product = product
         iconImageView.kf.setImage(with: URL(string: "https://picsum.photos/200"))
         nameLabel.text = product.name
         priceLabel.text = product.productPriceText
         attributeLabel.text = product.description
-        presenter.getProductCount()
     }
 }

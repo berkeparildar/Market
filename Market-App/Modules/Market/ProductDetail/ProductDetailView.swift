@@ -150,16 +150,18 @@ class ProductDetailView: UIViewController {
         let view = UIView()
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
         return view
     }()
     
     private lazy var cartButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.backgroundColor = .marketLightGray
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
-        //button.addTarget(self, action: #selector(), for: .touchUpInside)
+        button.addTarget(self, action: #selector(cartButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.isUserInteractionEnabled = true
         return button
     }()
     
@@ -188,7 +190,9 @@ class ProductDetailView: UIViewController {
         label.textColor = .marketYellow
         label.textAlignment = .center
         label.text = "$0,00"
+        label.isHidden = false
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.isUserInteractionEnabled = false
         return label
     }()
 }
@@ -198,16 +202,18 @@ extension ProductDetailView {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Product Detail"
-        navigationController?.navigationBar.barTintColor = .marketYellow
-        navigationController?.navigationBar.tintColor = .white
         setupViews()
         setupConstraints()
         setupCartButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         presenter.setProductData()
     }
 }
 
-// MARK: - VIEW SET UP
+// MARK: - VIEW SETUP
 extension ProductDetailView {
     private func setupViews() {
         view.backgroundColor = .marketYellow
@@ -357,9 +363,14 @@ extension ProductDetailView {
     @objc func decrementButtonTapped () {
         presenter.didTapDecrementButton()
     }
+    
+    @objc func cartButtonTapped() {
+        print("Cart Button Tapped")
+        presenter.didTapCartButton()
+    }
 }
 
-// MARK: - CART BUTTON VIEW SET UP
+// MARK: - CART BUTTON
 extension ProductDetailView {
     private func setupCartButton() {
         cartButtonView.addSubview(cartButton)
@@ -369,9 +380,13 @@ extension ProductDetailView {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cartButtonView)
         
+        cartButtonView.snp.makeConstraints { make in
+            make.width.equalTo(120)
+            make.height.equalTo(32)
+        }
+        
         cartButton.snp.makeConstraints { make in
-            make.centerX.equalTo(cartButtonView.snp.centerX).offset(160)
-            make.centerY.equalTo(cartButtonView.snp.centerY)
+            make.trailing.equalToSuperview().offset(160)
             make.height.equalTo(32)
         }
         
@@ -397,27 +412,52 @@ extension ProductDetailView {
     }
 }
 
+// MARK: - PROTOCOL METHODS
 extension ProductDetailView: ProductDetailViewProtocol {
-    func updateCartButton(price: Double) {
-        cartImageBackground.snp.updateConstraints { make in
-            make.trailing.equalTo(cartButton.snp.leading).offset(96)
+    func showCartButton() {
+        cartButton.snp.updateConstraints { make in
+            make.trailing.equalToSuperview().offset(8)
         }
         
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
             guard let self = self else { return }
+            self.cartButton.superview?.layoutIfNeeded()
+        })
+    }
+    
+    func hideCartButton() {
+        cartButton.snp.updateConstraints { make in
+            make.trailing.equalToSuperview().offset(160)
+        }
+        
+        UIView.animate(withDuration: 0.3, animations: { [weak self] in
+            guard let self = self else { return }
+            self.cartButton.superview?.layoutIfNeeded()
+        })
+    }
+    
+    func updateCartButton(price: Double) {
+        let animationDuration = 0.3
+        cartImageBackground.snp.updateConstraints { make in
+            make.trailing.equalTo(cartButton.snp.leading).offset(96)
+        }
+
+        UIView.animate(withDuration: animationDuration, animations: { [weak self] in
+            guard let self = self else { return }
             self.cartImageBackground.superview?.layoutIfNeeded()
         }, completion: { [weak self] _ in
             guard let self = self else { return }
-            
+
             self.cartPriceLabel.text = String(format: "$%.2f", price)
             
             self.cartImageBackground.snp.updateConstraints { make in
                 make.trailing.equalTo(self.cartButton.snp.leading).offset(32)
             }
             
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: animationDuration) {
                 self.cartImageBackground.superview?.layoutIfNeeded()
             }
+            
         })
     }
     
@@ -430,28 +470,6 @@ extension ProductDetailView: ProductDetailViewProtocol {
             quantityButtonsBackground.isHidden = true
             addToCartButton.isHidden = false
         }
-    }
-    
-    func showCartButton() {
-        cartButton.snp.updateConstraints { make in
-            make.centerX.equalTo(cartButtonView.snp.centerX).offset(-44)
-        }
-        
-        UIView.animate(withDuration: 0.3, animations: { [weak self] in
-            guard let self = self else { return }
-            self.cartButton.superview?.layoutIfNeeded()
-        })
-    }
-    
-    func hideCartButton() {
-        cartButton.snp.updateConstraints { make in
-            make.centerX.equalTo(cartButtonView.snp.centerX).offset(160)
-        }
-        
-        UIView.animate(withDuration: 0.3, animations: { [weak self] in
-            guard let self = self else { return }
-            self.cartButton.superview?.layoutIfNeeded()
-        })
     }
     
     func configure(with product: Product) {

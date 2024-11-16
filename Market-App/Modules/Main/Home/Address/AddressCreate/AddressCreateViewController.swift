@@ -226,7 +226,6 @@ class AddressCreateViewController: UIViewController, MKMapViewDelegate {
 
 extension AddressCreateViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(presenter.getAddressCount())
         return presenter.getAddressCount()
     }
     

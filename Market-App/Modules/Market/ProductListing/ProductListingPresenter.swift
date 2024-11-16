@@ -11,6 +11,7 @@ protocol ProductListingPresenterProtocol: AnyObject {
     func getCategory(at index: Int) -> Category
     func didChangeCart()
     func didSelectProduct(product: Product)
+    func didTapCartButton()
 }
 
 final class ProductListingPresenter {
@@ -31,6 +32,10 @@ final class ProductListingPresenter {
 }
 
 extension ProductListingPresenter: ProductListingPresenterProtocol {
+    func didTapCartButton() {
+        router.navigate(to: .cart)
+    }
+    
     func didSelectProduct(product: Product) {
         router.navigate(to: .productDetail(product: product))
     }

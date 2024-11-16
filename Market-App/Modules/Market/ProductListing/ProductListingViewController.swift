@@ -61,16 +61,18 @@ final class ProductListingViewController: UIViewController, LoadingShowable {
         let view = UIView()
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
         return view
     }()
     
     private lazy var cartButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.backgroundColor = .marketLightGray
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
-        //button.addTarget(self, action: #selector(), for: .touchUpInside)
+        button.addTarget(self, action: #selector(cartButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.isUserInteractionEnabled = true
         return button
     }()
     
@@ -99,41 +101,15 @@ final class ProductListingViewController: UIViewController, LoadingShowable {
         label.textColor = .marketYellow
         label.textAlignment = .center
         label.text = "$0,00"
+        label.isHidden = false
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.isUserInteractionEnabled = false
         return label
     }()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        title = "Market"
-        view.backgroundColor = .marketYellow
-        navigationController?.navigationBar.barTintColor = .marketYellow
-        navigationController?.navigationBar.tintColor = .white
-        presenter.getProducts()
-        setupViews()
-        setupConstraints()
-        setupCartButton()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        print("called")
-        reloadData()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        presenter.didChangeCart()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        shouldAnimate = false
-        hideCartButton()
-        print("called")
-    }
-        
-    
+}
+
+// MARK: - VIEW SETUP
+extension ProductListingViewController {
     private func setupViews() {
         view.addSubview(backgroundView)
         view.addSubview(collectionView)
@@ -155,6 +131,57 @@ final class ProductListingViewController: UIViewController, LoadingShowable {
         }
     }
     
+    func createCollectionViewLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
+            return sectionIndex == 0 ? CollectionViewLayoutStyle.categoryStyle : CollectionViewLayoutStyle.productGroupStyle
+        }
+        layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
+        layout.register(SectionRedBackground.self, forDecorationViewOfKind: "background-red-element-kind")
+        layout.register(SectionGreenBackground.self, forDecorationViewOfKind: "background-blue-element-kind")
+        return layout
+    }
+}
+
+// MARK: - BUTTON ACTIONS
+extension ProductListingViewController {
+    @objc private func cartButtonTapped() {
+        presenter.didTapCartButton()
+    }
+}
+
+// MARK: - VIEW CYCLES
+extension ProductListingViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Market"
+        view.backgroundColor = .marketYellow
+        navigationController?.navigationBar.barTintColor = .marketYellow
+        navigationController?.navigationBar.tintColor = .white
+        presenter.getProducts()
+        setupViews()
+        setupConstraints()
+        setupCartButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        reloadData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        presenter.didChangeCart()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        shouldAnimate = false
+        hideCartButton()
+    }
+}
+
+// MARK: - CART BUTTON
+extension ProductListingViewController {
     private func setupCartButton() {
         cartButtonView.addSubview(cartButton)
         cartButton.addSubview(priceLabel)
@@ -163,10 +190,13 @@ final class ProductListingViewController: UIViewController, LoadingShowable {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cartButtonView)
         
+        cartButtonView.snp.makeConstraints { make in
+            make.width.equalTo(120)
+            make.height.equalTo(32)
+        }
         
         cartButton.snp.makeConstraints { make in
-            make.centerX.equalTo(cartButtonView.snp.centerX).offset(100)
-            make.centerY.equalTo(cartButtonView.snp.centerY)
+            make.trailing.equalToSuperview().offset(160)
             make.height.equalTo(32)
         }
         
@@ -189,24 +219,14 @@ final class ProductListingViewController: UIViewController, LoadingShowable {
             make.bottom.equalTo(cartButton.snp.bottom).offset(-8)
             make.trailing.equalTo(cartButton.snp.trailing).offset(-8)
         }
-        
-    }
-    
-    func createCollectionViewLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
-            return sectionIndex == 0 ? CollectionViewLayoutStyle.categoryStyle : CollectionViewLayoutStyle.productGroupStyle
-        }
-        layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
-        layout.register(SectionRedBackground.self, forDecorationViewOfKind: "background-red-element-kind")
-        layout.register(SectionGreenBackground.self, forDecorationViewOfKind: "background-blue-element-kind")
-        return layout
     }
 }
-
+    
+// MARK: - PROTOCOL METHODS
 extension ProductListingViewController: ProductListingViewProtocol {
     func showCartButton() {
         cartButton.snp.updateConstraints { make in
-            make.centerX.equalTo(cartButtonView.snp.centerX).offset(-44)
+            make.trailing.equalToSuperview().offset(8)
         }
         
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
@@ -217,7 +237,7 @@ extension ProductListingViewController: ProductListingViewProtocol {
     
     func hideCartButton() {
         cartButton.snp.updateConstraints { make in
-            make.centerX.equalTo(cartButtonView.snp.centerX).offset(160)
+            make.trailing.equalToSuperview().offset(160)
         }
         
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
@@ -269,8 +289,8 @@ extension ProductListingViewController: ProductListingViewProtocol {
     }
 }
 
+// MARK: - COLLECTION VIEW DATA SOURCE
 extension ProductListingViewController: UICollectionViewDataSource {
-    
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         return presenter.getCategoryCount()
@@ -335,6 +355,7 @@ extension ProductListingViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - COLLECTION VIEW DELEGATE
 extension ProductListingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.section == 0 {
@@ -359,12 +380,14 @@ extension ProductListingViewController: UICollectionViewDelegate {
     }
 }
 
+// MARK: - CART BUTTON DELEGATE
 extension ProductListingViewController: CartButtonDelegate {
     func didChangeCart() {
         presenter.didChangeCart()
     }
 }
 
+// MARK: - PRODUCT SELECT DELEGATE
 extension ProductListingViewController: ProductSelectDelegate {
     func didTapProduct(product: Product) {
         presenter.didSelectProduct(product: product)

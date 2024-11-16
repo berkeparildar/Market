@@ -37,7 +37,6 @@ extension ProductPresenter: ProductPresenterProtocol {
     
     func didTapDecrementButton() {
         interactor.removeProductFromCart(product: product)
-
     }
 }
 

@@ -9,6 +9,7 @@ protocol ProductDetailPresenterProtocol {
     func didTapIncrementButton()
     func didTapDecrementButton()
     func setProductData()
+    func didTapCartButton()
 }
 
 final class ProductDetailPresenter {
@@ -29,6 +30,10 @@ final class ProductDetailPresenter {
 }
 
 extension ProductDetailPresenter: ProductDetailPresenterProtocol {
+    func didTapCartButton() {
+        router.navigate(to: .cart)
+    }
+    
     func setProductData() {
         view.configure(with: product)
         interactor.getProductCountInCart(product: product)
