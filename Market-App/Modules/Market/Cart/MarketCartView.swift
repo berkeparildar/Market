@@ -172,10 +172,11 @@ extension MarketCartView {
     func createCollectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout {
             (sectionIndex, environment) -> NSCollectionLayoutSection? in
-            return sectionIndex == 0 ? CollectionViewLayoutStyle.tableStyle :
-            CollectionViewLayoutStyle.suggestedStyle
+            return sectionIndex == 0 ? CollectionViewLayouts.cartProductSection() :
+            CollectionViewLayouts.suggestedProductSection()
         }
-        layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
+        layout.register(SectionBackground.self,
+                        forDecorationViewOfKind: "defaultBackgroundElementKind")
         return layout
     }
 }

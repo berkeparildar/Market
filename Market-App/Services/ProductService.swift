@@ -25,7 +25,6 @@ final class ProductService {
             case .success(let categories):
                 for category in categories {
                     let fetchedCategory = Category.from(dictionary: category)
-                    print(fetchedCategory?.name)
                     guard let fetchedCategory = fetchedCategory else { return }
                     self.marketCategories.append(fetchedCategory)
                 }

@@ -77,7 +77,6 @@ extension AuthenticationPresenter: AuthenticationInteractorOutputProtocol {
             view.showErrorMessage(message: error.localizedDescription)
         }
         else {
-            //view.hideLoadingIndicator()
             print("Sign in success.")
             router.navigate(to: .home)
         }

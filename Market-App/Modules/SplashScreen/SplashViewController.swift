@@ -25,7 +25,7 @@ class SplashViewController: UIViewController, InfoPopUpShowable {
     var splashLogo: UIImageView = {
         var logo = UIImageView()
         logo.image = UIImage(systemName: "cart.circle.fill")
-        logo.tintColor = .marketGreen
+        logo.tintColor = .marketOrange
         return logo
     }()
 
