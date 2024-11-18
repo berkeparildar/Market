@@ -20,6 +20,7 @@ final class ConfirmationDialog {
     private var backgroundView: UIView!
     private var dialogView: UIView!
     private var confirmAction: (() -> Void)?
+    private var cancelAction: (() -> Void)?
     
     private var showingConstraint: NSLayoutConstraint!
     private var hidingConstraint: NSLayoutConstraint!

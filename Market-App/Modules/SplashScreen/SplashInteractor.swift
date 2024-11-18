@@ -10,10 +10,12 @@ import Network
 
 protocol SplashInteractorProtocol: AnyObject {
     func checkInternetConnection()
+    func checkSavedLogIn()
 }
 
 protocol SplashInteractorOutputProtocol: AnyObject {
-    func internetConnection(status: Bool)
+    func internetConnectionOutput(status: Bool)
+    func savedLogInOutput(error: Error?)
 }
 
 final class SplashInteractor {
@@ -21,6 +23,13 @@ final class SplashInteractor {
 }
 
 extension SplashInteractor: SplashInteractorProtocol {
+    func checkSavedLogIn() {
+        UserService.shared.checkSignInInfo { [weak self] error in
+            guard let self = self else { return }
+            output?.savedLogInOutput(error: error)
+        }
+    }
+    
     func checkInternetConnection() {
         let networkMonitor = NWPathMonitor()
         var internetStatus = true
@@ -31,6 +40,6 @@ extension SplashInteractor: SplashInteractorProtocol {
                 internetStatus = false
             }
         }
-        self.output?.internetConnection(status: internetStatus)
+        self.output?.internetConnectionOutput(status: internetStatus)
     }
 }

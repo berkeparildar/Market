@@ -26,16 +26,19 @@ final class LoadingView {
     static let shared = LoadingView()
     private var backgroundView: UIView!
     private var logoImage: UIImageView!
+    
     private init() {
         setupViews()
     }
+    
     private func setupViews() {
         backgroundView = UIView(frame: UIScreen.main.bounds)
         backgroundView.backgroundColor = .marketLightGray
+        backgroundView.alpha = 0
         
         logoImage = UIImageView()
         logoImage.image = UIImage(systemName: "cart.circle.fill")
-        logoImage.tintColor = .marketGreen
+        logoImage.tintColor = .marketOrange
         logoImage.translatesAutoresizingMaskIntoConstraints = false
         
         backgroundView.addSubview(logoImage)
@@ -49,25 +52,33 @@ final class LoadingView {
     }
     
     private func setupPulseAnimation() {
-        let pulseAnimation = CABasicAnimation(keyPath: "transform.scale")
-        pulseAnimation.duration = 0.8
-        pulseAnimation.fromValue = 1.0
-        pulseAnimation.toValue = 1.2
+        let pulseAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
+        pulseAnimation.values = [1.0, 1.1, 1.2, 1.1, 1.0]
+        pulseAnimation.keyTimes = [0, 0.25, 0.5, 0.75, 1]
+        pulseAnimation.duration = 1.2
         pulseAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        pulseAnimation.autoreverses = true
         pulseAnimation.repeatCount = Float.infinity
         logoImage.layer.add(pulseAnimation, forKey: "pulseAnimation")
     }
     
     func startLoading() {
         setupPulseAnimation()
-        UIApplication.shared.windows.first?.addSubview(backgroundView)
+        guard let window = UIApplication.shared.windows.first else { return }
+        window.addSubview(backgroundView)
+        
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+            self.backgroundView.alpha = 1
+        }, completion: nil)
     }
     
     func hideLoading() {
         DispatchQueue.main.async {
-            self.logoImage.layer.removeAllAnimations()
-            self.backgroundView.removeFromSuperview()
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+                self.backgroundView.alpha = 0
+            }, completion: { _ in
+                self.logoImage.layer.removeAllAnimations()
+                self.backgroundView.removeFromSuperview()
+            })
         }
     }
 }

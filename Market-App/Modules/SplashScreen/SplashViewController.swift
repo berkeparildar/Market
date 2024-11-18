@@ -12,7 +12,7 @@ protocol SplashViewControllerProtocol: AnyObject {
     func setupViews()
 }
 
-class SplashViewController: UIViewController, ShowAlert {
+class SplashViewController: UIViewController, InfoPopUpShowable {
     
     var presenter: SplashPresenterProtocol?
     
@@ -25,7 +25,7 @@ class SplashViewController: UIViewController, ShowAlert {
     var splashLogo: UIImageView = {
         var logo = UIImageView()
         logo.image = UIImage(systemName: "cart.circle.fill")
-        logo.tintColor = .marketGreen
+        logo.tintColor = .marketOrange
         return logo
     }()
 
@@ -58,6 +58,6 @@ extension SplashViewController: SplashViewControllerProtocol {
     }
     
     func noInternetConnection() {
-        showAlert(title: "İnternet bağlantısı yok", message: "Bağlantıyı sağlayıp tekrar deneyin")
+        showInfoPopUp(message: "Please check your internet connection and try again.") {}
     }
 }
