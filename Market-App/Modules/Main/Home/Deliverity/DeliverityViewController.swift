@@ -58,6 +58,7 @@ class DeliverityViewController: UIViewController {
         button.layer.cornerRadius = 20
         button.imageView?.layer.cornerRadius = 20
         button.adjustsImageWhenHighlighted = false
+        button.addTarget(self, action: #selector(foodButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -272,6 +273,10 @@ class DeliverityViewController: UIViewController {
 }
 
 extension DeliverityViewController {
+    @objc private func foodButtonTapped() {
+        presenter.didTapFoodButton()
+    }
+    
     @objc private func marketButtonTapped() {
         presenter.didTapMarketButton()
     }

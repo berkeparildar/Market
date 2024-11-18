@@ -28,7 +28,7 @@ final class AuthenticationViewController: UIViewController {
     
     private lazy var marketLabel: UILabel = {
         let label = UILabel()
-        label.text = "Deliverity"
+        label.text = "Market"
         label.font = .systemFont(ofSize: 48, weight: .regular)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false

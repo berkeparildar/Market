@@ -10,6 +10,7 @@ import UIKit
 enum DeliverityRoutes {
     case selectAddress
     case market
+    case food
 }
 
 protocol DeliverityRouterProtocol {
@@ -44,12 +45,21 @@ extension DeliverityRouter: DeliverityRouterProtocol {
             guard let window = viewController?.view.window else { return }
             let productListingVC = ProductListingRouter.createModule()
             let marketNavControl = UINavigationController(rootViewController: productListingVC)
-            marketNavControl.navigationBar.tintColor = .marketYellow
+            marketNavControl.navigationBar.tintColor = .white
             marketNavControl.navigationBar.backgroundColor = .marketYellow
             marketNavControl.navigationBar.barTintColor = .marketYellow
             marketNavControl.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
             window.rootViewController = marketNavControl
             break
+        case .food:
+            guard let window = viewController?.view.window else { return }
+            let foodVC = FoodHomeRouter.createModule()
+            let foodNavControl = UINavigationController(rootViewController: foodVC)
+            foodNavControl.navigationBar.tintColor = .white
+            foodNavControl.navigationBar.backgroundColor = .marketRed
+            foodNavControl.navigationBar.barTintColor = .marketRed
+            foodNavControl.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+            window.rootViewController = foodNavControl
         }
     }
 }

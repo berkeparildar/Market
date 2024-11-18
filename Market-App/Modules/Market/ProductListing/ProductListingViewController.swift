@@ -145,11 +145,12 @@ extension ProductListingViewController {
     
     func createCollectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
-            return sectionIndex == 0 ? CollectionViewLayoutStyle.categoryStyle : CollectionViewLayoutStyle.productGroupStyle
+            return sectionIndex == 0 ? CollectionViewLayouts.productCategorySection() : CollectionViewLayouts.productListSection()
         }
-        layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
-        layout.register(SectionRedBackground.self, forDecorationViewOfKind: "background-red-element-kind")
-        layout.register(SectionGreenBackground.self, forDecorationViewOfKind: "background-blue-element-kind")
+        layout.register(SectionBackground.self,
+                        forDecorationViewOfKind: "defaultBackgroundElementKind")
+        layout.register(CategoryCollectionBackground.self,
+                        forDecorationViewOfKind: "categoryBackgroundElementKind")
         return layout
     }
 }
@@ -173,11 +174,9 @@ extension ProductListingViewController {
         showLoadingView()
         title = "Market"
         view.backgroundColor = .marketYellow
-        navigationController?.navigationBar.barTintColor = .marketYellow
-        navigationController?.navigationBar.tintColor = .white
-        presenter.getProducts()
         setupViews()
         setupConstraints()
+        presenter.getProducts()
         setupCartButton()
     }
     
@@ -293,7 +292,8 @@ extension ProductListingViewController: ProductListingViewProtocol {
     }
     
     func reloadData() {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
             self.collectionView.reloadData()
         }
     }

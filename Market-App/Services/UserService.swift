@@ -80,9 +80,11 @@ final class UserService {
                 self.saveUserIdToKeychain(uid: authDataResult.user.uid)
                 self.currentUser = User(email: email)
                 UserDefaults.standard.set(-1, forKey: "currentAddressIndex")
-                
+                completion(nil)
+                return
             case .failure(let error):
                 completion(error)
+                return
             }
         }
     }
@@ -98,6 +100,7 @@ final class UserService {
                 guard let self = self else { return }
                 if let error {
                     completion(error)
+                    return
                 }
                 currentUser!.verifiedEmail = firebaseAuthService.checkUserEmailVerified()
                 completion(nil)

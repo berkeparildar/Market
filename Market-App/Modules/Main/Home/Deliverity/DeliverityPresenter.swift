@@ -44,7 +44,7 @@ final class DeliverityPresenter: DeliverityPresenterProtocol {
     }
     
     func didTapFoodButton() {
-        
+        router.navigate(to: .food)
     }
     
     func didTapAddressButton() {

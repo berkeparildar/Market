@@ -57,9 +57,9 @@ class ProductListView: UICollectionViewCell {
     
     func createCollectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
-            return CollectionViewLayoutStyle.productStyle
+            return CollectionViewLayouts.productGridSection()
         }
-        layout.register(SectionBackground.self, forDecorationViewOfKind: "background-element-kind")
+        layout.register(SectionBackground.self, forDecorationViewOfKind: "backgroundElementKind")
         return layout
     }
 }

@@ -38,7 +38,7 @@ final class LoadingView {
         
         logoImage = UIImageView()
         logoImage.image = UIImage(systemName: "cart.circle.fill")
-        logoImage.tintColor = .marketGreen
+        logoImage.tintColor = .marketOrange
         logoImage.translatesAutoresizingMaskIntoConstraints = false
         
         backgroundView.addSubview(logoImage)
